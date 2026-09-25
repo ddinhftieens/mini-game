@@ -32,5 +32,7 @@ export interface GameTheme {
   description: string;
   backgroundTheme: string;
   primaryColor: string;
+  victoryTitle?: string;
+  victoryMessage?: string;
 }
 

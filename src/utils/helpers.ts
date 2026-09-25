@@ -120,7 +120,7 @@ export function playSound(type: 'correct' | 'wrong' | 'click' | 'jump' | 'countd
       const gain = ctx.createGain();
       osc.type = 'sine';
       osc.frequency.setValueAtTime(440, ctx.currentTime);
-      gain.gain.setValueAtTime(0.1, ctx.currentTime);
+      gain.gain.setValueAtTime(0.6, ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.05);
       osc.connect(gain);
       gain.connect(ctx.destination);
@@ -133,7 +133,7 @@ export function playSound(type: 'correct' | 'wrong' | 'click' | 'jump' | 'countd
       osc.type = 'triangle';
       osc.frequency.setValueAtTime(800, ctx.currentTime);
       osc.frequency.exponentialRampToValueAtTime(400, ctx.currentTime + 0.08);
-      gain.gain.setValueAtTime(0.25, ctx.currentTime);
+      gain.gain.setValueAtTime(0.95, ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
       osc.connect(gain);
       gain.connect(ctx.destination);
@@ -145,7 +145,7 @@ export function playSound(type: 'correct' | 'wrong' | 'click' | 'jump' | 'countd
       osc.type = 'triangle';
       osc.frequency.setValueAtTime(220, ctx.currentTime);
       osc.frequency.exponentialRampToValueAtTime(600, ctx.currentTime + 0.15);
-      gain.gain.setValueAtTime(0.2, ctx.currentTime);
+      gain.gain.setValueAtTime(0.9, ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
       osc.connect(gain);
       gain.connect(ctx.destination);
@@ -169,7 +169,7 @@ export function playSound(type: 'correct' | 'wrong' | 'click' | 'jump' | 'countd
         osc.type = 'sine';
         osc.frequency.setValueAtTime(freq, start);
 
-        gain.gain.setValueAtTime(0.22, start);
+        gain.gain.setValueAtTime(0.95, start);
         gain.gain.exponentialRampToValueAtTime(0.001, start + dur);
 
         osc.connect(gain);
@@ -194,7 +194,7 @@ export function playSound(type: 'correct' | 'wrong' | 'click' | 'jump' | 'countd
         osc.frequency.setValueAtTime(from, start);
         osc.frequency.exponentialRampToValueAtTime(to, start + dur);
 
-        gain.gain.setValueAtTime(0.2, start);
+        gain.gain.setValueAtTime(0.9, start);
         gain.gain.exponentialRampToValueAtTime(0.001, start + dur);
 
         osc.connect(gain);
@@ -225,7 +225,7 @@ export function playFireworkSound() {
     osc.type = 'sine';
     osc.frequency.setValueAtTime(400 + Math.random() * 200, now);
     osc.frequency.exponentialRampToValueAtTime(1200 + Math.random() * 400, now + 0.25);
-    oscGain.gain.setValueAtTime(0.08, now);
+    oscGain.gain.setValueAtTime(0.45, now);
     oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
     osc.connect(oscGain);
     oscGain.connect(ctx.destination);
@@ -250,7 +250,7 @@ export function playFireworkSound() {
 
     const noiseGain = ctx.createGain();
     noiseGain.gain.setValueAtTime(0.0, now);
-    noiseGain.gain.setValueAtTime(0.35, now + 0.22);
+    noiseGain.gain.setValueAtTime(1.0, now + 0.22);
     noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.65);
 
     whiteNoise.connect(filter);

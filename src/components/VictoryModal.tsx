@@ -176,16 +176,16 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
         </div>
 
         {/* Tiêu đề Chúc mừng */}
-        <h2 style={{
+        {/* <h2 style={{
           fontSize: '2.1rem',
           fontWeight: 900,
-          color: '#065f46',
+          color: theme.id === 'snail' ? '#b45309' : '#065f46',
           margin: '0 0 6px 0',
           lineHeight: 1.2,
           zIndex: 2,
         }}>
-          Chúc Mừng Em Đã Về Đích!
-        </h2>
+          {theme.victoryTitle || 'Chúc Mừng Em Đã Về Đích!'}
+        </h2> */}
         <p style={{
           fontSize: '1.08rem',
           color: '#475569',
@@ -193,7 +193,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
           fontWeight: 600,
           zIndex: 2,
         }}>
-          {theme.characterName} đã an toàn lên bờ nhờ sự thông minh của em!
+          {theme.victoryMessage || `${theme.characterName} đã an toàn lên bờ nhờ sự thông minh của em!`}
         </p>
 
         {/* HÌNH ẢNH CON ẾCH NGỒI TRÊN BỜ SÔNG OAI VỆ */}

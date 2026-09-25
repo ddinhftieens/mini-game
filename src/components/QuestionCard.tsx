@@ -312,7 +312,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                     boxShadow: '0 2px 8px rgba(34, 197, 94, 0.4)',
                   }}>
                     <CheckCircle size={16} color="#ffffff" />
-                    <span>Đúng</span>
+                    <span>Chính xác</span>
                   </div>
                 )}
                 {isAnswerWrong && !isCountingDown && (
@@ -329,7 +329,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                     boxShadow: '0 2px 8px rgba(239, 68, 68, 0.4)',
                   }}>
                     <AlertCircle size={16} color="#ffffff" />
-                    <span>Sai</span>
+                    <span>Chưa chính xác</span>
                   </div>
                 )}
               </div>
@@ -390,7 +390,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
             {countdown}
           </div>
           <span style={{ color: '#92400e', fontWeight: 800, fontSize: '0.98rem' }}>
-            ⏳ Đang kiểm tra đáp án... Bé hãy chờ trong giây lát nhé! ({countdown} giây)
+            ⏳ Đang kiểm tra đáp án... Con hãy chờ trong giây lát nhé! ({countdown} giây)
           </span>
         </div>
       )}
@@ -427,7 +427,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                 <Sparkles size={20} color="#ffffff" />
               </div>
               <span style={{ color: '#065f46', fontWeight: 800, fontSize: '0.98rem' }}>
-                Chính xác! Bé giỏi quá!
+                Chính xác! Con giỏi quá!
               </span>
             </>
           ) : (
@@ -445,7 +445,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                 <AlertCircle size={20} color="#ffffff" />
               </div>
               <span style={{ color: '#9f1239', fontWeight: 800, fontSize: '0.98rem' }}>
-                Chưa chính xác rồi! Bé hãy suy nghĩ và chọn lại nhé!
+                Chưa chính xác rồi! Con hãy suy nghĩ và chọn lại nhé!
               </span>
             </>
           )}

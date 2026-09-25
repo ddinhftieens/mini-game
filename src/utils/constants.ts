@@ -27,6 +27,8 @@ export const GAME_THEMES: GameTheme[] = [
     description: 'Cùng Ếch trả lời đúng các câu hỏi để nhảy qua từng chiếc lá sen và về đích an toàn nhé!',
     backgroundTheme: 'from-emerald-400 to-teal-700',
     primaryColor: '#10b981',
+    victoryTitle: 'Chúc mừng con đã về đích!',
+    victoryMessage: 'Chú Ếch Con đã an toàn lên bờ nhờ sự thông minh và chính xác của con!',
   },
   // {
   //   id: 'princess',
@@ -41,6 +43,8 @@ export const GAME_THEMES: GameTheme[] = [
   //   description: 'Vượt qua các chướng ngại vật kiến thức để mở khóa các tầng lâu đài và giải cứu công chúa nào!',
   //   backgroundTheme: 'from-pink-400 to-purple-700',
   //   primaryColor: '#ec4899',
+  //   victoryTitle: 'Giải Cứu Thành Công!',
+  //   victoryMessage: 'Em đã xuất sắc chinh phục đỉnh tháp và giải cứu công chúa!',
   // },
   {
     id: 'snail',
@@ -55,5 +59,7 @@ export const GAME_THEMES: GameTheme[] = [
     description: 'Cùng Ốc Sên kiên trì leo từng bậc đá lên khỏi miệng giếng đón ánh nắng rực rỡ nhé!',
     backgroundTheme: 'from-amber-400 to-orange-700',
     primaryColor: '#f59e0b',
+    victoryTitle: 'Chúc mừng con đã về đích!',
+    victoryMessage: 'Chú Ốc Sên đã kiên trì vươn tới khu vườn hoa nắng rực rỡ nhờ sự trợ giúp của con!',
   },
 ];
