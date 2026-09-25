@@ -1,0 +1,327 @@
+:root {
+  --font-main: 'Times New Roman', Times, serif;
+  --font-heading: 'Times New Roman', Times, serif;
+  --font-fun: 'Times New Roman', Times, serif;
+
+  --color-primary: #10b981;
+  --color-primary-dark: #059669;
+  --color-accent: #f59e0b;
+  --color-danger: #ef4444;
+  --color-success: #22c55e;
+  --color-bg: #ecfdf5;
+  --color-text-dark: #1e293b;
+  --color-text-muted: #64748b;
+
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  --shadow-fun: 0 6px 0px rgba(0, 0, 0, 0.12);
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-user-select: none;
+  font-family: 'Times New Roman', Times, serif;
+}
+
+button, input, textarea, select {
+  font-family: 'Times New Roman', Times, serif !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html, body {
+  font-family: 'Times New Roman', Times, serif;
+  background: linear-gradient(135deg, #a7f3d0 0%, #bae6fd 50%, #fde68a 100%);
+  height: 100%;
+  width: 100%;
+  color: var(--color-text-dark);
+  overflow: hidden;
+}
+
+/* Animations */
+@keyframes bounceSlow {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulseGlow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+  }
+
+  50% {
+    box-shadow: 0 0 30px rgba(16, 185, 129, 0.8);
+  }
+}
+
+@keyframes waterRipples {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.6;
+  }
+
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+
+  100% {
+    transform: scale(0.95);
+    opacity: 0.6;
+  }
+}
+
+@keyframes frogJump {
+  0% {
+    transform: scale(1, 1) translateY(0);
+  }
+
+  20% {
+    transform: scale(1.2, 0.8) translateY(0);
+  }
+
+  50% {
+    transform: scale(0.9, 1.2) translateY(-40px) rotate(10deg);
+  }
+
+  80% {
+    transform: scale(1.1, 0.9) translateY(0);
+  }
+
+  100% {
+    transform: scale(1, 1) translateY(0);
+  }
+}
+
+@keyframes shakeWrong {
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  20%,
+  60% {
+    transform: translateX(-8px);
+  }
+
+  40%,
+  80% {
+    transform: translateX(8px);
+  }
+}
+
+@keyframes popIn {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+
+  80% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-jump {
+  animation: frogJump 0.6s ease-in-out forwards;
+}
+
+.animate-shake {
+  animation: shakeWrong 0.4s ease-in-out;
+}
+
+.animate-pop {
+  animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.bounce-slow {
+  animation: bounceSlow 2.5s ease-in-out infinite;
+}
+
+/* Responsive Layout Rules */
+.app-container {
+  height: 100vh;
+  max-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #a7f3d0 0%, #bae6fd 50%, #fde68a 100%);
+  width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.main-layout {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 300px minmax(420px, 1fr) 320px;
+  gap: 14px;
+  padding: 10px 16px;
+  max-width: 1680px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+  align-items: stretch;
+}
+
+.layout-col {
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* Large Displays (>= 1440px) */
+@media (min-width: 1440px) {
+  .main-layout {
+    grid-template-columns: 320px minmax(480px, 1fr) 340px;
+    gap: 18px;
+    padding: 12px 20px;
+  }
+}
+
+/* Laptops / 1080p Screens (1150px - 1360px) */
+@media (max-width: 1360px) {
+  .main-layout {
+    grid-template-columns: 270px minmax(360px, 1fr) 280px;
+    gap: 12px;
+    padding: 8px 14px;
+  }
+}
+
+/* Tablets Landscape & Small Laptops (881px - 1149px) - e.g. 1024x768 */
+@media (max-width: 1149px) {
+  .main-layout {
+    grid-template-columns: 250px minmax(280px, 1fr) 250px;
+    gap: 10px;
+    padding: 8px 12px;
+  }
+}
+
+/* Tablets Portrait & Mobile (<= 880px) - e.g. 768px, iPad portrait, mobile */
+@media (max-width: 880px) {
+  html, body {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    height: auto !important;
+    min-height: 100vh !important;
+  }
+
+  .app-container {
+    height: auto !important;
+    max-height: none !important;
+    min-height: 100vh !important;
+    overflow-y: visible !important;
+  }
+
+  .main-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 10px;
+    overflow: visible !important;
+  }
+
+  .col-question-list {
+    order: 2;
+    height: 320px !important;
+    min-height: 300px !important;
+  }
+
+  .layout-col {
+    height: auto;
+    min-height: unset;
+    overflow: visible;
+  }
+
+  .app-header {
+    padding: 8px 12px !important;
+    gap: 8px !important;
+  }
+
+  .header-actions {
+    flex-wrap: wrap;
+    gap: 6px !important;
+  }
+
+  .header-title-text {
+    font-size: 0.95rem !important;
+  }
+
+  .header-subtitle-text {
+    display: none;
+  }
+
+  .question-options-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(16, 185, 129, 0.45);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(16, 185, 129, 0.75);
+}
+
+/* Scoped styling cho thanh cuộn bên trong khung Sân Khấu Ao Sen */
+.stage-scroll-viewport {
+  scrollbar-gutter: stable;
+}
+
+.stage-scroll-viewport::-webkit-scrollbar {
+  width: 6px;
+}
+
+.stage-scroll-viewport::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 10px;
+  margin: 8px 0;
+}
+
+.stage-scroll-viewport::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.65);
+  border-radius: 10px;
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.1);
+}
+
+.stage-scroll-viewport::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.95);
+}
