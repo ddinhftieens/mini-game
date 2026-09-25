@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { GameTheme, QuestionItem } from './types';
-import { GAME_THEMES } from './utils/constants';
+import { GAME_THEMES, DEFAULT_TARGET_STEPS } from './utils/constants';
 import { fetchQuestionsFromGoogleSheet, processQuestionsByDifficulty, playSound } from './utils/helpers';
 import { Header } from './components/Header';
 import { QuestionList } from './components/QuestionList';
@@ -19,7 +19,7 @@ export const App: React.FC = () => {
   const [sheetUrl, setSheetUrl] = useState<string>(() => localStorage.getItem('mini_game_sheet_url') || '');
   const [targetSteps, setTargetSteps] = useState<number | undefined>(() => {
     const saved = localStorage.getItem('mini_game_target_steps');
-    return saved ? parseInt(saved, 10) || undefined : undefined;
+    return saved !== null ? (parseInt(saved, 10) || undefined) : DEFAULT_TARGET_STEPS;
   });
 
   const [questions, setQuestions] = useState<QuestionItem[]>([]);

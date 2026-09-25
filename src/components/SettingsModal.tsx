@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X, Copy, Check, Save, Settings, FileSpreadsheet, Sparkles, RotateCcw, Footprints } from 'lucide-react';
-import { DEFAULT_GOOGLE_SHEET_URL } from '../utils/constants';
+import { DEFAULT_GOOGLE_SHEET_URL, DEFAULT_TARGET_STEPS } from '../utils/constants';
 
 interface SettingsModalProps {
   currentUrl: string;
@@ -16,7 +16,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   onClose,
 }) => {
   const [url, setUrl] = useState(currentUrl);
-  const [stepsInput, setStepsInput] = useState<string>(currentSteps ? String(currentSteps) : '');
+  const [stepsInput, setStepsInput] = useState<string>(
+    currentSteps !== undefined ? String(currentSteps) : (currentSteps === undefined ? String(DEFAULT_TARGET_STEPS) : '')
+  );
   const [copied, setCopied] = useState(false);
   const [stepError, setStepError] = useState<string | null>(null);
 
@@ -254,24 +256,60 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           borderRadius: '16px',
           border: '1.5px solid #e2e8f0',
         }}>
-          <label style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            fontWeight: 800,
-            fontSize: '0.98rem',
-            color: '#334155',
-            marginBottom: '8px',
-          }}>
-            <Footprints size={18} color="#2563eb" />
-            <span>Số bước để tới đích:</span>
-          </label>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
+            <label style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              fontWeight: 800,
+              fontSize: '0.98rem',
+              color: '#334155',
+              margin: 0,
+            }}>
+              <Footprints size={18} color="#2563eb" />
+              <span>Số bước để tới đích:</span>
+            </label>
+
+            <button
+              type="button"
+              onClick={() => {
+                setStepsInput(String(DEFAULT_TARGET_STEPS));
+                setStepError(null);
+              }}
+              title="Đặt lại số bước về 5 bước mặc định"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '5px 12px',
+                borderRadius: '8px',
+                background: '#e0f2fe',
+                color: '#0284c7',
+                border: '1px solid #bae6fd',
+                fontSize: '0.85rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = '#0284c7';
+                e.currentTarget.style.color = '#ffffff';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = '#e0f2fe';
+                e.currentTarget.style.color = '#0284c7';
+              }}
+            >
+              <RotateCcw size={14} />
+              <span>Mặc định (5 bước)</span>
+            </button>
+          </div>
 
           <input
             type="number"
             min="1"
             step="1"
-            placeholder="Để trống để lấy toàn bộ câu hỏi trong Sheet (Mặc định)"
+            placeholder="Mặc định: 5 bước (Để trống nếu muốn lấy toàn bộ câu hỏi trong Sheet)"
             value={stepsInput}
             onChange={(e) => {
               setStepsInput(e.target.value);
@@ -296,7 +334,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             </span>
           ) : (
             <span style={{ fontSize: '0.84rem', color: '#64748b', marginTop: '6px', display: 'block', fontWeight: 600 }}>
-              Ví dụ: Sheet có 10 câu hỏi, cấu hình <b>5</b> bước sẽ lấy ngẫu nhiên 5 câu hỏi từ bảng tính. Nếu để trống hoặc số bước lớn hơn số câu hỏi trong Sheet thì game sẽ lấy toàn bộ câu hỏi (được xáo trộn ngẫu nhiên).
+              Số bước mặc định là <b>5 bước</b> (lấy ngẫu nhiên 5 câu hỏi từ bảng tính). Nếu xóa trống hoặc số bước lớn hơn số câu hỏi trong Sheet thì game sẽ lấy toàn bộ câu hỏi.
             </span>
           )}
         </div>

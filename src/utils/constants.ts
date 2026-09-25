@@ -5,6 +5,7 @@ import { GameTheme } from '../types';
  */
 export const DEFAULT_GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbzMVJhX3QrMcP0O3TW9VTPbBTlUBFyQaPLUYIPuIG6acBP5xACFGruUkZJ-hhqbJ5Yzlg/exec';
 export const GOOGLE_SHEET_APPS_SCRIPT_URL = '';
+export const DEFAULT_TARGET_STEPS = 5;
 
 /**
  * CÁC CHỦ ĐỀ GAME
