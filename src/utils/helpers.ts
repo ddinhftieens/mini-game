@@ -50,8 +50,27 @@ export function processQuestionsByDifficulty(rawList: RawQuestion[], targetSteps
 }
 
 /**
+ * Fetch một lần với timeout (ms). Ném lỗi nếu quá thời gian hoặc HTTP không OK.
+ */
+async function fetchWithTimeout(url: string, timeoutMs: number): Promise<any> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const response = await fetch(url, { signal: controller.signal });
+    if (!response.ok) {
+      throw new Error(`HTTP_${response.status}`);
+    }
+    return await response.json();
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+/**
  * Fetch câu hỏi từ Google Sheet qua Apps Script URL.
- * Nếu không có URL hoặc tải lỗi, trả về lỗi để giao diện hiển thị thông báo.
+ * Tự động retry tối đa MAX_RETRIES lần với exponential backoff khi gặp lỗi
+ * tạm thời (404, 5xx, timeout, network error) — giúp xử lý tình trạng cold-start
+ * hoặc không ổn định của Google Apps Script.
  */
 export async function fetchQuestionsFromGoogleSheet(customUrl?: string): Promise<{
   questions: RawQuestion[];
@@ -63,47 +82,82 @@ export async function fetchQuestionsFromGoogleSheet(customUrl?: string): Promise
     throw new Error('Chưa cấu hình đường dẫn Google Apps Script Web App URL. Vui lòng bấm vào nút "⚙️ Sheet" ở góc trên để cấu hình.');
   }
 
-  try {
-    const response = await fetch(urlToUse);
-    if (!response.ok) {
-      throw new Error(`Máy chủ Google phản hồi lỗi HTTP ${response.status}`);
+  const MAX_RETRIES = 3;
+  const TIMEOUT_MS = 10_000; // 10 giây mỗi lần thử
+  const BASE_DELAY_MS = 1_000; // 1s → 2s → 4s
+
+  let lastError: Error = new Error('Lỗi không xác định');
+
+  for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      console.log(`[GAS] Lần thử ${attempt}/${MAX_RETRIES}: ${urlToUse}`);
+      const data = await fetchWithTimeout(urlToUse, TIMEOUT_MS);
+
+      let rawList: any[] = [];
+      if (Array.isArray(data)) {
+        rawList = data;
+      } else if (data && Array.isArray(data.data)) {
+        rawList = data.data;
+      } else if (data && Array.isArray(data.questions)) {
+        rawList = data.questions;
+      }
+
+      if (rawList.length === 0) {
+        throw new Error('Google Sheet không có dữ liệu câu hỏi nào. Hãy kiểm tra lại bảng tính của bạn.');
+      }
+
+      // Map chuẩn hóa cấu trúc
+      const formatted: RawQuestion[] = rawList.map((item, idx) => ({
+        id: item.id || idx + 1,
+        question: item.question || item['Câu hỏi'] || item['cau_hoi'] || item['Question'] || `Câu hỏi ${idx + 1}`,
+        A: String(item.A ?? item['a'] ?? item['Đáp án A'] ?? item['A'] ?? ''),
+        B: String(item.B ?? item['b'] ?? item['Đáp án B'] ?? item['B'] ?? ''),
+        C: String(item.C ?? item['c'] ?? item['Đáp án C'] ?? item['C'] ?? ''),
+        D: String(item.D ?? item['d'] ?? item['Đáp án D'] ?? item['D'] ?? ''),
+        answer: String(item.answer || item['Đáp án'] || item['dap_an'] || item['Answer'] || 'A').trim().toUpperCase(),
+        difficulty: Number(item.difficulty || item['Mức độ khó'] || item['muc_do_kho'] || item['Difficulty'] || 1),
+        explanation: item.explanation || item['Giải thích'] || '',
+      }));
+
+      return { questions: formatted, isCustomSource: true };
+
+    } catch (error: any) {
+      const isAbort = error.name === 'AbortError';
+      const msg: string = error.message || '';
+      const isRetryable =
+        isAbort ||
+        msg.startsWith('HTTP_404') ||
+        msg.startsWith('HTTP_5') ||
+        msg.includes('Failed to fetch') ||
+        msg.includes('NetworkError') ||
+        msg.includes('Load failed');
+
+      lastError = new Error(
+        isAbort
+          ? `Lần thử ${attempt}: Hết thời gian chờ (${TIMEOUT_MS / 1000}s).`
+          : `Lần thử ${attempt}: ${msg}`
+      );
+      console.warn(`[GAS] ${lastError.message}`);
+
+      // Nếu lỗi không thể retry (ví dụ: sheet trống, URL sai định dạng) → dừng ngay
+      if (!isRetryable) break;
+
+      // Chưa đến lần cuối → chờ rồi thử lại (exponential backoff)
+      if (attempt < MAX_RETRIES) {
+        const delay = BASE_DELAY_MS * Math.pow(2, attempt - 1);
+        console.log(`[GAS] Chờ ${delay}ms trước khi thử lại...`);
+        await new Promise((resolve) => setTimeout(resolve, delay));
+      }
     }
-    const data = await response.json();
-
-    let rawList: any[] = [];
-    if (Array.isArray(data)) {
-      rawList = data;
-    } else if (data && Array.isArray(data.data)) {
-      rawList = data.data;
-    } else if (data && Array.isArray(data.questions)) {
-      rawList = data.questions;
-    }
-
-    if (rawList.length === 0) {
-      throw new Error('Google Sheet không có dữ liệu câu hỏi nào. Hãy kiểm tra lại bảng tính của bạn.');
-    }
-
-    // Map chuẩn hóa cấu trúc
-    const formatted: RawQuestion[] = rawList.map((item, idx) => ({
-      id: item.id || idx + 1,
-      question: item.question || item['Câu hỏi'] || item['cau_hoi'] || item['Question'] || `Câu hỏi ${idx + 1}`,
-      A: String(item.A ?? item['a'] ?? item['Đáp án A'] ?? item['A'] ?? ''),
-      B: String(item.B ?? item['b'] ?? item['Đáp án B'] ?? item['B'] ?? ''),
-      C: String(item.C ?? item['c'] ?? item['Đáp án C'] ?? item['C'] ?? ''),
-      D: String(item.D ?? item['d'] ?? item['Đáp án D'] ?? item['D'] ?? ''),
-      answer: String(item.answer || item['Đáp án'] || item['dap_an'] || item['Answer'] || 'A').trim().toUpperCase(),
-      difficulty: Number(item.difficulty || item['Mức độ khó'] || item['muc_do_kho'] || item['Difficulty'] || 1),
-      explanation: item.explanation || item['Giải thích'] || '',
-    }));
-
-    return {
-      questions: formatted,
-      isCustomSource: true,
-    };
-  } catch (error: any) {
-    console.error('Lỗi khi tải từ Google Apps Script:', error);
-    throw new Error(error.message || 'Không thể kết nối đến Google Apps Script. Hãy kiểm tra lại URL và quyền truy cập (Anyone).');
   }
+
+  console.error('[GAS] Đã hết số lần thử:', lastError);
+  throw new Error(
+    lastError.message.includes('Hết thời gian') || lastError.message.includes('HTTP_')
+      ? `Không thể kết nối đến Google Apps Script sau ${MAX_RETRIES} lần thử. ` +
+        'Máy chủ Google có thể đang bận — hãy thử lại sau vài giây, hoặc kiểm tra URL và quyền truy cập (Anyone).'
+      : lastError.message
+  );
 }
 
 /**
