@@ -62,17 +62,6 @@ export const QuestionList: React.FC<QuestionListProps> = ({
             <Trophy size={20} color="#f59e0b" style={{ flexShrink: 0 }} />
             <span>Lộ Trình Thử Thách</span>
           </h2>
-          <span style={{
-            fontSize: '0.92rem',
-            fontWeight: 800,
-            color: '#3b82f6',
-            background: '#eff6ff',
-            padding: '3px 10px',
-            borderRadius: '10px',
-            flexShrink: 0,
-          }}>
-            {correctCount}/{questions.length}
-          </span>
         </div>
 
         {/* Thanh tiến độ mini */}

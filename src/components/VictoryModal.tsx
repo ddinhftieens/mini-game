@@ -106,7 +106,8 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
       alignItems: 'center',
       justifyContent: 'center',
       zIndex: 150,
-      padding: '20px',
+      padding: '12px',
+      boxSizing: 'border-box',
       fontFamily: "'Times New Roman', Times, serif",
       animation: 'fadeIn 0.3s ease-out',
     }}>
@@ -126,19 +127,20 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
 
       <div style={{
         background: '#ffffff',
-        borderRadius: '32px',
-        maxWidth: '560px',
+        borderRadius: '28px',
+        maxWidth: '540px',
         width: '100%',
-        padding: '36px 32px 32px 32px',
+        maxHeight: '92vh',
+        overflowY: 'auto',
+        padding: '24px 20px',
         boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.4), 0 0 40px rgba(16, 185, 129, 0.35)',
-        border: '4px solid #bbf7d0',
+        border: '3px solid #bbf7d0',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         textAlign: 'center',
         position: 'relative',
         boxSizing: 'border-box',
-        overflow: 'hidden',
         zIndex: 155,
       }}>
         {/* Vòng hào quang phát sáng nền */}

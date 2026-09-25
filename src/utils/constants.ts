@@ -15,7 +15,7 @@ const formatPath = (path: string) => `${baseUrl.replace(/\/$/, '')}/${path.repla
 export const GAME_THEMES: GameTheme[] = [
   {
     id: 'frog',
-    title: 'Giải cứu Chú Ếch Xanh',
+    title: 'Giải cứu Ếch Xanh',
     subtitle: 'Nhảy qua các lá sen để lên bờ an toàn',
     characterName: 'Chú Ếch Con',
     characterImage: formatPath('giaicuuechsanh/character_images.png'),
@@ -23,7 +23,7 @@ export const GAME_THEMES: GameTheme[] = [
     destinationImage: formatPath('giaicuuechsanh/destination_images.png'),
     stepName: 'Lá sen',
     stepImage: formatPath('giaicuuechsanh/step_images.png'),
-    description: 'Bé hãy cùng bạn Ếch trả lời đúng các câu hỏi để nhảy qua từng chiếc lá sen và về đích an toàn nhé!',
+    description: 'Cùng Ếch trả lời đúng các câu hỏi để nhảy qua từng chiếc lá sen và về đích an toàn nhé!',
     backgroundTheme: 'from-emerald-400 to-teal-700',
     primaryColor: '#10b981',
   },
@@ -43,7 +43,7 @@ export const GAME_THEMES: GameTheme[] = [
   // },
   {
     id: 'snail',
-    title: 'Ốc Sên Leo Miệng Giếng',
+    title: 'Giải cứu Ốc Sên',
     subtitle: 'Từng bước vươn tới ánh mặt trời',
     characterName: 'Chú Ốc Sên',
     characterImage: formatPath('giaicuuocsen/character_images.png'),
@@ -51,7 +51,7 @@ export const GAME_THEMES: GameTheme[] = [
     destinationImage: formatPath('giaicuuocsen/destination_images.png'),
     stepName: 'Bậc đá',
     stepImage: formatPath('giaicuuocsen/step_images.png'),
-    description: 'Cùng chú ốc sên kiên trì leo từng bậc đá lên khỏi miệng giếng đón ánh nắng rực rỡ nhé!',
+    description: 'Cùng Ốc Sên kiên trì leo từng bậc đá lên khỏi miệng giếng đón ánh nắng rực rỡ nhé!',
     backgroundTheme: 'from-amber-400 to-orange-700',
     primaryColor: '#f59e0b',
   },

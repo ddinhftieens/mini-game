@@ -269,7 +269,7 @@ export const App: React.FC = () => {
             </section>
 
             {/* Cột 2: Câu hỏi và 4 đáp án */}
-            <section className="layout-col">
+            <section className="layout-col col-question-card">
               {currentQuestion && (
                 <QuestionCard
                   question={currentQuestion}
@@ -281,7 +281,7 @@ export const App: React.FC = () => {
             </section>
 
             {/* Cột 3: Trò chơi tương tác (Nhảy lá sen / leo tháp / miệng giếng) */}
-            <section className="layout-col">
+            <section className="layout-col col-stage">
               <GameStage
                 theme={currentTheme}
                 totalQuestions={questions.length}

@@ -245,10 +245,20 @@ html, body {
     overflow: visible !important;
   }
 
-  .col-question-list {
+  .col-stage {
+    order: 1;
+    height: 380px !important;
+    min-height: 350px !important;
+  }
+
+  .col-question-card {
     order: 2;
-    height: 320px !important;
-    min-height: 300px !important;
+  }
+
+  .col-question-list {
+    order: 3;
+    height: 300px !important;
+    min-height: 280px !important;
   }
 
   .layout-col {
