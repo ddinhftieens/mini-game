@@ -21,12 +21,20 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   const [pendingOption, setPendingOption] = useState<'A' | 'B' | 'C' | 'D' | null>(null);
   const [countdown, setCountdown] = useState<number | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  // Ref riêng để cleanup timeout animate-shake (sai đáp án)
+  const wrongAnimTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const options: ('A' | 'B' | 'C' | 'D')[] = ['A', 'B', 'C', 'D'];
 
   // Reset khi chuyển câu hỏi mới
   useEffect(() => {
     if (timerRef.current) clearInterval(timerRef.current);
+    // Cancel cả timeout animate-shake khỏi động lại sớm
+    if (wrongAnimTimerRef.current) {
+      clearTimeout(wrongAnimTimerRef.current);
+      wrongAnimTimerRef.current = null;
+      setAnimatingWrong(false);
+    }
     setPendingOption(null);
     setCountdown(null);
   }, [currentIndex, question.id]);
@@ -48,7 +56,12 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
 
       if (opt !== question.answer) {
         setAnimatingWrong(true);
-        setTimeout(() => setAnimatingWrong(false), 500);
+        // Lưu ref để cancel nếu cần (chuyển câu trước 500ms)
+        if (wrongAnimTimerRef.current) clearTimeout(wrongAnimTimerRef.current);
+        wrongAnimTimerRef.current = setTimeout(() => {
+          wrongAnimTimerRef.current = null;
+          setAnimatingWrong(false);
+        }, 500);
       }
       onAnswer(opt);
     }

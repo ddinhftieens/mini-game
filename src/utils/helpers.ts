@@ -107,13 +107,35 @@ export async function fetchQuestionsFromGoogleSheet(customUrl?: string): Promise
 }
 
 /**
+ * Singleton AudioContext — dùng chung cho toàn bộ app để tránh leak và giới hạn ~6 context của trình duyệt.
+ */
+let _audioCtx: AudioContext | null = null;
+
+function getAudioContext(): AudioContext | null {
+  try {
+    const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+    if (!AudioCtx) return null;
+    if (!_audioCtx || _audioCtx.state === 'closed') {
+      _audioCtx = new AudioCtx();
+    }
+    // Resume nếu bị browser suspend do chính sách autoplay
+    if (_audioCtx.state === 'suspended') {
+      _audioCtx.resume();
+    }
+    return _audioCtx;
+  } catch (e) {
+    console.error('AudioContext error:', e);
+    return null;
+  }
+}
+
+/**
  * Tạo âm thanh vui nhộn trực tiếp bằng Web Audio API (không cần tải file ngoài)
  */
 export function playSound(type: 'correct' | 'wrong' | 'click' | 'jump' | 'countdown') {
   try {
-    const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
-    if (!AudioCtx) return;
-    const ctx = new AudioCtx();
+    const ctx = getAudioContext();
+    if (!ctx) return;
 
     if (type === 'click') {
       const osc = ctx.createOscillator();
@@ -214,9 +236,8 @@ export function playSound(type: 'correct' | 'wrong' | 'click' | 'jump' | 'countd
  */
 export function playFireworkSound() {
   try {
-    const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
-    if (!AudioCtx) return;
-    const ctx = new AudioCtx();
+    const ctx = getAudioContext();
+    if (!ctx) return;
     const now = ctx.currentTime;
 
     // 1. Tiếng xé gió vút lên (Whistle/Rise)

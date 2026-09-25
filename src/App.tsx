@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { GameTheme, QuestionItem, RawQuestion } from './types';
 import { GAME_THEMES, DEFAULT_TARGET_STEPS } from './utils/constants';
 import { fetchQuestionsFromGoogleSheet, processQuestionsByDifficulty, playSound } from './utils/helpers';
@@ -12,6 +12,9 @@ import { VictoryModal } from './components/VictoryModal';
 import { AlertTriangle, Settings, RefreshCw, Loader2 } from 'lucide-react';
 
 export const App: React.FC = () => {
+  // Ref lưu timeout tự động chuyển câu — để cancel khi cần (chơi lại, unmount)
+  const autoAdvanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   // State quản lý Game
   const [currentTheme, setCurrentTheme] = useState<GameTheme>(GAME_THEMES[0]);
   const [showThemeModal, setShowThemeModal] = useState<boolean>(true);
@@ -59,6 +62,10 @@ export const App: React.FC = () => {
 
   useEffect(() => {
     loadData();
+    // Cleanup: cancel timeout tự động chuyển câu khi component unmount
+    return () => {
+      if (autoAdvanceTimerRef.current) clearTimeout(autoAdvanceTimerRef.current);
+    };
   }, []);
 
   // Xử lý khi trả lời câu hỏi
@@ -92,7 +99,10 @@ export const App: React.FC = () => {
         // Hoàn thành tất cả - VictoryModal sẽ tự động kích hoạt pháo hoa liên tục và nhạc chiến thắng
       } else {
         // Tự động chuyển tiếp sang câu hỏi tiếp theo sau 2.5 giây nếu chưa phải câu cuối
-        setTimeout(() => {
+        // Cancel timeout cũ trước (nếu có) rồi mới tạo timeout mới
+        if (autoAdvanceTimerRef.current) clearTimeout(autoAdvanceTimerRef.current);
+        autoAdvanceTimerRef.current = setTimeout(() => {
+          autoAdvanceTimerRef.current = null;
           setCurrentIndex((prev) => {
             if (prev < questions.length - 1) {
               playSound('click');
@@ -109,6 +119,11 @@ export const App: React.FC = () => {
 
   // Chơi lại từ đầu: Lấy lại ngẫu nhiên danh sách câu hỏi mới và sắp xếp theo độ khó tăng dần
   const handleResetGame = () => {
+    // Cancel timeout tự động chuyển câu đang chờ (nếu có)
+    if (autoAdvanceTimerRef.current) {
+      clearTimeout(autoAdvanceTimerRef.current);
+      autoAdvanceTimerRef.current = null;
+    }
     playSound('click');
     if (rawQuestions.length > 0) {
       const processed = processQuestionsByDifficulty(rawQuestions, targetSteps);
