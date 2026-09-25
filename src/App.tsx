@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { GameTheme, QuestionItem } from './types';
+import { GameTheme, QuestionItem, RawQuestion } from './types';
 import { GAME_THEMES, DEFAULT_TARGET_STEPS } from './utils/constants';
 import { fetchQuestionsFromGoogleSheet, processQuestionsByDifficulty, playSound } from './utils/helpers';
 import { Header } from './components/Header';
@@ -22,6 +22,7 @@ export const App: React.FC = () => {
     return saved !== null ? (parseInt(saved, 10) || undefined) : DEFAULT_TARGET_STEPS;
   });
 
+  const [rawQuestions, setRawQuestions] = useState<RawQuestion[]>([]);
   const [questions, setQuestions] = useState<QuestionItem[]>([]);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [score, setScore] = useState<number>(0);
@@ -40,7 +41,8 @@ export const App: React.FC = () => {
       if (!rawList || rawList.length === 0) {
         throw new Error('Không tìm thấy câu hỏi nào trong Google Sheet.');
       }
-      // Sắp xếp ngẫu nhiên theo độ khó từ nhỏ tới lớn và cắt theo số bước (nếu có)
+      setRawQuestions(rawList);
+      // Lấy ngẫu nhiên theo số bước và sắp xếp theo độ khó tăng dần
       const processed = processQuestionsByDifficulty(rawList, stepsToUse);
       setQuestions(processed);
       setCurrentIndex(0);
@@ -48,6 +50,7 @@ export const App: React.FC = () => {
     } catch (err: any) {
       console.error('Lỗi nạp câu hỏi:', err);
       setErrorMessage(err.message || 'Không thể tải câu hỏi từ Google Sheet.');
+      setRawQuestions([]);
       setQuestions([]);
     } finally {
       setLoading(false);
@@ -104,16 +107,12 @@ export const App: React.FC = () => {
     }
   };
 
-  // Reset Game tức thì về câu 1 mà không phải chờ tải lại mạng
+  // Chơi lại từ đầu: Lấy lại ngẫu nhiên danh sách câu hỏi mới và sắp xếp theo độ khó tăng dần
   const handleResetGame = () => {
     playSound('click');
-    if (questions.length > 0) {
-      const resetQuestions: QuestionItem[] = questions.map((q, idx) => ({
-        ...q,
-        status: idx === 0 ? 'active' : 'pending',
-        selectedAnswer: undefined,
-      }));
-      setQuestions(resetQuestions);
+    if (rawQuestions.length > 0) {
+      const processed = processQuestionsByDifficulty(rawQuestions, targetSteps);
+      setQuestions(processed);
       setCurrentIndex(0);
       setScore(0);
     } else {

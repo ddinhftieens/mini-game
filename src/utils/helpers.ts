@@ -17,7 +17,9 @@ export function shuffleArray<T>(array: T[]): T[] {
  * Xử lý lấy ngẫu nhiên các câu hỏi từ danh sách tải về từ Google Sheet.
  * - Xáo trộn ngẫu nhiên toàn bộ danh sách câu hỏi.
  * - Nếu cấu hình targetSteps (> 0 và < tổng số câu hỏi) -> lấy ngẫu nhiên đúng targetSteps câu.
- * - Nếu targetSteps >= tổng số câu hỏi hoặc không đặt -> lấy toàn bộ câu hỏi (đã xáo trộn ngẫu nhiên).
+ * - Sắp xếp danh sách câu hỏi đã chọn theo mức độ khó tăng dần (difficulty từ nhỏ đến lớn).
+ * - Nếu cùng độ khó thì giữ nguyên thứ tự xáo trộn ngẫu nhiên.
+ * - Đánh số thứ tự id từ 1 đến hết và đặt câu 1 là active.
  */
 export function processQuestionsByDifficulty(rawList: RawQuestion[], targetSteps?: number): QuestionItem[] {
   // 1. Xáo trộn ngẫu nhiên toàn bộ danh sách câu hỏi từ Google Sheet
@@ -29,8 +31,15 @@ export function processQuestionsByDifficulty(rawList: RawQuestion[], targetSteps
     selected = shuffledRaw.slice(0, targetSteps);
   }
 
-  // 3. Đánh số thứ tự id từ 1 đến hết và đặt câu 1 là active
-  const result: QuestionItem[] = selected.map((item, idx) => ({
+  // 3. Sắp xếp theo mức độ khó (difficulty) tăng dần từ nhỏ tới lớn
+  const sorted = [...selected].sort((a, b) => {
+    const diffA = Number(a.difficulty) || 1;
+    const diffB = Number(b.difficulty) || 1;
+    return diffA - diffB;
+  });
+
+  // 4. Đánh số thứ tự id từ 1 đến hết và đặt câu 1 là active
+  const result: QuestionItem[] = sorted.map((item, idx) => ({
     ...item,
     id: idx + 1,
     originalIndex: idx + 1,
