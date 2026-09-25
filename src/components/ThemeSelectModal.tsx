@@ -1,7 +1,7 @@
 import React from 'react';
 import { GameTheme, GameThemeType } from '../types';
 import { GAME_THEMES } from '../utils/constants';
-import { Sparkles, Play, BookOpen } from 'lucide-react';
+import { Sparkles, Play } from 'lucide-react';
 
 interface ThemeSelectModalProps {
   selectedThemeId: GameThemeType;

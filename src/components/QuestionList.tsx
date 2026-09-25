@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { QuestionItem } from '../types';
-import { CheckCircle2, CircleDot, HelpCircle, XCircle, Lock, Trophy, Award } from 'lucide-react';
+import { CheckCircle2, CircleDot, XCircle, Lock, Trophy } from 'lucide-react';
 
 interface QuestionListProps {
   questions: QuestionItem[];
@@ -112,7 +112,6 @@ export const QuestionList: React.FC<QuestionListProps> = ({
 
           let bg = '#f8fafc';
           let border = '#e2e8f0';
-          let textColor = '#64748b';
           let badgeBg = '#f1f5f9';
           let badgeColor = '#94a3b8';
           let icon = <Lock size={16} color="#cbd5e1" style={{ flexShrink: 0 }} />;
@@ -120,14 +119,12 @@ export const QuestionList: React.FC<QuestionListProps> = ({
           if (isDone) {
             bg = 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)';
             border = '#86efac';
-            textColor = '#166534';
             badgeBg = '#22c55e';
             badgeColor = '#ffffff';
             icon = <CheckCircle2 size={19} color="#16a34a" style={{ flexShrink: 0 }} />;
           } else if (isFailed) {
             bg = 'linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%)';
             border = '#fca5a5';
-            textColor = '#991b1b';
             badgeBg = '#ef4444';
             badgeColor = '#ffffff';
             icon = <XCircle size={19} color="#dc2626" style={{ flexShrink: 0 }} />;
@@ -136,7 +133,6 @@ export const QuestionList: React.FC<QuestionListProps> = ({
           if (isActive) {
             border = '#3b82f6';
             bg = 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)';
-            textColor = '#1d4ed8';
             badgeBg = '#2563eb';
             badgeColor = '#ffffff';
             icon = <CircleDot size={19} color="#2563eb" style={{ flexShrink: 0 }} />;

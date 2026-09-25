@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import confetti from 'canvas-confetti';
 import { GameTheme, QuestionItem } from './types';
 import { GAME_THEMES } from './utils/constants';
 import { fetchQuestionsFromGoogleSheet, processQuestionsByDifficulty, playSound } from './utils/helpers';
@@ -102,21 +101,6 @@ export const App: React.FC = () => {
       }
     } else {
       playSound('wrong');
-    }
-  };
-
-  // Chuyển câu hỏi
-  const handleNext = () => {
-    if (currentIndex < questions.length - 1) {
-      playSound('click');
-      setCurrentIndex((prev) => prev + 1);
-    }
-  };
-
-  const handlePrev = () => {
-    if (currentIndex > 0) {
-      playSound('click');
-      setCurrentIndex((prev) => prev - 1);
     }
   };
 
