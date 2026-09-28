@@ -18,8 +18,6 @@ export const StartScreen: React.FC<StartScreenProps> = ({
   onOpenSettings,
   loading,
 }) => {
-  const currentSelectedTheme = GAME_THEMES.find((t) => t.id === selectedThemeId) || GAME_THEMES[0];
-
   return (
     <div
       style={{
