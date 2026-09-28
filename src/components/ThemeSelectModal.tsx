@@ -56,19 +56,19 @@ export const ThemeSelectModal: React.FC<ThemeSelectModalProps> = ({
           overscrollBehavior: 'contain',
           touchAction: 'pan-y',
           background: '#ffffff',
-        borderRadius: '28px',
-        maxWidth: '750px',
-        width: '100%',
-        maxHeight: '92vh',
-        overflowY: 'auto',
-        padding: '24px 20px',
-        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-        border: '3px solid #bbf7d0',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '18px',
-        boxSizing: 'border-box',
-      }}>
+          borderRadius: '28px',
+          maxWidth: '750px',
+          width: '100%',
+          maxHeight: '92vh',
+          overflowY: 'auto',
+          padding: '24px 20px',
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+          border: '3px solid #bbf7d0',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '18px',
+          boxSizing: 'border-box',
+        }}>
         {/* Header */}
         <div style={{ textAlign: 'center' }}>
           <div style={{
@@ -84,7 +84,7 @@ export const ThemeSelectModal: React.FC<ThemeSelectModalProps> = ({
             marginBottom: '6px',
           }}>
             <Sparkles size={15} />
-            <span>HỌC MÀ VUI, VUI MÀ HỌC</span>
+            <span>HỌC MÀ CHƠI, CHƠI MÀ HỌC</span>
           </div>
           <h1 style={{
             fontSize: 'clamp(1.3rem, 4vw, 1.95rem)',
@@ -232,7 +232,7 @@ export const ThemeSelectModal: React.FC<ThemeSelectModalProps> = ({
             }}
           >
             <Play fill="#ffffff" size={22} />
-            <span>BẮT ĐẦU TRÒ CHƠI</span>
+            <span>TIẾP TỤC</span>
           </button>
         </div>
       </div>
