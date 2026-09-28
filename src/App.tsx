@@ -11,7 +11,7 @@ import { ThemeSelectModal } from './components/ThemeSelectModal';
 import { SettingsModal } from './components/SettingsModal';
 import { VictoryModal } from './components/VictoryModal';
 import { LoadingScreen } from './components/LoadingScreen';
-import { AlertTriangle, Settings, RefreshCw, Loader2, ArrowLeft } from 'lucide-react';
+import { AlertTriangle, Settings, RefreshCw, ArrowLeft } from 'lucide-react';
 
 export const App: React.FC = () => {
   // Ref lưu timeout tự động chuyển câu — để cancel khi cần (chơi lại, unmount)
