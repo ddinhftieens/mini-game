@@ -1,7 +1,7 @@
 import React from 'react';
 import { GameTheme, GameThemeType } from '../types';
 import { GAME_THEMES } from '../utils/constants';
-import { Sparkles, Play, Settings, Compass, BookOpen, Star } from 'lucide-react';
+import { Sparkles, Play, Settings, Compass, BookOpen, Star, Loader2 } from 'lucide-react';
 
 interface StartScreenProps {
   selectedThemeId: GameThemeType;
@@ -394,7 +394,7 @@ export const StartScreen: React.FC<StartScreenProps> = ({
             width: '100%',
             maxWidth: '400px',
             letterSpacing: '0.5px',
-            opacity: loading ? 0.7 : 1,
+            opacity: loading ? 0.75 : 1,
           }}
           onMouseEnter={(e) => {
             if (!loading) {
@@ -409,8 +409,17 @@ export const StartScreen: React.FC<StartScreenProps> = ({
             }
           }}
         >
-          <Play fill="#ffffff" size={26} />
-          <span>BẮT ĐẦU CHƠI</span>
+          {loading ? (
+            <>
+              <Loader2 className="animate-spin" size={26} />
+              <span>ĐANG TẢI...</span>
+            </>
+          ) : (
+            <>
+              <Play fill="#ffffff" size={26} />
+              <span>BẮT ĐẦU CHƠI</span>
+            </>
+          )}
         </button>
       </div>
     </div>

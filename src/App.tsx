@@ -10,6 +10,7 @@ import { StartScreen } from './components/StartScreen';
 import { ThemeSelectModal } from './components/ThemeSelectModal';
 import { SettingsModal } from './components/SettingsModal';
 import { VictoryModal } from './components/VictoryModal';
+import { LoadingScreen } from './components/LoadingScreen';
 import { AlertTriangle, Settings, RefreshCw, Loader2, ArrowLeft } from 'lucide-react';
 
 export const App: React.FC = () => {
@@ -243,21 +244,7 @@ export const App: React.FC = () => {
       {/* Main 3-Column Layout */}
       <main className="main-layout">
         {loading ? (
-          <div style={{
-            gridColumn: '1 / -1',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '1.15rem',
-            fontWeight: 800,
-            color: '#065f46',
-            minHeight: '380px',
-            gap: '14px',
-          }}>
-            <Loader2 size={44} color="#10b981" style={{ animation: 'spin 1s linear infinite' }} />
-            <div>Đang tải câu hỏi từ Google Sheet...</div>
-          </div>
+          <LoadingScreen theme={currentTheme} />
         ) : errorMessage ? (
           <div style={{
             gridColumn: '1 / -1',
