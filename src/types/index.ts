@@ -17,7 +17,7 @@ export interface QuestionItem extends RawQuestion {
   selectedAnswer?: string;
 }
 
-export type GameThemeType = 'frog' | 'princess' | 'snail';
+export type GameThemeType = 'frog' | 'snail' | 'astronaut' | 'bee' | 'penguin' | 'rabbit';
 
 export interface GameTheme {
   id: GameThemeType;

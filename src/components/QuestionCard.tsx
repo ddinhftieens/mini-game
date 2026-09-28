@@ -23,15 +23,18 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   // State đếm ngược 5 giây hồi hộp
   const [pendingOption, setPendingOption] = useState<'A' | 'B' | 'C' | 'D' | null>(null);
   const [countdown, setCountdown] = useState<number | null>(null);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   // Ref riêng để cleanup timeout animate-shake (sai đáp án)
-  const wrongAnimTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const wrongAnimTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const options: ('A' | 'B' | 'C' | 'D')[] = ['A', 'B', 'C', 'D'];
 
   // Reset khi chuyển câu hỏi mới
   useEffect(() => {
-    if (timerRef.current) clearInterval(timerRef.current);
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
     // Cancel cả timeout animate-shake khỏi động lại sớm
     if (wrongAnimTimerRef.current) {
       clearTimeout(wrongAnimTimerRef.current);
