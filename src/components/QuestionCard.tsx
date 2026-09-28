@@ -99,7 +99,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
         height: '100%',
         background: 'rgba(255, 255, 255, 0.96)',
         borderRadius: '24px',
-        padding: '24px',
+        padding: 'clamp(14px, 2.5vw, 22px)',
         boxShadow: '0 12px 36px rgba(15, 23, 42, 0.08)',
         border: '3px solid #ffffff',
         position: 'relative',
@@ -112,47 +112,48 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: '16px',
+        marginBottom: 'clamp(8px, 1.5vh, 14px)',
         flexWrap: 'wrap',
         gap: '8px',
+        flexShrink: 0,
       }}>
         <div style={{
           display: 'inline-flex',
           alignItems: 'center',
-          gap: '8px',
+          gap: '6px',
           background: 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)',
           color: '#1d4ed8',
-          padding: '8px 16px',
-          borderRadius: '14px',
+          padding: '6px 12px',
+          borderRadius: '12px',
           fontWeight: 900,
-          fontSize: '0.95rem',
+          fontSize: 'clamp(0.8rem, 1.8vw, 0.92rem)',
           border: '1.5px solid #bfdbfe',
           boxShadow: '0 2px 6px rgba(59, 130, 246, 0.1)',
         }}>
           <span>CÂU HỎI {currentIndex + 1} / {totalQuestions}</span>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
           {/* Bộ đếm thời gian làm thử thách */}
           <div
             style={{
               background: 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)',
               color: '#92400e',
               border: '1.5px solid #fcd34d',
-              padding: '6px 14px',
-              borderRadius: '14px',
-              fontSize: '0.92rem',
+              padding: '5px 10px',
+              borderRadius: '12px',
+              fontSize: 'clamp(0.78rem, 1.8vw, 0.88rem)',
               fontWeight: 800,
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '6px',
+              gap: '5px',
               boxShadow: '0 2px 6px rgba(245, 158, 11, 0.15)',
               fontFamily: 'monospace',
             }}
             title="Thời gian làm thử thách"
           >
-            <Clock size={16} color="#d97706" />
-            <span style={{ fontFamily: 'monospace', fontSize: '1rem', letterSpacing: '0.5px' }}>
+            <Clock size={15} color="#d97706" />
+            <span style={{ fontFamily: 'monospace', fontSize: '0.95rem', letterSpacing: '0.5px' }}>
               {formatElapsedTime(elapsedSeconds)}
             </span>
           </div>
@@ -161,19 +162,19 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
             background: question.difficulty === 1 ? '#dcfce7' : question.difficulty === 2 ? '#fef9c3' : '#fee2e2',
             color: question.difficulty === 1 ? '#15803d' : question.difficulty === 2 ? '#a16207' : '#b91c1c',
             border: `1.5px solid ${question.difficulty === 1 ? '#86efac' : question.difficulty === 2 ? '#fde047' : '#fca5a5'}`,
-            padding: '6px 14px',
-            borderRadius: '14px',
-            fontSize: '0.92rem',
+            padding: '5px 10px',
+            borderRadius: '12px',
+            fontSize: 'clamp(0.78rem, 1.8vw, 0.88rem)',
             fontWeight: 800,
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '5px',
+            gap: '4px',
           }}>
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
               {Array.from({ length: question.difficulty || 1 }).map((_, i) => (
                 <Star
                   key={i}
-                  size={15}
+                  size={14}
                   fill={question.difficulty === 1 ? '#16a34a' : question.difficulty === 2 ? '#d97706' : '#dc2626'}
                   color={question.difficulty === 1 ? '#16a34a' : question.difficulty === 2 ? '#d97706' : '#dc2626'}
                 />
@@ -190,16 +191,17 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       <div style={{
         background: 'linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 100%)',
         border: '2px solid #86efac',
-        borderRadius: '18px',
-        padding: '16px 22px',
-        marginBottom: '14px',
+        borderRadius: '16px',
+        padding: 'clamp(12px, 2vh, 18px) clamp(14px, 2.5vw, 20px)',
+        marginBottom: 'clamp(10px, 1.5vh, 14px)',
         boxShadow: '0 4px 12px rgba(16, 185, 129, 0.08), inset 0 2px 4px rgba(255, 255, 255, 0.8)',
+        flexShrink: 0,
       }}>
         <p style={{
-          fontSize: '1.25rem',
+          fontSize: 'clamp(1.05rem, 2.2vw, 1.25rem)',
           fontWeight: 700,
           color: '#0f172a',
-          lineHeight: 1.5,
+          lineHeight: 1.45,
           fontFamily: "'Times New Roman', Times, serif",
           margin: 0,
         }}>
@@ -213,8 +215,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(2, 1fr)',
-          gridAutoRows: '1fr',
-          gap: '14px',
+          gap: 'clamp(8px, 1.5vh, 12px)',
           flex: 1,
           minHeight: 0,
         }}
@@ -235,28 +236,28 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
           let badgeBg = '#475569';
           let badgeColor = '#ffffff';
           let textColor = '#1e293b';
-          let shadow = '0 4px 0 #cbd5e1, 0 6px 16px rgba(0, 0, 0, 0.04)';
+          let shadow = '0 3px 0 #cbd5e1, 0 4px 12px rgba(0, 0, 0, 0.04)';
 
           if (isPendingSelection) {
             btnBg = 'linear-gradient(145deg, #fefce8 0%, #fef08a 100%)';
             borderCol = '#f59e0b';
             badgeBg = '#d97706';
             badgeColor = '#ffffff';
-            shadow = '0 0 0 4px rgba(245, 158, 11, 0.3), 0 8px 24px rgba(245, 158, 11, 0.35)';
+            shadow = '0 0 0 3px rgba(245, 158, 11, 0.3), 0 6px 18px rgba(245, 158, 11, 0.35)';
           } else if (isAnswerCorrect) {
             btnBg = 'linear-gradient(145deg, #dcfce7 0%, #bbf7d0 100%)';
             borderCol = '#22c55e';
             badgeBg = '#16a34a';
             badgeColor = '#ffffff';
             textColor = '#14532d';
-            shadow = '0 5px 0 #16a34a, 0 12px 24px rgba(34, 197, 94, 0.3)';
+            shadow = '0 4px 0 #16a34a, 0 8px 18px rgba(34, 197, 94, 0.3)';
           } else if (isAnswerWrong) {
             btnBg = 'linear-gradient(145deg, #fee2e2 0%, #fecaca 100%)';
             borderCol = '#ef4444';
             badgeBg = '#dc2626';
             badgeColor = '#ffffff';
             textColor = '#7f1d1d';
-            shadow = '0 5px 0 #dc2626, 0 12px 24px rgba(239, 68, 68, 0.3)';
+            shadow = '0 4px 0 #dc2626, 0 8px 18px rgba(239, 68, 68, 0.3)';
           }
 
           return (
@@ -268,10 +269,10 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
-                padding: '16px 20px',
-                borderRadius: '20px',
+                padding: 'clamp(8px, 1.5vh, 14px) clamp(10px, 1.5vw, 16px)',
+                borderRadius: '16px',
                 background: btnBg,
-                border: `2.5px solid ${borderCol}`,
+                border: `2px solid ${borderCol}`,
                 cursor: (isDoneCorrect || isCountingDown) ? 'default' : 'pointer',
                 boxShadow: shadow,
                 transition: 'all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1)',
@@ -282,12 +283,13 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                 overflow: 'hidden',
                 opacity: (isDoneCorrect && !isAnswerCorrect) || (isCountingDown && !isPendingSelection) ? 0.5 : 1,
                 transform: isPendingSelection ? 'scale(1.02)' : 'scale(1)',
+                minHeight: 'clamp(60px, 10vh, 100px)',
               }}
               onMouseEnter={(e) => {
                 if (!isDoneCorrect && !isCountingDown) {
-                  e.currentTarget.style.transform = 'translateY(-3px)';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
                   e.currentTarget.style.borderColor = '#94a3b8';
-                  e.currentTarget.style.boxShadow = '0 6px 0 #94a3b8, 0 12px 22px rgba(0,0,0,0.08)';
+                  e.currentTarget.style.boxShadow = '0 5px 0 #94a3b8, 0 8px 16px rgba(0,0,0,0.08)';
                 }
               }}
               onMouseLeave={(e) => {
@@ -306,18 +308,19 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                 width: '100%',
               }}>
                 <div style={{
-                  width: '36px',
-                  height: '36px',
-                  borderRadius: '11px',
+                  width: 'clamp(28px, 4vh, 34px)',
+                  height: 'clamp(28px, 4vh, 34px)',
+                  borderRadius: '9px',
                   background: badgeBg,
                   color: badgeColor,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontSize: '1.15rem',
+                  fontSize: 'clamp(0.95rem, 1.8vw, 1.1rem)',
                   fontWeight: 900,
-                  boxShadow: '0 2px 5px rgba(0,0,0,0.12)',
+                  boxShadow: '0 2px 4px rgba(0,0,0,0.12)',
                   letterSpacing: '-0.5px',
+                  flexShrink: 0,
                 }}>
                   {opt}
                 </div>
@@ -327,17 +330,17 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                   <div style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '6px',
+                    gap: '4px',
                     background: '#d97706',
                     color: '#ffffff',
-                    padding: '4px 10px',
-                    borderRadius: '20px',
-                    fontSize: '0.85rem',
+                    padding: '3px 8px',
+                    borderRadius: '16px',
+                    fontSize: '0.78rem',
                     fontWeight: 900,
-                    boxShadow: '0 2px 8px rgba(217, 119, 6, 0.4)',
+                    boxShadow: '0 2px 6px rgba(217, 119, 6, 0.4)',
                     animation: 'bounceSlow 1s infinite',
                   }}>
-                    <Timer size={16} />
+                    <Timer size={14} />
                     <span>{countdown}s</span>
                   </div>
                 )}
@@ -347,16 +350,16 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                   <div style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '6px',
+                    gap: '4px',
                     background: '#22c55e',
                     color: '#ffffff',
-                    padding: '4px 10px',
-                    borderRadius: '20px',
-                    fontSize: '0.8rem',
+                    padding: '3px 8px',
+                    borderRadius: '16px',
+                    fontSize: '0.75rem',
                     fontWeight: 800,
-                    boxShadow: '0 2px 8px rgba(34, 197, 94, 0.4)',
+                    boxShadow: '0 2px 6px rgba(34, 197, 94, 0.4)',
                   }}>
-                    <CheckCircle size={16} color="#ffffff" />
+                    <CheckCircle size={14} color="#ffffff" />
                     <span>Chính xác</span>
                   </div>
                 )}
@@ -364,17 +367,17 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                   <div style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '6px',
+                    gap: '4px',
                     background: '#ef4444',
                     color: '#ffffff',
-                    padding: '4px 10px',
-                    borderRadius: '20px',
-                    fontSize: '0.8rem',
+                    padding: '3px 8px',
+                    borderRadius: '16px',
+                    fontSize: '0.75rem',
                     fontWeight: 800,
-                    boxShadow: '0 2px 8px rgba(239, 68, 68, 0.4)',
+                    boxShadow: '0 2px 6px rgba(239, 68, 68, 0.4)',
                   }}>
-                    <AlertCircle size={16} color="#ffffff" />
-                    <span>Chưa chính xác</span>
+                    <AlertCircle size={14} color="#ffffff" />
+                    <span>Sai</span>
                   </div>
                 )}
               </div>
@@ -386,16 +389,17 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                 alignItems: 'center',
                 justifyContent: 'center',
                 textAlign: 'center',
-                padding: '12px 4px',
+                padding: '6px 2px',
                 width: '100%',
               }}>
                 <span style={{
-                  fontSize: optText.length > 20 ? '1.25rem' : '1.6rem',
+                  fontSize: optText.length > 24 ? 'clamp(0.95rem, 1.8vw, 1.15rem)' : 'clamp(1.1rem, 2.2vw, 1.45rem)',
                   fontWeight: 800,
                   color: textColor,
-                  lineHeight: 1.35,
+                  lineHeight: 1.3,
                   fontFamily: "'Times New Roman', Times, serif",
                   letterSpacing: '0.2px',
+                  wordBreak: 'break-word',
                 }}>
                   {optText}
                 </span>
@@ -408,34 +412,35 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       {/* Thông báo hồi hộp trong 5s đếm ngược */}
       {isCountingDown && (
         <div style={{
-          marginTop: '16px',
-          padding: '14px 18px',
-          borderRadius: '18px',
+          marginTop: 'clamp(8px, 1.5vh, 14px)',
+          padding: '10px 14px',
+          borderRadius: '14px',
           background: 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)',
-          border: '2.5px solid #f59e0b',
+          border: '2px solid #f59e0b',
           display: 'flex',
           alignItems: 'center',
-          gap: '12px',
-          boxShadow: '0 6px 18px rgba(245, 158, 11, 0.2)',
+          gap: '10px',
+          boxShadow: '0 4px 14px rgba(245, 158, 11, 0.15)',
+          flexShrink: 0,
         }}>
           <div style={{
-            width: '38px',
-            height: '38px',
-            borderRadius: '12px',
+            width: '32px',
+            height: '32px',
+            borderRadius: '10px',
             background: '#d97706',
             color: '#ffffff',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             fontWeight: 900,
-            fontSize: '1.25rem',
+            fontSize: '1.1rem',
             flexShrink: 0,
-            boxShadow: '0 2px 8px rgba(217, 119, 6, 0.4)',
+            boxShadow: '0 2px 6px rgba(217, 119, 6, 0.4)',
           }}>
             {countdown}
           </div>
-          <span style={{ color: '#92400e', fontWeight: 800, fontSize: '0.98rem' }}>
-            ⏳ Đang kiểm tra đáp án... Con hãy chờ trong giây lát nhé! ({countdown} giây)
+          <span style={{ color: '#92400e', fontWeight: 800, fontSize: 'clamp(0.82rem, 1.8vw, 0.92rem)' }}>
+            ⏳ Đang kiểm tra đáp án... Chờ giây lát nhé! ({countdown}s)
           </span>
         </div>
       )}
@@ -443,53 +448,54 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       {/* Thông báo kết quả / Giải thích (Chỉ hiện sau khi hết 5s đếm ngược) */}
       {!isCountingDown && (isDoneCorrect || isWrongAttempt) && (
         <div style={{
-          marginTop: '16px',
-          padding: '14px 18px',
-          borderRadius: '18px',
+          marginTop: 'clamp(8px, 1.5vh, 14px)',
+          padding: '10px 14px',
+          borderRadius: '14px',
           background: isDoneCorrect
             ? 'linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)'
             : 'linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%)',
-          border: `2.5px solid ${isDoneCorrect ? '#34d399' : '#f87171'}`,
+          border: `2px solid ${isDoneCorrect ? '#34d399' : '#f87171'}`,
           display: 'flex',
           alignItems: 'center',
-          gap: '12px',
+          gap: '10px',
           boxShadow: isDoneCorrect
-            ? '0 6px 18px rgba(16, 185, 129, 0.15)'
-            : '0 6px 18px rgba(244, 63, 94, 0.15)',
+            ? '0 4px 14px rgba(16, 185, 129, 0.12)'
+            : '0 4px 14px rgba(244, 63, 94, 0.12)',
+          flexShrink: 0,
         }}>
           {isDoneCorrect ? (
             <>
               <div style={{
-                width: '36px',
-                height: '36px',
-                borderRadius: '12px',
+                width: '32px',
+                height: '32px',
+                borderRadius: '10px',
                 background: '#10b981',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 flexShrink: 0,
               }}>
-                <Sparkles size={20} color="#ffffff" />
+                <Sparkles size={18} color="#ffffff" />
               </div>
-              <span style={{ color: '#065f46', fontWeight: 800, fontSize: '0.98rem' }}>
+              <span style={{ color: '#065f46', fontWeight: 800, fontSize: 'clamp(0.85rem, 1.8vw, 0.95rem)' }}>
                 Chính xác! Con giỏi quá!
               </span>
             </>
           ) : (
             <>
               <div style={{
-                width: '36px',
-                height: '36px',
-                borderRadius: '12px',
+                width: '32px',
+                height: '32px',
+                borderRadius: '10px',
                 background: '#e11d48',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 flexShrink: 0,
               }}>
-                <AlertCircle size={20} color="#ffffff" />
+                <AlertCircle size={18} color="#ffffff" />
               </div>
-              <span style={{ color: '#9f1239', fontWeight: 800, fontSize: '0.98rem' }}>
+              <span style={{ color: '#9f1239', fontWeight: 800, fontSize: 'clamp(0.85rem, 1.8vw, 0.95rem)' }}>
                 Chưa chính xác rồi! Con hãy suy nghĩ và chọn lại nhé!
               </span>
             </>
@@ -499,3 +505,4 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
     </div>
   );
 };
+

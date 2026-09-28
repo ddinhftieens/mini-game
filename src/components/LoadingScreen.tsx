@@ -21,8 +21,8 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        minHeight: '420px',
-        padding: '24px 16px',
+        minHeight: 'clamp(280px, 50vh, 420px)',
+        padding: 'clamp(12px, 2.5vw, 24px) 16px',
         width: '100%',
         boxSizing: 'border-box',
       }}
@@ -30,21 +30,22 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
       <div
         className="animate-pop"
         style={{
-          background: 'rgba(255, 255, 255, 0.9)',
+          background: 'rgba(255, 255, 255, 0.92)',
           backdropFilter: 'blur(16px)',
           WebkitBackdropFilter: 'blur(16px)',
-          borderRadius: '28px',
-          padding: '36px 32px 32px 32px',
+          borderRadius: 'clamp(20px, 3vw, 28px)',
+          padding: 'clamp(20px, 4vh, 36px) clamp(16px, 3vw, 32px)',
           border: '2px solid rgba(255, 255, 255, 0.95)',
           boxShadow: '0 20px 40px -12px rgba(16, 185, 129, 0.2), 0 4px 12px rgba(0, 0, 0, 0.04)',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           textAlign: 'center',
-          maxWidth: '480px',
+          maxWidth: '460px',
           width: '100%',
           position: 'relative',
           overflow: 'hidden',
+          boxSizing: 'border-box',
         }}
       >
         {/* Top Decorative Subtle Line */}
@@ -65,20 +66,20 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
         <div
           style={{
             position: 'relative',
-            width: '90px',
-            height: '90px',
+            width: 'clamp(68px, 10vh, 88px)',
+            height: 'clamp(68px, 10vh, 88px)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            marginBottom: '22px',
+            marginBottom: 'clamp(14px, 2vh, 22px)',
           }}
         >
           {/* Soft Glow Background */}
           <div
             style={{
               position: 'absolute',
-              width: '80px',
-              height: '80px',
+              width: '80%',
+              height: '80%',
               borderRadius: '50%',
               background: 'radial-gradient(circle, rgba(16, 185, 129, 0.3) 0%, rgba(16, 185, 129, 0) 70%)',
               animation: 'pulseGlow 2.5s infinite ease-in-out',
@@ -90,8 +91,8 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
             className="animate-spin-reverse"
             style={{
               position: 'absolute',
-              width: '86px',
-              height: '86px',
+              width: '100%',
+              height: '100%',
               borderRadius: '50%',
               border: '2.5px dashed rgba(16, 185, 129, 0.45)',
               boxSizing: 'border-box',
@@ -101,7 +102,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
           {/* Inner Fast Primary Spinner */}
           <Loader2
             className="animate-spin"
-            size={52}
+            size={42}
             color="#059669"
             strokeWidth={2.5}
             style={{ zIndex: 2 }}
@@ -122,14 +123,14 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
                 src={theme.characterImage}
                 alt={theme.characterName || 'Character'}
                 style={{
-                  width: '32px',
-                  height: '32px',
+                  width: '28px',
+                  height: '28px',
                   objectFit: 'contain',
                   borderRadius: '50%',
                 }}
               />
             ) : (
-              <FileSpreadsheet size={22} color="#10b981" />
+              <FileSpreadsheet size={20} color="#10b981" />
             )}
           </div>
         </div>
@@ -137,10 +138,10 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
         {/* Main Title with Animated Dots */}
         <h3
           style={{
-            fontSize: '1.25rem',
+            fontSize: 'clamp(1.05rem, 2.2vw, 1.25rem)',
             fontWeight: 900,
             color: '#064e3b',
-            marginBottom: '8px',
+            marginBottom: '6px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -189,11 +190,11 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
         {/* Subtitle */}
         <p
           style={{
-            fontSize: '0.92rem',
+            fontSize: 'clamp(0.8rem, 1.8vw, 0.9rem)',
             color: '#64748b',
-            marginBottom: '20px',
-            lineHeight: 1.5,
-            maxWidth: '380px',
+            marginBottom: 'clamp(12px, 2vh, 18px)',
+            lineHeight: 1.45,
+            maxWidth: '360px',
           }}
         >
           {subMessage}
@@ -203,12 +204,12 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
         <div
           style={{
             width: '100%',
-            maxWidth: '320px',
-            height: '8px',
+            maxWidth: '280px',
+            height: '7px',
             backgroundColor: '#e2e8f0',
             borderRadius: '999px',
             overflow: 'hidden',
-            marginBottom: '20px',
+            marginBottom: 'clamp(12px, 2vh, 18px)',
             position: 'relative',
           }}
         >
@@ -232,17 +233,18 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
             gap: '6px',
             background: 'rgba(236, 253, 245, 0.85)',
             border: '1px solid #a7f3d0',
-            padding: '6px 14px',
-            borderRadius: '20px',
-            fontSize: '0.82rem',
+            padding: '5px 12px',
+            borderRadius: '16px',
+            fontSize: 'clamp(0.75rem, 1.6vw, 0.82rem)',
             color: '#065f46',
             fontWeight: 700,
           }}
         >
-          <Sparkles size={14} color="#10b981" />
+          <Sparkles size={13} color="#10b981" />
           <span>Sẵn sàng thử thách kiến thức của bạn</span>
         </div>
       </div>
     </div>
   );
 };
+

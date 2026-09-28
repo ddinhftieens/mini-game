@@ -296,28 +296,35 @@ body.modal-open {
     overflow-y: visible !important;
   }
 
+  .start-screen-container {
+    height: auto !important;
+    min-height: 100vh !important;
+    overflow-y: auto !important;
+  }
+
   .main-layout {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 14px;
     padding: 10px;
     overflow: visible !important;
   }
 
   .col-stage {
     order: 1;
-    height: 380px !important;
-    min-height: 350px !important;
+    height: 360px !important;
+    min-height: 320px !important;
   }
 
   .col-question-card {
     order: 2;
+    min-height: 420px;
   }
 
   .col-question-list {
     order: 3;
-    height: 300px !important;
-    min-height: 280px !important;
+    height: 280px !important;
+    min-height: 260px !important;
   }
 
   .layout-col {
@@ -345,8 +352,37 @@ body.modal-open {
   }
 
   .question-options-grid {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: 1fr 1fr !important;
     gap: 10px !important;
+  }
+}
+
+/* Mobile Screens (<= 580px) */
+@media (max-width: 580px) {
+  .question-options-grid {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+
+  .col-stage {
+    height: 320px !important;
+    min-height: 290px !important;
+  }
+
+  .app-header {
+    padding: 6px 10px !important;
+  }
+}
+
+/* Low Height Viewports (e.g., Laptops with short screens <= 720px height) */
+@media (min-width: 881px) and (max-height: 720px) {
+  .main-layout {
+    padding: 6px 10px;
+    gap: 10px;
+  }
+
+  .question-options-grid {
+    gap: 8px !important;
   }
 }
 
