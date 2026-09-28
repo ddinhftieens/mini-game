@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { QuestionItem } from '../types';
-import { Sparkles, AlertCircle, CheckCircle, Timer, Star } from 'lucide-react';
-import { playSound } from '../utils/helpers';
+import { Sparkles, AlertCircle, CheckCircle, Timer, Star, Clock } from 'lucide-react';
+import { playSound, formatElapsedTime } from '../utils/helpers';
 
 interface QuestionCardProps {
   question: QuestionItem;
   currentIndex: number;
   totalQuestions: number;
+  elapsedSeconds?: number;
   onAnswer: (selectedOption: 'A' | 'B' | 'C' | 'D') => void;
 }
 
@@ -14,8 +15,10 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   question,
   currentIndex,
   totalQuestions,
+  elapsedSeconds = 0,
   onAnswer,
 }) => {
+
   const [animatingWrong, setAnimatingWrong] = useState(false);
   // State đếm ngược 5 giây hồi hộp
   const [pendingOption, setPendingOption] = useState<'A' | 'B' | 'C' | 'D' | null>(null);
@@ -107,6 +110,8 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
         alignItems: 'center',
         justifyContent: 'space-between',
         marginBottom: '16px',
+        flexWrap: 'wrap',
+        gap: '8px',
       }}>
         <div style={{
           display: 'inline-flex',
@@ -124,7 +129,31 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
           <span>CÂU HỎI {currentIndex + 1} / {totalQuestions}</span>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+          {/* Bộ đếm thời gian làm thử thách */}
+          <div
+            style={{
+              background: 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)',
+              color: '#92400e',
+              border: '1.5px solid #fcd34d',
+              padding: '6px 14px',
+              borderRadius: '14px',
+              fontSize: '0.92rem',
+              fontWeight: 800,
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              boxShadow: '0 2px 6px rgba(245, 158, 11, 0.15)',
+              fontFamily: 'monospace',
+            }}
+            title="Thời gian làm thử thách"
+          >
+            <Clock size={16} color="#d97706" />
+            <span style={{ fontFamily: 'monospace', fontSize: '1rem', letterSpacing: '0.5px' }}>
+              {formatElapsedTime(elapsedSeconds)}
+            </span>
+          </div>
+
           <span style={{
             background: question.difficulty === 1 ? '#dcfce7' : question.difficulty === 2 ? '#fef9c3' : '#fee2e2',
             color: question.difficulty === 1 ? '#15803d' : question.difficulty === 2 ? '#a16207' : '#b91c1c',

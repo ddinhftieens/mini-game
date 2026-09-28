@@ -1,13 +1,14 @@
 import React, { useEffect, useRef } from 'react';
 import confetti from 'canvas-confetti';
 import { GameTheme } from '../types';
-import { RotateCcw, Trophy, Award, Sparkles } from 'lucide-react';
-import { playFireworkSound } from '../utils/helpers';
+import { RotateCcw, Trophy, Award, Sparkles, Clock } from 'lucide-react';
+import { playFireworkSound, formatElapsedTime } from '../utils/helpers';
 
 interface VictoryModalProps {
   theme: GameTheme;
   score: number;
   totalQuestions: number;
+  completionTimeSeconds?: number;
   onPlayAgain: () => void;
 }
 
@@ -15,6 +16,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
   theme,
   score,
   totalQuestions,
+  completionTimeSeconds = 0,
   onPlayAgain,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -252,52 +254,138 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
           )}
         </div>
 
-        {/* Khung Điểm Số & Thành Tích */}
+        {/* Khung Điểm Số, Số Câu & Thời Gian Hoàn Thành */}
         <div style={{
-          display: 'flex',
-          gap: '16px',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          gap: '10px',
           width: '100%',
-          maxWidth: '440px',
-          justifyContent: 'center',
+          maxWidth: '520px',
           marginBottom: '26px',
           zIndex: 2,
+          boxSizing: 'border-box',
         }}>
+          {/* Câu đúng */}
           <div style={{
-            flex: 1,
-            background: '#f8fafc',
-            border: '2px solid #e2e8f0',
-            borderRadius: '18px',
-            padding: '12px 14px',
+            background: 'linear-gradient(145deg, #f8fafc 0%, #f1f5f9 100%)',
+            border: '2px solid #cbd5e1',
+            borderRadius: '20px',
+            padding: '12px 6px',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            boxShadow: '0 4px 6px rgba(0,0,0,0.03)',
+            justifyContent: 'center',
+            boxShadow: '0 4px 10px rgba(0, 0, 0, 0.04)',
+            minWidth: 0,
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#059669', fontSize: '0.92rem', fontWeight: 800 }}>
-              <Award size={18} />
-              <span>CÂU ĐÚNG</span>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '4px',
+              color: '#059669',
+              fontSize: 'clamp(0.72rem, 2.2vw, 0.85rem)',
+              fontWeight: 800,
+              whiteSpace: 'nowrap',
+              width: '100%',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            }}>
+              <Award size={15} style={{ flexShrink: 0 }} />
+              <span style={{ whiteSpace: 'nowrap' }}>CÂU ĐÚNG</span>
             </div>
-            <span style={{ fontSize: '1.6rem', fontWeight: 900, color: '#065f46', marginTop: '2px' }}>
+            <span style={{
+              fontSize: 'clamp(1.2rem, 3.5vw, 1.55rem)',
+              fontWeight: 900,
+              color: '#065f46',
+              marginTop: '4px',
+              lineHeight: 1.1,
+              whiteSpace: 'nowrap',
+            }}>
               {totalQuestions}/{totalQuestions}
             </span>
           </div>
 
+          {/* Thời gian hoàn thành */}
           <div style={{
-            flex: 1,
-            background: 'linear-gradient(135deg, #fefce8 0%, #fef08a 100%)',
-            border: '2px solid #fde047',
-            borderRadius: '18px',
-            padding: '12px 14px',
+            background: 'linear-gradient(145deg, #eff6ff 0%, #dbeafe 100%)',
+            border: '2px solid #93c5fd',
+            borderRadius: '20px',
+            padding: '12px 6px',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            boxShadow: '0 4px 10px rgba(234, 179, 8, 0.18)',
+            justifyContent: 'center',
+            boxShadow: '0 4px 12px rgba(59, 130, 246, 0.15)',
+            minWidth: 0,
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#b45309', fontSize: '0.92rem', fontWeight: 800 }}>
-              <Trophy size={18} />
-              <span>TỔNG ĐIỂM</span>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '4px',
+              color: '#1d4ed8',
+              fontSize: 'clamp(0.72rem, 2.2vw, 0.85rem)',
+              fontWeight: 800,
+              whiteSpace: 'nowrap',
+              width: '100%',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            }}>
+              <Clock size={15} style={{ flexShrink: 0 }} />
+              <span style={{ whiteSpace: 'nowrap' }}>THỜI GIAN</span>
             </div>
-            <span style={{ fontSize: '1.6rem', fontWeight: 900, color: '#b45309', marginTop: '2px' }}>
+            <span style={{
+              fontSize: 'clamp(1.2rem, 3.5vw, 1.55rem)',
+              fontWeight: 900,
+              color: '#1e40af',
+              marginTop: '4px',
+              fontFamily: 'monospace',
+              letterSpacing: '0.5px',
+              lineHeight: 1.1,
+              whiteSpace: 'nowrap',
+            }}>
+              {formatElapsedTime(completionTimeSeconds)}
+            </span>
+          </div>
+
+          {/* Tổng điểm */}
+          <div style={{
+            background: 'linear-gradient(145deg, #fefce8 0%, #fef08a 100%)',
+            border: '2px solid #fde047',
+            borderRadius: '20px',
+            padding: '12px 6px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: '0 4px 12px rgba(234, 179, 8, 0.18)',
+            minWidth: 0,
+          }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '4px',
+              color: '#b45309',
+              fontSize: 'clamp(0.72rem, 2.2vw, 0.85rem)',
+              fontWeight: 800,
+              whiteSpace: 'nowrap',
+              width: '100%',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            }}>
+              <Trophy size={15} style={{ flexShrink: 0 }} />
+              <span style={{ whiteSpace: 'nowrap' }}>TỔNG ĐIỂM</span>
+            </div>
+            <span style={{
+              fontSize: 'clamp(1.2rem, 3.5vw, 1.55rem)',
+              fontWeight: 900,
+              color: '#b45309',
+              marginTop: '4px',
+              lineHeight: 1.1,
+              whiteSpace: 'nowrap',
+            }}>
               {score}
             </span>
           </div>

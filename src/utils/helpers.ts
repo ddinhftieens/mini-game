@@ -14,6 +14,23 @@ export function shuffleArray<T>(array: T[]): T[] {
 }
 
 /**
+ * Định dạng số giây sang chuỗi MM:SS hoặc HH:MM:SS
+ */
+export function formatElapsedTime(seconds: number): string {
+  const hrs = Math.floor(seconds / 3600);
+  const mins = Math.floor((seconds % 3600) / 60);
+  const secs = seconds % 60;
+
+  const pad = (n: number) => n.toString().padStart(2, '0');
+
+  if (hrs > 0) {
+    return `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
+  }
+  return `${pad(mins)}:${pad(secs)}`;
+}
+
+
+/**
  * Xử lý lấy ngẫu nhiên các câu hỏi từ danh sách tải về từ Google Sheet.
  * - Xáo trộn ngẫu nhiên toàn bộ danh sách câu hỏi.
  * - Nếu cấu hình targetSteps (> 0 và < tổng số câu hỏi) -> lấy ngẫu nhiên đúng targetSteps câu.

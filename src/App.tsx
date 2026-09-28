@@ -6,10 +6,11 @@ import { Header } from './components/Header';
 import { QuestionList } from './components/QuestionList';
 import { QuestionCard } from './components/QuestionCard';
 import { GameStage } from './components/GameStage';
+import { StartScreen } from './components/StartScreen';
 import { ThemeSelectModal } from './components/ThemeSelectModal';
 import { SettingsModal } from './components/SettingsModal';
 import { VictoryModal } from './components/VictoryModal';
-import { AlertTriangle, Settings, RefreshCw, Loader2 } from 'lucide-react';
+import { AlertTriangle, Settings, RefreshCw, Loader2, ArrowLeft } from 'lucide-react';
 
 export const App: React.FC = () => {
   // Ref lưu timeout tự động chuyển câu — để cancel khi cần (chơi lại, unmount)
@@ -17,7 +18,8 @@ export const App: React.FC = () => {
 
   // State quản lý Game
   const [currentTheme, setCurrentTheme] = useState<GameTheme>(GAME_THEMES[0]);
-  const [showThemeModal, setShowThemeModal] = useState<boolean>(true);
+  const [gameStarted, setGameStarted] = useState<boolean>(false);
+  const [showThemeModal, setShowThemeModal] = useState<boolean>(false);
   const [showSettingsModal, setShowSettingsModal] = useState<boolean>(false);
   const [sheetUrl, setSheetUrl] = useState<string>(() => localStorage.getItem('mini_game_sheet_url') || '');
   const [targetSteps, setTargetSteps] = useState<number | undefined>(() => {
@@ -29,13 +31,19 @@ export const App: React.FC = () => {
   const [questions, setQuestions] = useState<QuestionItem[]>([]);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [score, setScore] = useState<number>(0);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  // State bộ đếm thời gian làm thử thách (giây)
+  const [elapsedSeconds, setElapsedSeconds] = useState<number>(0);
+  const [isTimerRunning, setIsTimerRunning] = useState<boolean>(false);
 
   // Tải danh sách câu hỏi từ Google Sheet
   const loadData = async (customUrl?: string, customSteps?: number) => {
     setLoading(true);
     setErrorMessage(null);
+    setIsTimerRunning(false);
+    setElapsedSeconds(0);
     const targetUrl = customUrl !== undefined ? customUrl : sheetUrl;
     const stepsToUse = customSteps !== undefined ? customSteps : targetSteps;
 
@@ -50,19 +58,55 @@ export const App: React.FC = () => {
       setQuestions(processed);
       setCurrentIndex(0);
       setScore(0);
+      // Bắt đầu đếm giờ sau khi tải dữ liệu thành công
+      setElapsedSeconds(0);
+      setIsTimerRunning(true);
     } catch (err: any) {
       console.error('Lỗi nạp câu hỏi:', err);
       setErrorMessage(err.message || 'Không thể tải câu hỏi từ Google Sheet.');
       setRawQuestions([]);
       setQuestions([]);
+      setIsTimerRunning(false);
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
+  // Handler khi nhấn nút "Bắt đầu chơi" từ màn hình bắt đầu
+  const handleStartGame = () => {
+    playSound('click');
+    setGameStarted(true);
     loadData();
-    // Cleanup: cancel timeout tự động chuyển câu khi component unmount
+  };
+
+  // Quay lại màn hình bắt đầu
+  const handleBackToStart = () => {
+    if (autoAdvanceTimerRef.current) {
+      clearTimeout(autoAdvanceTimerRef.current);
+      autoAdvanceTimerRef.current = null;
+    }
+    playSound('click');
+    setGameStarted(false);
+    setIsTimerRunning(false);
+    setQuestions([]);
+    setErrorMessage(null);
+  };
+
+  // Logic chạy bộ đếm thời gian
+  useEffect(() => {
+    let interval: ReturnType<typeof setInterval> | null = null;
+    if (isTimerRunning) {
+      interval = setInterval(() => {
+        setElapsedSeconds((prev) => prev + 1);
+      }, 1000);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isTimerRunning]);
+
+  // Cleanup timeout khi unmount
+  useEffect(() => {
     return () => {
       if (autoAdvanceTimerRef.current) clearTimeout(autoAdvanceTimerRef.current);
     };
@@ -96,10 +140,10 @@ export const App: React.FC = () => {
       // Kiểm tra nếu đã hoàn thành tất cả
       const newCorrectCount = updated.filter((q) => q.status === 'correct').length;
       if (newCorrectCount === updated.length) {
-        // Hoàn thành tất cả - VictoryModal sẽ tự động kích hoạt pháo hoa liên tục và nhạc chiến thắng
+        // Dừng đếm giờ khi hoàn thành tất cả thử thách
+        setIsTimerRunning(false);
       } else {
         // Tự động chuyển tiếp sang câu hỏi tiếp theo sau 2.5 giây nếu chưa phải câu cuối
-        // Cancel timeout cũ trước (nếu có) rồi mới tạo timeout mới
         if (autoAdvanceTimerRef.current) clearTimeout(autoAdvanceTimerRef.current);
         autoAdvanceTimerRef.current = setTimeout(() => {
           autoAdvanceTimerRef.current = null;
@@ -117,19 +161,20 @@ export const App: React.FC = () => {
     }
   };
 
-  // Chơi lại từ đầu: Lấy lại ngẫu nhiên danh sách câu hỏi mới và sắp xếp theo độ khó tăng dần
+  // Chơi lại từ đầu: Lấy lại ngẫu nhiên danh sách câu hỏi mới và reset bộ đếm giờ
   const handleResetGame = () => {
-    // Cancel timeout tự động chuyển câu đang chờ (nếu có)
     if (autoAdvanceTimerRef.current) {
       clearTimeout(autoAdvanceTimerRef.current);
       autoAdvanceTimerRef.current = null;
     }
     playSound('click');
+    setElapsedSeconds(0);
     if (rawQuestions.length > 0) {
       const processed = processQuestionsByDifficulty(rawQuestions, targetSteps);
       setQuestions(processed);
       setCurrentIndex(0);
       setScore(0);
+      setIsTimerRunning(true);
     } else {
       loadData();
     }
@@ -148,12 +193,39 @@ export const App: React.FC = () => {
     }
 
     setShowSettingsModal(false);
-    loadData(newUrl, newTargetSteps);
+    if (gameStarted) {
+      loadData(newUrl, newTargetSteps);
+    }
   };
 
   const correctCount = questions.filter((q) => q.status === 'correct').length;
   const isWon = questions.length > 0 && correctCount === questions.length;
   const currentQuestion = questions[currentIndex];
+
+  // Nếu chưa bấm bắt đầu -> Hiển thị Màn hình Bắt Đầu (StartScreen)
+  if (!gameStarted) {
+    return (
+      <>
+        <StartScreen
+          selectedThemeId={currentTheme.id}
+          onSelectTheme={(t) => setCurrentTheme(t)}
+          onStartGame={handleStartGame}
+          onOpenSettings={() => setShowSettingsModal(true)}
+          loading={loading}
+        />
+
+        {/* Modal Cài đặt Sheet API */}
+        {showSettingsModal && (
+          <SettingsModal
+            currentUrl={sheetUrl}
+            currentSteps={targetSteps}
+            onSave={handleSaveSettings}
+            onClose={() => setShowSettingsModal(false)}
+          />
+        )}
+      </>
+    );
+  }
 
   return (
     <div className="app-container">
@@ -226,7 +298,7 @@ export const App: React.FC = () => {
               lineHeight: 1.6,
               maxWidth: '460px',
             }}>
-              Chưa cấu hình đường dẫn Google Apps Script Web App URL. Vui lòng bấm vào nút <b>"Cấu hình Google Sheet URL"</b> bên dưới để kết nối.
+              Chưa cấu hình đường dẫn Google Apps Script Web App URL hoặc kết nối bị gián đoạn. Vui lòng bấm vào nút <b>"Cấu hình Google Sheet URL"</b> bên dưới để kết nối.
             </p>
             <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center' }}>
               <button
@@ -270,6 +342,26 @@ export const App: React.FC = () => {
                 <RefreshCw size={17} />
                 <span>Thử lại</span>
               </button>
+              <button
+                onClick={handleBackToStart}
+                style={{
+                  padding: '11px 20px',
+                  borderRadius: '14px',
+                  background: '#f1f5f9',
+                  color: '#475569',
+                  border: '1.5px solid #cbd5e1',
+                  fontWeight: 800,
+                  fontSize: '0.9rem',
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  transition: 'all 0.2s',
+                }}
+              >
+                <ArrowLeft size={17} />
+                <span>Màn hình chính</span>
+              </button>
             </div>
           </div>
         ) : (
@@ -282,13 +374,14 @@ export const App: React.FC = () => {
               />
             </section>
 
-            {/* Cột 2: Câu hỏi và 4 đáp án */}
+            {/* Cột 2: Câu hỏi, 4 đáp án và Bộ đếm thời gian */}
             <section className="layout-col col-question-card">
               {currentQuestion && (
                 <QuestionCard
                   question={currentQuestion}
                   currentIndex={currentIndex}
                   totalQuestions={questions.length}
+                  elapsedSeconds={elapsedSeconds}
                   onAnswer={handleAnswer}
                 />
               )}
@@ -308,7 +401,7 @@ export const App: React.FC = () => {
         )}
       </main>
 
-      {/* Modal Chọn chủ đề trước khi bắt đầu */}
+      {/* Modal Chọn chủ đề trong quá trình chơi */}
       {showThemeModal && (
         <ThemeSelectModal
           selectedThemeId={currentTheme.id}
@@ -336,9 +429,11 @@ export const App: React.FC = () => {
           theme={currentTheme}
           score={score}
           totalQuestions={questions.length}
+          completionTimeSeconds={elapsedSeconds}
           onPlayAgain={handleResetGame}
         />
       )}
     </div>
   );
 };
+
