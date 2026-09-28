@@ -123,11 +123,24 @@ export const GameStage: React.FC<GameStageProps> = ({
       <div
         style={{
           flex: 1,
-          background: theme.id === 'frog'
-            ? 'linear-gradient(180deg, #6ee7b7 0%, #38bdf8 55%, #0284c7 100%)'
-            : theme.id === 'princess'
-              ? 'linear-gradient(180deg, #fbcfe8 0%, #c084fc 55%, #6366f1 100%)'
-              : 'linear-gradient(180deg, #fef08a 0%, #fb923c 55%, #ea580c 100%)',
+          background: (() => {
+            switch (theme.id) {
+              case 'frog':
+                return 'linear-gradient(180deg, #6ee7b7 0%, #38bdf8 55%, #0284c7 100%)';
+              case 'snail':
+                return 'linear-gradient(180deg, #fef08a 0%, #fb923c 55%, #b45309 100%)';
+              case 'bee':
+                return 'linear-gradient(180deg, #fef08a 0%, #facc15 55%, #ca8a04 100%)';
+              case 'astronaut':
+                return 'linear-gradient(180deg, #818cf8 0%, #4f46e5 55%, #1e1b4b 100%)';
+              case 'penguin':
+                return 'linear-gradient(180deg, #a5f3fc 0%, #38bdf8 55%, #0369a1 100%)';
+              case 'rabbit':
+                return 'linear-gradient(180deg, #fbcfe8 0%, #fb7185 55%, #e11d48 100%)';
+              default:
+                return 'linear-gradient(180deg, #6ee7b7 0%, #38bdf8 55%, #0284c7 100%)';
+            }
+          })(),
           borderRadius: '20px',
           position: 'relative',
           boxShadow: 'inset 0 4px 14px rgba(0,0,0,0.1)',
