@@ -87,7 +87,7 @@ export const GameStage: React.FC<GameStageProps> = ({
       width: '100%',
     }}>
       {/* Header Tiêu đề & Tiến độ */}
-      <div style={{
+      {/* <div style={{
         paddingBottom: '10px',
         borderBottom: '2px dashed #cbd5e1',
         marginBottom: '10px',
@@ -114,10 +114,10 @@ export const GameStage: React.FC<GameStageProps> = ({
           )}
           <span>{theme.title}</span>
         </h2>
-        {/* <p style={{ fontSize: '0.82rem', color: '#64748b', marginTop: '4px', fontWeight: 600 }}>
+        <p style={{ fontSize: '0.82rem', color: '#64748b', marginTop: '4px', fontWeight: 600 }}>
           Đúng {correctCount}/{totalQuestions} câu để tới đích!
-        </p> */}
-      </div>
+        </p>
+      </div> */}
 
       {/* Sân khấu Ao Sen: Khung bo viền hoàn chỉnh với thanh cuộn nằm gọn gàng bên trong */}
       <div
