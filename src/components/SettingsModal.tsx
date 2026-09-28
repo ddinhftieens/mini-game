@@ -88,6 +88,24 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     onSave(url, parsedSteps);
   };
 
+  // Khóa scroll của body/trang khi modal đang mở
+  React.useEffect(() => {
+    const scrollY = window.scrollY;
+    document.documentElement.classList.add('modal-open');
+    document.body.classList.add('modal-open');
+    document.body.style.top = `-${scrollY}px`;
+
+    return () => {
+      document.documentElement.classList.remove('modal-open');
+      document.body.classList.remove('modal-open');
+      const top = document.body.style.top;
+      document.body.style.top = '';
+      if (top) {
+        window.scrollTo(0, parseInt(top || '0', 10) * -1);
+      }
+    };
+  }, []);
+
   return (
     <div style={{
       position: 'fixed',
@@ -103,8 +121,14 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
       zIndex: 110,
       padding: '12px',
       boxSizing: 'border-box',
+      overscrollBehavior: 'contain',
+      touchAction: 'none',
     }}>
-      <div style={{
+      <div
+        className="settings-modal-content"
+        style={{
+          overscrollBehavior: 'contain',
+          touchAction: 'pan-y',
         background: '#ffffff',
         borderRadius: '24px',
         maxWidth: '650px',
@@ -141,7 +165,13 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
         </button>
 
         {/* Header với Icon đẹp mắt */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px',
+          marginBottom: '8px',
+          paddingRight: '44px',
+        }}>
           <div style={{
             width: '44px',
             height: '44px',
@@ -155,16 +185,24 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           }}>
             <Settings size={24} color="#2563eb" />
           </div>
-          <div>
+          <div style={{ flex: 1, minWidth: 0 }}>
             <h2 style={{
-              fontSize: '1.45rem',
+              fontSize: 'clamp(1.15rem, 4vw, 1.45rem)',
               fontWeight: 800,
               color: '#1e293b',
               margin: 0,
+              lineHeight: 1.25,
+              wordBreak: 'break-word',
             }}>
               Cấu hình Google Sheet API
             </h2>
-            <p style={{ fontSize: '0.92rem', color: '#64748b', margin: 0, marginTop: '2px' }}>
+            <p style={{
+              fontSize: '0.88rem',
+              color: '#64748b',
+              margin: 0,
+              marginTop: '3px',
+              lineHeight: 1.35,
+            }}>
               Kết nối bộ câu hỏi trực tiếp từ bảng tính của thầy cô
             </p>
           </div>
@@ -430,7 +468,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             }}
           >
             <Save size={18} />
-            <span>Lưu & Tải Lại Dữ Liệu</span>
+            <span>Tải lại dữ liệu</span>
           </button>
         </div>
       </div>

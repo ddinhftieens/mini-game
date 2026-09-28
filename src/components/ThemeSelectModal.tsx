@@ -14,6 +14,24 @@ export const ThemeSelectModal: React.FC<ThemeSelectModalProps> = ({
   onSelectTheme,
   onStartGame,
 }) => {
+  // Khóa scroll của body/trang khi modal đang mở
+  React.useEffect(() => {
+    const scrollY = window.scrollY;
+    document.documentElement.classList.add('modal-open');
+    document.body.classList.add('modal-open');
+    document.body.style.top = `-${scrollY}px`;
+
+    return () => {
+      document.documentElement.classList.remove('modal-open');
+      document.body.classList.remove('modal-open');
+      const top = document.body.style.top;
+      document.body.style.top = '';
+      if (top) {
+        window.scrollTo(0, parseInt(top || '0', 10) * -1);
+      }
+    };
+  }, []);
+
   return (
     <div style={{
       position: 'fixed',
@@ -29,9 +47,15 @@ export const ThemeSelectModal: React.FC<ThemeSelectModalProps> = ({
       zIndex: 100,
       padding: '12px',
       boxSizing: 'border-box',
+      overscrollBehavior: 'contain',
+      touchAction: 'none',
     }}>
-      <div style={{
-        background: '#ffffff',
+      <div
+        className="settings-modal-content"
+        style={{
+          overscrollBehavior: 'contain',
+          touchAction: 'pan-y',
+          background: '#ffffff',
         borderRadius: '28px',
         maxWidth: '750px',
         width: '100%',
