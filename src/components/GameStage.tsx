@@ -39,13 +39,187 @@ export const GameStage: React.FC<GameStageProps> = ({
     }
   }, [currentStep, isWon]);
 
-  // Chiều cao và khoảng cách giữa các lá sen
-  const stepRowHeight = 92;
-  const destinationTop = 20;
-  const topPaddingForDestination = 135;
-  const totalTrailHeight = stepsCount * stepRowHeight + topPaddingForDestination + 40;
+  // Cấu hình kích thước và căn chỉnh chuyên biệt cho từng chủ đề
+  const stageConfig = useMemo(() => {
+    switch (theme.id) {
+      case 'frog':
+        return {
+          destination: {
+            width: '160px',
+            height: '68px',
+            imgHeight: '58px',
+            charBottom: '22px',
+            charLeft: undefined,
+            charRight: undefined,
+            charWidth: '56px',
+            charHeight: '56px',
+          },
+          step: {
+            width: '78px',
+            height: '66px',
+            activeWidth: '86px',
+            activeHeight: '74px',
+            glowSize: '92px',
+            charBottom: '16px',
+            charWidth: '50px',
+            charHeight: '50px',
+          },
+          connectY: 74,
+        };
+      case 'snail':
+        return {
+          destination: {
+            width: '95px',
+            height: '92px',
+            imgHeight: '88px',
+            charBottom: '44px',
+            charLeft: undefined,
+            charRight: undefined,
+            charWidth: '52px',
+            charHeight: '52px',
+          },
+          step: {
+            width: '84px',
+            height: '62px',
+            activeWidth: '92px',
+            activeHeight: '70px',
+            glowSize: '92px',
+            charBottom: '16px',
+            charWidth: '52px',
+            charHeight: '52px',
+          },
+          connectY: 92,
+        };
+      case 'astronaut':
+        return {
+          destination: {
+            width: '100px',
+            height: '106px',
+            imgHeight: '102px',
+            charBottom: '14px',
+            charLeft: '-18px',
+            charRight: undefined,
+            charWidth: '60px',
+            charHeight: '60px',
+          },
+          step: {
+            width: '98px',
+            height: '92px',
+            activeWidth: '108px',
+            activeHeight: '100px',
+            glowSize: '115px',
+            charBottom: '38px',
+            charWidth: '62px',
+            charHeight: '62px',
+          },
+          connectY: 102,
+        };
+      case 'bee':
+        return {
+          destination: {
+            width: '100px',
+            height: '100px',
+            imgHeight: '96px',
+            charBottom: '22px',
+            charLeft: '-14px',
+            charRight: undefined,
+            charWidth: '50px',
+            charHeight: '50px',
+          },
+          step: {
+            width: '82px',
+            height: '78px',
+            activeWidth: '90px',
+            activeHeight: '86px',
+            glowSize: '96px',
+            charBottom: '26px',
+            charWidth: '48px',
+            charHeight: '48px',
+          },
+          connectY: 96,
+        };
+      case 'penguin':
+        return {
+          destination: {
+            width: '110px',
+            height: '92px',
+            imgHeight: '88px',
+            charBottom: '10px',
+            charLeft: '-10px',
+            charRight: undefined,
+            charWidth: '50px',
+            charHeight: '50px',
+          },
+          step: {
+            width: '86px',
+            height: '66px',
+            activeWidth: '94px',
+            activeHeight: '74px',
+            glowSize: '94px',
+            charBottom: '28px',
+            charWidth: '50px',
+            charHeight: '50px',
+          },
+          connectY: 92,
+        };
+      case 'rabbit':
+        return {
+          destination: {
+            width: '80px',
+            height: '108px',
+            imgHeight: '104px',
+            charBottom: '12px',
+            charLeft: '-16px',
+            charRight: undefined,
+            charWidth: '52px',
+            charHeight: '52px',
+          },
+          step: {
+            width: '80px',
+            height: '76px',
+            activeWidth: '88px',
+            activeHeight: '84px',
+            glowSize: '94px',
+            charBottom: '28px',
+            charWidth: '50px',
+            charHeight: '50px',
+          },
+          connectY: 104,
+        };
+      default:
+        return {
+          destination: {
+            width: '120px',
+            height: '80px',
+            imgHeight: '76px',
+            charBottom: '20px',
+            charLeft: undefined,
+            charRight: undefined,
+            charWidth: '52px',
+            charHeight: '52px',
+          },
+          step: {
+            width: '80px',
+            height: '70px',
+            activeWidth: '88px',
+            activeHeight: '78px',
+            glowSize: '92px',
+            charBottom: '18px',
+            charWidth: '50px',
+            charHeight: '50px',
+          },
+          connectY: 85,
+        };
+    }
+  }, [theme.id]);
 
-  // Tính toán tọa độ (x, y) zigzag tự nhiên cho từng lá sen
+  // Chiều cao và khoảng cách giữa các lá sen / bậc bước
+  const stepRowHeight = 92;
+  const destinationTop = 16;
+  const topPaddingForDestination = 145;
+  const totalTrailHeight = stepsCount * stepRowHeight + topPaddingForDestination + 30;
+
+  // Tính toán tọa độ (x, y) zigzag tự nhiên cho từng bước
   // X: từ 24% đến 72% để giữ khoảng đệm thoáng đãng ở mép bên phải (nơi có thanh cuộn)
   const stepsPositions = useMemo(() => {
     return Array.from({ length: stepsCount }).map((_, idx) => {
@@ -56,7 +230,7 @@ export const GameStage: React.FC<GameStageProps> = ({
     });
   }, [stepsCount]);
 
-  // Đường cong Bézier uốn lượn mềm mại nối từ Lá 1 -> ... -> Lá cuối -> Bờ Sông (50, 70)
+  // Đường cong Bézier uốn lượn mềm mại nối từ Bậc 1 -> ... -> Bậc cuối -> Đích đến
   const pathD = useMemo(() => {
     if (stepsPositions.length === 0) return '';
     let d = `M ${stepsPositions[0].xPercent} ${stepsPositions[0].yPos}`;
@@ -67,9 +241,9 @@ export const GameStage: React.FC<GameStageProps> = ({
       d += ` C ${p1.xPercent} ${midY}, ${p2.xPercent} ${midY}, ${p2.xPercent} ${p2.yPos}`;
     }
     const lastP = stepsPositions[stepsPositions.length - 1];
-    d += ` C ${lastP.xPercent} ${lastP.yPos - 35}, 50 ${lastP.yPos - 25}, 50 68`;
+    d += ` C ${lastP.xPercent} ${lastP.yPos - 35}, 50 ${lastP.yPos - 25}, 50 ${stageConfig.connectY}`;
     return d;
-  }, [stepsPositions]);
+  }, [stepsPositions, stageConfig.connectY]);
 
   return (
     <div style={{
@@ -86,40 +260,7 @@ export const GameStage: React.FC<GameStageProps> = ({
       boxSizing: 'border-box',
       width: '100%',
     }}>
-      {/* Header Tiêu đề & Tiến độ */}
-      {/* <div style={{
-        paddingBottom: '10px',
-        borderBottom: '2px dashed #cbd5e1',
-        marginBottom: '10px',
-        textAlign: 'center',
-        flexShrink: 0,
-      }}>
-        <h2 style={{
-          fontSize: '1.25rem',
-          fontWeight: 800,
-          color: '#065f46',
-          fontFamily: "'Times New Roman', Times, serif",
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '8px',
-          margin: 0,
-        }}>
-          {theme.characterImage && (
-            <img
-              src={theme.characterImage}
-              alt={theme.characterName}
-              style={{ width: '30px', height: '30px', objectFit: 'contain' }}
-            />
-          )}
-          <span>{theme.title}</span>
-        </h2>
-        <p style={{ fontSize: '0.82rem', color: '#64748b', marginTop: '4px', fontWeight: 600 }}>
-          Đúng {correctCount}/{totalQuestions} câu để tới đích!
-        </p>
-      </div> */}
-
-      {/* Sân khấu Ao Sen: Khung bo viền hoàn chỉnh với thanh cuộn nằm gọn gàng bên trong */}
+      {/* Sân khấu: Khung bo viền hoàn chỉnh với thanh cuộn nằm gọn gàng bên trong */}
       <div
         style={{
           flex: 1,
@@ -132,7 +273,7 @@ export const GameStage: React.FC<GameStageProps> = ({
               case 'bee':
                 return 'linear-gradient(180deg, #fef08a 0%, #facc15 55%, #ca8a04 100%)';
               case 'astronaut':
-                return 'linear-gradient(180deg, #818cf8 0%, #4f46e5 55%, #1e1b4b 100%)';
+                return 'linear-gradient(180deg, #38bdf8 0%, #0369a1 55%, #0f172a 100%)';
               case 'penguin':
                 return 'linear-gradient(180deg, #a5f3fc 0%, #38bdf8 55%, #0369a1 100%)';
               case 'rabbit':
@@ -144,7 +285,6 @@ export const GameStage: React.FC<GameStageProps> = ({
           borderRadius: '20px',
           position: 'relative',
           boxShadow: 'inset 0 4px 14px rgba(0,0,0,0.1)',
-          // border: '3px solid rgba(255,255,255,0.7)',
           overflow: 'hidden',
           display: 'flex',
           flexDirection: 'column',
@@ -176,7 +316,7 @@ export const GameStage: React.FC<GameStageProps> = ({
             boxSizing: 'border-box',
           }}>
 
-            {/* 1. BỜ SÔNG / BỜ AO ĐÍCH ĐẾN */}
+            {/* 1. ĐÍCH ĐẾN (BỜ SÔNG / TỔ ONG / PHI THUYỀN / CÀ RỐT /...) */}
             <div
               ref={destinationRef}
               style={{
@@ -194,13 +334,13 @@ export const GameStage: React.FC<GameStageProps> = ({
             >
               <div style={{
                 position: 'relative',
-                width: '150px',
-                height: '75px',
+                width: stageConfig.destination.width,
+                height: stageConfig.destination.height,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
-                {/* Ảnh Bờ Sông / Bờ Đất */}
+                {/* Ảnh Đích Đến */}
                 {theme.destinationImage && (
                   <img
                     src={theme.destinationImage}
@@ -209,7 +349,7 @@ export const GameStage: React.FC<GameStageProps> = ({
                       position: 'absolute',
                       bottom: '0px',
                       width: '100%',
-                      height: '52px',
+                      height: stageConfig.destination.imgHeight || '100%',
                       objectFit: 'contain',
                       filter: isWon
                         ? 'drop-shadow(0 8px 18px rgba(0,0,0,0.35))'
@@ -218,15 +358,17 @@ export const GameStage: React.FC<GameStageProps> = ({
                   />
                 )}
 
-                {/* CON ẾCH NGỒI TRÊN BỜ SÔNG KHI HOÀN THÀNH VỀ ĐÍCH */}
+                {/* NHÂN VẬT KHI HOÀN THÀNH VỀ ĐÍCH */}
                 {isWon && theme.characterImage && (
                   <div
                     className="animate-jump"
                     style={{
                       position: 'absolute',
-                      bottom: '22px',
-                      width: '58px',
-                      height: '58px',
+                      bottom: stageConfig.destination.charBottom || '20px',
+                      left: stageConfig.destination.charLeft,
+                      right: stageConfig.destination.charRight,
+                      width: stageConfig.destination.charWidth || '52px',
+                      height: stageConfig.destination.charHeight || '52px',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -249,7 +391,7 @@ export const GameStage: React.FC<GameStageProps> = ({
               </div>
             </div>
 
-            {/* 2. ĐƯỜNG CONG UỐN LƯỢN NỐI CÁC LÁ SEN TỚI BỜ SÔNG (SVG Path) */}
+            {/* 2. ĐƯỜNG CONG UỐN LƯỢN NỐI CÁC BẬC TỚI ĐÍCH (SVG Path) */}
             <svg
               style={{
                 position: 'absolute',
@@ -283,11 +425,14 @@ export const GameStage: React.FC<GameStageProps> = ({
               />
             </svg>
 
-            {/* 3. CÁC LÁ SEN ĐẶT THEO TỌA ĐỘ UỐN LƯỢN */}
+            {/* 3. CÁC BẬC BƯỚC ĐẶT THEO TỌA ĐỘ UỐN LƯỢN */}
             {stepsPositions.map((pos) => {
               const stepNum = pos.idx + 1;
               const hasCharacter = !isWon && currentStep === pos.idx;
               const isPassed = correctCount >= stepNum;
+
+              const stepW = hasCharacter ? stageConfig.step.activeWidth : stageConfig.step.width;
+              const stepH = hasCharacter ? stageConfig.step.activeHeight : stageConfig.step.height;
 
               return (
                 <div
@@ -307,11 +452,11 @@ export const GameStage: React.FC<GameStageProps> = ({
                     transition: 'all 0.3s ease',
                   }}
                 >
-                  {/* Khu vực Chiếc lá sen + Con ếch ngồi trên */}
+                  {/* Khu vực Bậc bước + Nhân vật đứng trên */}
                   <div style={{
                     position: 'relative',
-                    width: hasCharacter ? '84px' : '72px',
-                    height: hasCharacter ? '74px' : '62px',
+                    width: stepW,
+                    height: stepH,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -321,8 +466,8 @@ export const GameStage: React.FC<GameStageProps> = ({
                     {hasCharacter && (
                       <div style={{
                         position: 'absolute',
-                        width: '90px',
-                        height: '90px',
+                        width: stageConfig.step.glowSize,
+                        height: stageConfig.step.glowSize,
                         borderRadius: '50%',
                         background: 'radial-gradient(circle, rgba(255,255,255,0.85) 0%, rgba(52,211,153,0.3) 60%, transparent 80%)',
                         animation: 'pulseGlow 2s infinite',
@@ -330,25 +475,26 @@ export const GameStage: React.FC<GameStageProps> = ({
                       }} />
                     )}
 
-                    {/* Ảnh Chiếc Lá Sen */}
+                    {/* Ảnh Bậc bước (Lá sen, Bông hoa, Thiên thạch, Nấm,...) */}
                     {theme.stepImage ? (
                       <img
                         src={theme.stepImage}
-                        alt={`Lá sen ${stepNum}`}
+                        alt={`${theme.stepName} ${stepNum}`}
                         style={{
                           position: 'absolute',
-                          bottom: '4px',
+                          bottom: '2px',
                           width: '100%',
                           height: '100%',
                           objectFit: 'contain',
-                          opacity: isPassed || hasCharacter ? 1 : 0.72,
+                          opacity: isPassed || hasCharacter ? 1 : 0.75,
                           filter: hasCharacter
                             ? 'drop-shadow(0 8px 14px rgba(0,0,0,0.35))'
                             : isPassed
                               ? 'drop-shadow(0 4px 8px rgba(0,0,0,0.2))'
                               : 'drop-shadow(0 2px 4px rgba(0,0,0,0.15))',
-                          transform: hasCharacter ? 'scale(1.08)' : 'scale(1)',
+                          transform: hasCharacter ? 'scale(1.06)' : 'scale(1)',
                           transition: 'transform 0.3s ease',
+                          zIndex: 2,
                         }}
                       />
                     ) : (
@@ -357,10 +503,11 @@ export const GameStage: React.FC<GameStageProps> = ({
                         height: '56px',
                         borderRadius: '50%',
                         background: hasCharacter ? '#10b981' : isPassed ? '#22c55e' : '#64748b',
+                        zIndex: 2,
                       }} />
                     )}
 
-                    {/* HUY HIỆU SỐ THỨ TỰ TRÊN LÁ SEN */}
+                    {/* HUY HIỆU SỐ THỨ TỰ TRÊN BẬC */}
                     <span style={{
                       position: 'absolute',
                       top: '2px',
@@ -378,20 +525,20 @@ export const GameStage: React.FC<GameStageProps> = ({
                       fontWeight: 900,
                       boxShadow: '0 2px 5px rgba(0,0,0,0.3)',
                       border: '1.5px solid #ffffff',
-                      zIndex: 6,
+                      zIndex: 9,
                     }}>
                       {stepNum}
                     </span>
 
-                    {/* CHÚ ẾCH / NHÂN VẬT NGỒI OAI VỆ TRÊN LÁ SEN */}
+                    {/* NHÂN VẬT ĐỨNG TRÊN BẬC */}
                     {hasCharacter && theme.characterImage && (
                       <div
                         className="animate-jump"
                         style={{
                           position: 'absolute',
-                          bottom: '18px',
-                          width: '52px',
-                          height: '52px',
+                          bottom: stageConfig.step.charBottom,
+                          width: stageConfig.step.charWidth,
+                          height: stageConfig.step.charHeight,
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
@@ -413,7 +560,7 @@ export const GameStage: React.FC<GameStageProps> = ({
                     )}
 
                     {/* Biểu tượng lấp lánh khi đã vượt qua */}
-                    {isPassed && !hasCharacter && (
+                    {/* {isPassed && !hasCharacter && (
                       <span style={{
                         position: 'absolute',
                         top: '0px',
@@ -427,11 +574,11 @@ export const GameStage: React.FC<GameStageProps> = ({
                         justifyContent: 'center',
                         boxShadow: '0 2px 6px rgba(0,0,0,0.25)',
                         border: '1.5px solid #ffffff',
-                        zIndex: 7,
+                        zIndex: 9,
                       }}>
                         <Sparkles size={12} color="#ffffff" />
                       </span>
-                    )}
+                    )} */}
                   </div>
                 </div>
               );

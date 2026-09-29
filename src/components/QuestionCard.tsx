@@ -83,7 +83,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
 
     // Bắt đầu đếm ngược 5s hồi hộp
     setPendingOption(opt);
-    setCountdown(5);
+    setCountdown(3);
   };
 
   const isDoneCorrect = question.status === 'correct';

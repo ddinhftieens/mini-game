@@ -95,6 +95,151 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
     };
   }, []);
 
+  const victoryConfig = React.useMemo(() => {
+    switch (theme.id) {
+      case 'frog':
+        return {
+          dest: {
+            position: 'absolute' as const,
+            bottom: '0px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: '240px',
+            height: '80px',
+            zIndex: 3,
+          },
+          char: {
+            bottom: '36px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: '95px',
+            height: '95px',
+            zIndex: 5,
+          },
+        };
+      case 'snail':
+        return {
+          dest: {
+            position: 'absolute' as const,
+            bottom: '0px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: '130px',
+            height: '115px',
+            zIndex: 3,
+          },
+          char: {
+            bottom: '50px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: '85px',
+            height: '85px',
+            zIndex: 5,
+          },
+        };
+      case 'astronaut':
+        return {
+          dest: {
+            position: 'absolute' as const,
+            bottom: '0px',
+            left: '60%',
+            transform: 'translateX(-50%)',
+            width: '120px',
+            height: '140px',
+            zIndex: 3,
+          },
+          char: {
+            bottom: '18px',
+            left: '30%',
+            transform: 'translateX(-50%)',
+            width: '100px',
+            height: '100px',
+            zIndex: 5,
+          },
+        };
+      case 'bee':
+        return {
+          dest: {
+            position: 'absolute' as const,
+            bottom: '0px',
+            left: '60%',
+            transform: 'translateX(-50%)',
+            width: '130px',
+            height: '130px',
+            zIndex: 3,
+          },
+          char: {
+            bottom: '30px',
+            left: '30%',
+            transform: 'translateX(-50%)',
+            width: '95px',
+            height: '95px',
+            zIndex: 5,
+          },
+        };
+      case 'penguin':
+        return {
+          dest: {
+            position: 'absolute' as const,
+            bottom: '0px',
+            left: '60%',
+            transform: 'translateX(-50%)',
+            width: '145px',
+            height: '120px',
+            zIndex: 3,
+          },
+          char: {
+            bottom: '10px',
+            left: '30%',
+            transform: 'translateX(-50%)',
+            width: '90px',
+            height: '90px',
+            zIndex: 5,
+          },
+        };
+      case 'rabbit':
+        return {
+          dest: {
+            position: 'absolute' as const,
+            bottom: '0px',
+            left: '60%',
+            transform: 'translateX(-50%)',
+            width: '105px',
+            height: '145px',
+            zIndex: 3,
+          },
+          char: {
+            bottom: '15px',
+            left: '30%',
+            transform: 'translateX(-50%)',
+            width: '95px',
+            height: '95px',
+            zIndex: 5,
+          },
+        };
+      default:
+        return {
+          dest: {
+            position: 'absolute' as const,
+            bottom: '0px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: '200px',
+            height: '90px',
+            zIndex: 3,
+          },
+          char: {
+            bottom: '30px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: '95px',
+            height: '95px',
+            zIndex: 5,
+          },
+        };
+    }
+  }, [theme.id]);
+
   return (
     <div style={{
       position: 'fixed',
@@ -177,17 +322,6 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
           <Sparkles size={18} color="#16a34a" />
         </div>
 
-        {/* Tiêu đề Chúc mừng */}
-        {/* <h2 style={{
-          fontSize: '2.1rem',
-          fontWeight: 900,
-          color: theme.id === 'snail' ? '#b45309' : '#065f46',
-          margin: '0 0 6px 0',
-          lineHeight: 1.2,
-          zIndex: 2,
-        }}>
-          {theme.victoryTitle || 'Chúc Mừng Em Đã Về Đích!'}
-        </h2> */}
         <p style={{
           fontSize: '1.08rem',
           color: '#475569',
@@ -198,46 +332,51 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
           {theme.victoryMessage || `${theme.characterName} đã an toàn lên bờ nhờ sự thông minh của em!`}
         </p>
 
-        {/* HÌNH ẢNH CON ẾCH NGỒI TRÊN BỜ SÔNG OAI VỆ */}
+        {/* HÌNH ẢNH CHIẾN THẮNG / ĐÍCH ĐẾN + NHÂN VẬT */}
         <div style={{
           position: 'relative',
-          width: '260px',
-          height: '160px',
+          width: '280px',
+          height: '165px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           margin: '0 auto 20px auto',
           zIndex: 2,
         }}>
-          {/* Ảnh Bờ Sông / Bờ Đất */}
+          {/* Ảnh Đích Đến */}
           {theme.destinationImage && (
             <img
               src={theme.destinationImage}
               alt={theme.destinationName}
               style={{
-                position: 'absolute',
-                bottom: '0px',
-                width: '100%',
-                height: '80px',
+                position: victoryConfig.dest.position,
+                bottom: victoryConfig.dest.bottom,
+                left: victoryConfig.dest.left,
+                transform: victoryConfig.dest.transform,
+                width: victoryConfig.dest.width,
+                height: victoryConfig.dest.height,
                 objectFit: 'contain',
                 filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.3))',
+                zIndex: victoryConfig.dest.zIndex,
               }}
             />
           )}
 
-          {/* Con Ếch Ngồi Trên Bờ Đất Nhún Nhảy Vui Vẻ */}
+          {/* Nhân Vật Nhún Nhảy Vui Vẻ */}
           {theme.characterImage && (
             <div
               className="animate-jump"
               style={{
                 position: 'absolute',
-                bottom: '36px',
-                width: '95px',
-                height: '95px',
+                bottom: victoryConfig.char.bottom,
+                left: victoryConfig.char.left,
+                transform: victoryConfig.char.transform,
+                width: victoryConfig.char.width,
+                height: victoryConfig.char.height,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                zIndex: 5,
+                zIndex: victoryConfig.char.zIndex,
               }}
             >
               <img
