@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { GameTheme, QuestionItem, RawQuestion } from './types';
 import { GAME_THEMES, DEFAULT_TARGET_STEPS } from './utils/constants';
-import { fetchQuestionsFromGoogleSheet, processQuestionsByDifficulty, playSound } from './utils/helpers';
+import { fetchQuestionsFromGoogleSheet, processQuestionsByDifficulty, playSound, stopThemeDescriptionAudio } from './utils/helpers';
 import { Header } from './components/Header';
 import { QuestionList } from './components/QuestionList';
 import { QuestionCard } from './components/QuestionCard';
@@ -75,6 +75,7 @@ export const App: React.FC = () => {
 
   // Handler khi nhấn nút "Bắt đầu chơi" từ màn hình bắt đầu
   const handleStartGame = () => {
+    stopThemeDescriptionAudio();
     playSound('click');
     setGameStarted(true);
     loadData();
@@ -82,6 +83,7 @@ export const App: React.FC = () => {
 
   // Quay lại màn hình bắt đầu
   const handleBackToStart = () => {
+    stopThemeDescriptionAudio();
     if (autoAdvanceTimerRef.current) {
       clearTimeout(autoAdvanceTimerRef.current);
       autoAdvanceTimerRef.current = null;
@@ -106,10 +108,11 @@ export const App: React.FC = () => {
     };
   }, [isTimerRunning]);
 
-  // Cleanup timeout khi unmount
+  // Cleanup timeout & audio khi unmount
   useEffect(() => {
     return () => {
       if (autoAdvanceTimerRef.current) clearTimeout(autoAdvanceTimerRef.current);
+      stopThemeDescriptionAudio();
     };
   }, []);
 
@@ -394,6 +397,7 @@ export const App: React.FC = () => {
           selectedThemeId={currentTheme.id}
           onSelectTheme={(t) => setCurrentTheme(t)}
           onStartGame={() => {
+            stopThemeDescriptionAudio();
             playSound('click');
             setShowThemeModal(false);
           }}

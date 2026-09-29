@@ -356,3 +356,117 @@ export function playFireworkSound() {
   }
 }
 
+/**
+ * =========================================================================
+ * QUẢN LÝ PHÁT FILE MP3 MÔ TẢ CHỦ ĐỀ (description.mp3)
+ * =========================================================================
+ */
+let _currentThemeAudio: HTMLAudioElement | null = null;
+let _currentThemeAudioUrl: string | null = null;
+type AudioStateListener = (isPlaying: boolean, audioUrl: string | null) => void;
+const _audioListeners = new Set<AudioStateListener>();
+
+function notifyAudioListeners(isPlaying: boolean, url: string | null) {
+  _audioListeners.forEach((fn) => {
+    try {
+      fn(isPlaying, url);
+    } catch (e) {
+      console.error('Error notifying audio listener:', e);
+    }
+  });
+}
+
+/**
+ * Đăng ký lắng nghe trạng thái phát âm thanh mô tả (đang phát hay dừng, url nào)
+ */
+export function subscribeThemeAudioState(listener: AudioStateListener): () => void {
+  _audioListeners.add(listener);
+  // Gọi ngay 1 lần với trạng thái hiện tại
+  const isCurrentlyPlaying = _currentThemeAudio !== null && !_currentThemeAudio.paused && !_currentThemeAudio.ended;
+  listener(isCurrentlyPlaying, _currentThemeAudioUrl);
+
+  return () => {
+    _audioListeners.delete(listener);
+  };
+}
+
+/**
+ * Lấy trạng thái âm thanh mô tả hiện tại
+ */
+export function isThemeAudioPlaying(): boolean {
+  return _currentThemeAudio !== null && !_currentThemeAudio.paused && !_currentThemeAudio.ended;
+}
+
+/**
+ * Dừng và tắt hoàn toàn âm thanh mô tả chủ đề đang phát
+ */
+export function stopThemeDescriptionAudio() {
+  if (_currentThemeAudio) {
+    try {
+      _currentThemeAudio.pause();
+      _currentThemeAudio.currentTime = 0;
+      _currentThemeAudio.onended = null;
+      _currentThemeAudio.onerror = null;
+      _currentThemeAudio.onpause = null;
+      _currentThemeAudio.src = '';
+    } catch (e) {
+      console.error('Error stopping theme audio:', e);
+    }
+    _currentThemeAudio = null;
+    _currentThemeAudioUrl = null;
+    notifyAudioListeners(false, null);
+  }
+}
+
+/**
+ * Phát file mp3 mô tả của chủ đề đã chọn.
+ * Tự động dừng file trước đó nếu đang phát dở.
+ */
+export function playThemeDescriptionAudio(audioUrl?: string) {
+  // Dừng file cũ trước
+  stopThemeDescriptionAudio();
+
+  if (!audioUrl) return;
+
+  try {
+    const audio = new Audio(audioUrl);
+    _currentThemeAudio = audio;
+    _currentThemeAudioUrl = audioUrl;
+
+    audio.onended = () => {
+      if (_currentThemeAudio === audio) {
+        _currentThemeAudio = null;
+        _currentThemeAudioUrl = null;
+      }
+      notifyAudioListeners(false, null);
+    };
+
+    audio.onerror = (e) => {
+      console.warn('Theme audio playback error:', e);
+      if (_currentThemeAudio === audio) {
+        _currentThemeAudio = null;
+        _currentThemeAudioUrl = null;
+      }
+      notifyAudioListeners(false, null);
+    };
+
+    const playPromise = audio.play();
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => {
+          notifyAudioListeners(true, audioUrl);
+        })
+        .catch((err) => {
+          console.warn('Autoplay error / cancelled:', err);
+          if (_currentThemeAudio === audio) {
+            _currentThemeAudio = null;
+            _currentThemeAudioUrl = null;
+          }
+          notifyAudioListeners(false, null);
+        });
+    }
+  } catch (err) {
+    console.error('Audio initialization error:', err);
+  }
+}
+

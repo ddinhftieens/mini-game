@@ -30,6 +30,7 @@ export interface GameTheme {
   stepName: string;
   stepImage?: string;
   description: string;
+  descriptionAudio?: string;
   backgroundTheme: string;
   primaryColor: string;
   victoryTitle?: string;

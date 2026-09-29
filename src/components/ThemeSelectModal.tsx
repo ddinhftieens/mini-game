@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { GameTheme, GameThemeType } from '../types';
 import { GAME_THEMES } from '../utils/constants';
-import { Sparkles, Play } from 'lucide-react';
+import { playThemeDescriptionAudio, stopThemeDescriptionAudio, subscribeThemeAudioState } from '../utils/helpers';
+import { Sparkles, Play, Volume2 } from 'lucide-react';
 
 interface ThemeSelectModalProps {
   selectedThemeId: GameThemeType;
@@ -14,8 +15,25 @@ export const ThemeSelectModal: React.FC<ThemeSelectModalProps> = ({
   onSelectTheme,
   onStartGame,
 }) => {
+  const [isPlayingAudio, setIsPlayingAudio] = useState<boolean>(false);
+  const [playingAudioUrl, setPlayingAudioUrl] = useState<string | null>(null);
+
+  // Lắng nghe trạng thái âm thanh mô tả
+  useEffect(() => {
+    const unsubscribe = subscribeThemeAudioState((isPlaying, url) => {
+      setIsPlayingAudio(isPlaying);
+      setPlayingAudioUrl(url);
+    });
+
+    // Cleanup khi đóng modal: tắt mp3
+    return () => {
+      unsubscribe();
+      stopThemeDescriptionAudio();
+    };
+  }, []);
+
   // Khóa scroll của body/trang khi modal đang mở
-  React.useEffect(() => {
+  useEffect(() => {
     const scrollY = window.scrollY;
     document.documentElement.classList.add('modal-open');
     document.body.classList.add('modal-open');
@@ -31,6 +49,16 @@ export const ThemeSelectModal: React.FC<ThemeSelectModalProps> = ({
       }
     };
   }, []);
+
+  const handleSelectTheme = (theme: GameTheme) => {
+    onSelectTheme(theme);
+    playThemeDescriptionAudio(theme.descriptionAudio);
+  };
+
+  const handleContinue = () => {
+    stopThemeDescriptionAudio();
+    onStartGame();
+  };
 
   return (
     <div style={{
@@ -115,10 +143,11 @@ export const ThemeSelectModal: React.FC<ThemeSelectModalProps> = ({
         }}>
           {GAME_THEMES.map((t) => {
             const isSelected = t.id === selectedThemeId;
+            const isThisAudioPlaying = isPlayingAudio && isSelected;
             return (
               <div
                 key={t.id}
-                onClick={() => onSelectTheme(t)}
+                onClick={() => handleSelectTheme(t)}
                 style={{
                   background: isSelected ? '#f0fdf4' : '#ffffff',
                   border: isSelected ? '3px solid #10b981' : '2.5px solid #e2e8f0',
@@ -186,6 +215,9 @@ export const ThemeSelectModal: React.FC<ThemeSelectModalProps> = ({
                 </div>
 
                 <div style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '5px',
                   fontSize: '0.82rem',
                   fontWeight: 700,
                   color: isSelected ? '#15803d' : '#94a3b8',
@@ -195,7 +227,16 @@ export const ThemeSelectModal: React.FC<ThemeSelectModalProps> = ({
                   fontFamily: "'Times New Roman', Times, serif",
                   marginTop: 'auto',
                 }}>
-                  {isSelected ? '✓ Đã chọn' : 'Nhấn để chọn'}
+                  {isThisAudioPlaying ? (
+                    <>
+                      <Volume2 size={14} className="animate-pulse" color="#16a34a" />
+                      <span>Đang phát lời thoại...</span>
+                    </>
+                  ) : isSelected ? (
+                    '✓ Đã chọn'
+                  ) : (
+                    'Nhấn để chọn'
+                  )}
                 </div>
               </div>
             );
@@ -210,7 +251,7 @@ export const ThemeSelectModal: React.FC<ThemeSelectModalProps> = ({
           marginTop: '6px',
         }}>
           <button
-            onClick={onStartGame}
+            onClick={handleContinue}
             style={{
               display: 'flex',
               alignItems: 'center',

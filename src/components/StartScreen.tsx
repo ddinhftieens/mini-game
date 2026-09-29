@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { GameTheme, GameThemeType } from '../types';
 import { GAME_THEMES } from '../utils/constants';
-import { Sparkles, Play, Settings, Compass, BookOpen, Star, Loader2 } from 'lucide-react';
+import { playThemeDescriptionAudio, stopThemeDescriptionAudio, subscribeThemeAudioState } from '../utils/helpers';
+import { Sparkles, Play, Settings, Compass, BookOpen, Star, Loader2, Volume2 } from 'lucide-react';
 
 interface StartScreenProps {
   selectedThemeId: GameThemeType;
@@ -18,6 +19,35 @@ export const StartScreen: React.FC<StartScreenProps> = ({
   onOpenSettings,
   loading,
 }) => {
+  const [isPlayingAudio, setIsPlayingAudio] = useState<boolean>(false);
+  const [playingAudioUrl, setPlayingAudioUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    const unsubscribe = subscribeThemeAudioState((isPlaying, url) => {
+      setIsPlayingAudio(isPlaying);
+      setPlayingAudioUrl(url);
+    });
+
+    return () => {
+      unsubscribe();
+      stopThemeDescriptionAudio();
+    };
+  }, []);
+
+  const handleSelectTheme = (theme: GameTheme) => {
+    onSelectTheme(theme);
+    playThemeDescriptionAudio(theme.descriptionAudio);
+  };
+
+  const handleStart = () => {
+    stopThemeDescriptionAudio();
+    onStartGame();
+  };
+
+  const handleOpenSettings = () => {
+    stopThemeDescriptionAudio();
+    onOpenSettings();
+  };
   return (
     <div
       className="start-screen-container"
@@ -120,7 +150,7 @@ export const StartScreen: React.FC<StartScreenProps> = ({
 
           {/* Integrated Settings Button */}
           <button
-            onClick={onOpenSettings}
+            onClick={handleOpenSettings}
             style={{
               background: '#f1f5f9',
               border: '1.5px solid #cbd5e1',
@@ -149,7 +179,6 @@ export const StartScreen: React.FC<StartScreenProps> = ({
             title="Cấu hình Google Sheet & Số bước thử thách"
           >
             <Settings size={15} color="#2563eb" style={{ flexShrink: 0 }} />
-            {/* <span style={{ fontSize: '0.8rem' }}>Cấu hình</span> */}
           </button>
         </div>
 
@@ -208,10 +237,11 @@ export const StartScreen: React.FC<StartScreenProps> = ({
           >
             {GAME_THEMES.map((theme) => {
               const isSelected = theme.id === selectedThemeId;
+              const isThisAudioPlaying = isPlayingAudio && isSelected;
               return (
                 <div
                   key={theme.id}
-                  onClick={() => onSelectTheme(theme)}
+                  onClick={() => handleSelectTheme(theme)}
                   style={{
                     background: isSelected
                       ? 'linear-gradient(145deg, #f0fdf4 0%, #dcfce7 100%)'
@@ -310,6 +340,9 @@ export const StartScreen: React.FC<StartScreenProps> = ({
 
                   <div
                     style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '5px',
                       fontSize: 'clamp(0.72rem, 1.5vw, 0.8rem)',
                       fontWeight: 700,
                       color: isSelected ? '#15803d' : '#64748b',
@@ -319,7 +352,16 @@ export const StartScreen: React.FC<StartScreenProps> = ({
                       marginTop: 'auto',
                     }}
                   >
-                    {isSelected ? 'Đang chọn' : 'Nhấn để chọn'}
+                    {isThisAudioPlaying ? (
+                      <>
+                        <Volume2 size={13} className="animate-pulse" color="#16a34a" />
+                        <span>Đang đọc mô tả...</span>
+                      </>
+                    ) : isSelected ? (
+                      'Đang chọn'
+                    ) : (
+                      'Nhấn để chọn'
+                    )}
                   </div>
                 </div>
               );
@@ -376,7 +418,7 @@ export const StartScreen: React.FC<StartScreenProps> = ({
 
         {/* Big Start Game Button */}
         <button
-          onClick={onStartGame}
+          onClick={handleStart}
           disabled={loading}
           style={{
             display: 'inline-flex',
