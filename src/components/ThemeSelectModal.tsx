@@ -91,7 +91,7 @@ export const ThemeSelectModal: React.FC<ThemeSelectModalProps> = ({
           overflowY: 'auto',
           padding: '24px 20px',
           boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-          border: '3px solid #bbf7d0',
+          // border: '3px solid #bbf7d0',
           display: 'flex',
           flexDirection: 'column',
           gap: '18px',

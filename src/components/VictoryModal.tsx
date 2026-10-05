@@ -281,7 +281,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
         overflowY: 'auto',
         padding: '24px 20px',
         boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.4), 0 0 40px rgba(16, 185, 129, 0.35)',
-        border: '3px solid #bbf7d0',
+        // border: '3px solid #bbf7d0',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',

@@ -52,58 +52,67 @@ export const StartScreen: React.FC<StartScreenProps> = ({
     <div
       className="start-screen-container"
       style={{
-        height: '100vh',
         width: '100%',
         background: 'linear-gradient(135deg, #064e3b 0%, #065f46 40%, #047857 70%, #0f766e 100%)',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center',
-        padding: 'clamp(8px, 2vh, 20px) clamp(10px, 2.5vw, 20px)',
+        justifyContent: 'flex-start',
+        padding: 'clamp(8px, 1.8vh, 18px) clamp(8px, 2vw, 20px)',
         boxSizing: 'border-box',
         position: 'relative',
-        overflow: 'hidden',
         fontFamily: "'Times New Roman', Times, serif",
       }}
     >
-      {/* Background Decorative Rings/Glow */}
+      {/* Background Decorative Rings/Glow (contained so they never cause scrollbars) */}
       <div
         style={{
           position: 'absolute',
-          top: '-10%',
-          left: '-5%',
-          width: 'clamp(250px, 40vw, 450px)',
-          height: 'clamp(250px, 40vw, 450px)',
-          background: 'radial-gradient(circle, rgba(52, 211, 153, 0.25) 0%, transparent 70%)',
-          borderRadius: '50%',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          overflow: 'hidden',
           pointerEvents: 'none',
-          animation: 'pulseGlow 4s infinite ease-in-out',
+          zIndex: 1,
         }}
-      />
-      <div
-        style={{
-          position: 'absolute',
-          bottom: '-10%',
-          right: '-5%',
-          width: 'clamp(250px, 45vw, 500px)',
-          height: 'clamp(250px, 45vw, 500px)',
-          background: 'radial-gradient(circle, rgba(251, 191, 36, 0.2) 0%, transparent 70%)',
-          borderRadius: '50%',
-          pointerEvents: 'none',
-          animation: 'pulseGlow 5s infinite ease-in-out',
-        }}
-      />
+      >
+        <div
+          style={{
+            position: 'absolute',
+            top: '-10%',
+            left: '-5%',
+            width: 'clamp(250px, 40vw, 450px)',
+            height: 'clamp(250px, 40vw, 450px)',
+            background: 'radial-gradient(circle, rgba(52, 211, 153, 0.25) 0%, transparent 70%)',
+            borderRadius: '50%',
+            animation: 'pulseGlow 4s infinite ease-in-out',
+          }}
+        />
+        <div
+          style={{
+            position: 'absolute',
+            bottom: '-10%',
+            right: '-5%',
+            width: 'clamp(250px, 45vw, 500px)',
+            height: 'clamp(250px, 45vw, 500px)',
+            background: 'radial-gradient(circle, rgba(251, 191, 36, 0.2) 0%, transparent 70%)',
+            borderRadius: '50%',
+            animation: 'pulseGlow 5s infinite ease-in-out',
+          }}
+        />
+      </div>
 
       {/* Main Container Card */}
       <div
         style={{
           width: '100%',
-          maxWidth: '860px',
+          maxWidth: '840px',
           background: 'rgba(255, 255, 255, 0.96)',
-          borderRadius: 'clamp(18px, 3vw, 28px)',
-          padding: 'clamp(14px, 2.5vh, 28px) clamp(12px, 3vw, 28px)',
+          borderRadius: 'clamp(16px, 2.5vw, 24px)',
+          padding: 'clamp(10px, 1.8vh, 18px) clamp(12px, 2.5vw, 22px)',
           boxShadow: '0 20px 50px rgba(0, 0, 0, 0.3), 0 0 30px rgba(52, 211, 153, 0.2)',
-          border: '3px solid #bbf7d0',
+          // border: '3px solid #bbf7d0',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -122,9 +131,9 @@ export const StartScreen: React.FC<StartScreenProps> = ({
             alignItems: 'center',
             justifyContent: 'space-between',
             width: '100%',
-            marginBottom: 'clamp(6px, 1.2vh, 12px)',
+            marginBottom: 'clamp(4px, 0.8vh, 8px)',
             flexWrap: 'wrap',
-            gap: '8px',
+            gap: '6px',
           }}
         >
           {/* Subtitle Badge */}
@@ -132,19 +141,19 @@ export const StartScreen: React.FC<StartScreenProps> = ({
             style={{
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '6px',
+              gap: '5px',
               background: 'linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%)',
               color: '#15803d',
-              padding: '4px 12px',
+              padding: '3px 10px',
               borderRadius: '999px',
               fontWeight: 800,
-              fontSize: 'clamp(0.72rem, 1.8vw, 0.85rem)',
+              fontSize: 'clamp(0.7rem, 1.5vw, 0.8rem)',
               border: '1.5px solid #86efac',
               boxShadow: '0 2px 6px rgba(34, 197, 94, 0.12)',
               whiteSpace: 'nowrap',
             }}
           >
-            <Sparkles size={14} color="#16a34a" style={{ flexShrink: 0 }} />
+            <Sparkles size={13} color="#16a34a" style={{ flexShrink: 0 }} />
             <span>TRÒ CHƠI HỌC TẬP TƯƠNG TÁC</span>
           </div>
 
@@ -155,14 +164,14 @@ export const StartScreen: React.FC<StartScreenProps> = ({
               background: '#f1f5f9',
               border: '1.5px solid #cbd5e1',
               color: '#334155',
-              padding: '4px 10px',
-              borderRadius: '12px',
+              padding: '3px 8px',
+              borderRadius: '10px',
               cursor: 'pointer',
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '6px',
+              gap: '5px',
               fontWeight: 700,
-              fontSize: 'clamp(0.75rem, 1.8vw, 0.85rem)',
+              fontSize: 'clamp(0.72rem, 1.5vw, 0.8rem)',
               boxShadow: '0 2px 6px rgba(0, 0, 0, 0.04)',
               transition: 'all 0.18s cubic-bezier(0.4, 0, 0.2, 1)',
               marginLeft: 'auto',
@@ -178,18 +187,18 @@ export const StartScreen: React.FC<StartScreenProps> = ({
             }}
             title="Cấu hình Google Sheet & Số bước thử thách"
           >
-            <Settings size={15} color="#2563eb" style={{ flexShrink: 0 }} />
+            <Settings size={14} color="#2563eb" style={{ flexShrink: 0 }} />
           </button>
         </div>
 
         {/* Big Game Title */}
         <h1
           style={{
-            fontSize: 'clamp(1.35rem, 3.5vw, 2.3rem)',
+            fontSize: 'clamp(1.25rem, 2.8vw, 1.95rem)',
             fontWeight: 900,
             color: '#065f46',
-            margin: '2px 0 6px 0',
-            lineHeight: 1.2,
+            margin: '0 0 3px 0',
+            lineHeight: 1.15,
             letterSpacing: '-0.3px',
           }}
         >
@@ -198,40 +207,40 @@ export const StartScreen: React.FC<StartScreenProps> = ({
 
         <p
           style={{
-            fontSize: 'clamp(0.85rem, 2vw, 1.05rem)',
+            fontSize: 'clamp(0.8rem, 1.5vw, 0.95rem)',
             color: '#475569',
             maxWidth: '620px',
-            margin: '0 0 clamp(10px, 2vh, 18px) 0',
+            margin: '0 0 clamp(6px, 1.2vh, 12px) 0',
             fontWeight: 600,
-            lineHeight: 1.4,
+            lineHeight: 1.35,
           }}
         >
           Chào mừng thầy cô và các em học sinh! Hãy chọn chủ đề trò chơi yêu thích và nhấn <b>Bắt đầu</b> để giải đố và giúp nhân vật về đích nhé!
         </p>
 
         {/* Theme Selection Grid */}
-        <div style={{ width: '100%', marginBottom: 'clamp(10px, 2vh, 20px)' }}>
+        <div style={{ width: '100%', marginBottom: 'clamp(6px, 1.2vh, 12px)' }}>
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '6px',
+              gap: '5px',
               color: '#0f766e',
               fontWeight: 800,
-              fontSize: 'clamp(0.85rem, 2vw, 0.95rem)',
-              marginBottom: '10px',
+              fontSize: 'clamp(0.78rem, 1.5vw, 0.88rem)',
+              marginBottom: 'clamp(4px, 0.8vh, 8px)',
             }}
           >
-            <Compass size={18} />
+            <Compass size={16} />
             <span>CHỌN CHỦ ĐỀ TRÒ CHƠI:</span>
           </div>
 
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(clamp(150px, 26vw, 220px), 1fr))',
-              gap: 'clamp(8px, 1.5vw, 14px)',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(clamp(130px, 28vw, 220px), 1fr))',
+              gap: 'clamp(6px, 1vw, 10px)',
               width: '100%',
             }}
           >
@@ -247,16 +256,16 @@ export const StartScreen: React.FC<StartScreenProps> = ({
                       ? 'linear-gradient(145deg, #f0fdf4 0%, #dcfce7 100%)'
                       : '#ffffff',
                     border: isSelected ? '2.5px solid #10b981' : '2px solid #e2e8f0',
-                    borderRadius: 'clamp(14px, 2vw, 20px)',
-                    padding: 'clamp(10px, 1.8vh, 16px) clamp(8px, 1.5vw, 14px)',
+                    borderRadius: 'clamp(12px, 1.8vw, 16px)',
+                    padding: 'clamp(6px, 1vh, 10px) clamp(6px, 1vw, 10px)',
                     cursor: 'pointer',
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
-                    gap: 'clamp(6px, 1vh, 10px)',
+                    gap: 'clamp(3px, 0.6vh, 6px)',
                     boxShadow: isSelected
-                      ? '0 8px 20px rgba(16, 185, 129, 0.22), 0 0 0 2px rgba(16, 185, 129, 0.15)'
-                      : '0 3px 10px rgba(0, 0, 0, 0.03)',
+                      ? '0 6px 16px rgba(16, 185, 129, 0.2), 0 0 0 2px rgba(16, 185, 129, 0.15)'
+                      : '0 2px 8px rgba(0, 0, 0, 0.03)',
                     transform: isSelected ? 'scale(1.02)' : 'scale(1)',
                     transition: 'all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)',
                     boxSizing: 'border-box',
@@ -268,17 +277,17 @@ export const StartScreen: React.FC<StartScreenProps> = ({
                     <div
                       style={{
                         position: 'absolute',
-                        top: '8px',
-                        right: '8px',
+                        top: '6px',
+                        right: '6px',
                         background: '#16a34a',
                         color: '#ffffff',
                         borderRadius: '50%',
-                        width: '20px',
-                        height: '20px',
+                        width: '18px',
+                        height: '18px',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        fontSize: '11px',
+                        fontSize: '10px',
                         fontWeight: 900,
                         boxShadow: '0 2px 5px rgba(22, 163, 74, 0.4)',
                       }}
@@ -290,16 +299,16 @@ export const StartScreen: React.FC<StartScreenProps> = ({
                   {/* Character Avatar */}
                   <div
                     style={{
-                      width: 'clamp(50px, 8vw, 70px)',
-                      height: 'clamp(50px, 8vw, 70px)',
-                      borderRadius: '16px',
+                      width: 'clamp(38px, 4.5vw, 52px)',
+                      height: 'clamp(38px, 4.5vw, 52px)',
+                      borderRadius: '12px',
                       background: isSelected ? '#ffffff' : '#f8fafc',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       border: isSelected ? '2px solid #86efac' : '1.5px solid #e2e8f0',
-                      padding: '4px',
-                      boxShadow: '0 3px 8px rgba(0,0,0,0.05)',
+                      padding: '3px',
+                      boxShadow: '0 2px 6px rgba(0,0,0,0.04)',
                     }}
                   >
                     {theme.characterImage ? (
@@ -309,7 +318,7 @@ export const StartScreen: React.FC<StartScreenProps> = ({
                         style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                       />
                     ) : (
-                      <Sparkles size={28} color="#10b981" />
+                      <Sparkles size={24} color="#10b981" />
                     )}
                   </div>
 
@@ -317,21 +326,22 @@ export const StartScreen: React.FC<StartScreenProps> = ({
                   <div>
                     <h3
                       style={{
-                        fontSize: 'clamp(0.95rem, 2vw, 1.15rem)',
+                        fontSize: 'clamp(0.85rem, 1.5vw, 1.02rem)',
                         fontWeight: 800,
                         color: isSelected ? '#065f46' : '#1e293b',
                         margin: 0,
+                        lineHeight: 1.2,
                       }}
                     >
                       {theme.title}
                     </h3>
                     <p
                       style={{
-                        fontSize: 'clamp(0.75rem, 1.6vw, 0.84rem)',
+                        fontSize: 'clamp(0.68rem, 1.2vw, 0.78rem)',
                         color: isSelected ? '#047857' : '#64748b',
-                        margin: '3px 0 0 0',
+                        margin: '2px 0 0 0',
                         fontWeight: 600,
-                        lineHeight: 1.25,
+                        lineHeight: 1.2,
                       }}
                     >
                       {theme.subtitle}
@@ -342,19 +352,19 @@ export const StartScreen: React.FC<StartScreenProps> = ({
                     style={{
                       display: 'inline-flex',
                       alignItems: 'center',
-                      gap: '5px',
-                      fontSize: 'clamp(0.72rem, 1.5vw, 0.8rem)',
+                      gap: '4px',
+                      fontSize: 'clamp(0.66rem, 1.1vw, 0.74rem)',
                       fontWeight: 700,
                       color: isSelected ? '#15803d' : '#64748b',
                       background: isSelected ? '#bbf7d0' : '#f1f5f9',
-                      padding: '3px 10px',
-                      borderRadius: '8px',
+                      padding: '2px 8px',
+                      borderRadius: '6px',
                       marginTop: 'auto',
                     }}
                   >
                     {isThisAudioPlaying ? (
                       <>
-                        <Volume2 size={13} className="animate-pulse" color="#16a34a" />
+                        <Volume2 size={12} className="animate-pulse" color="#16a34a" />
                         <span>Đang đọc mô tả...</span>
                       </>
                     ) : isSelected ? (
@@ -375,25 +385,25 @@ export const StartScreen: React.FC<StartScreenProps> = ({
             display: 'flex',
             flexWrap: 'wrap',
             justifyContent: 'center',
-            gap: '8px',
-            marginBottom: 'clamp(12px, 2vh, 20px)',
+            gap: '6px',
+            marginBottom: 'clamp(8px, 1.4vh, 14px)',
           }}
         >
           <div
             style={{
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '5px',
+              gap: '4px',
               background: '#f8fafc',
               border: '1.5px solid #e2e8f0',
-              padding: '4px 12px',
-              borderRadius: '10px',
+              padding: '3px 10px',
+              borderRadius: '8px',
               color: '#334155',
-              fontSize: 'clamp(0.76rem, 1.6vw, 0.84rem)',
+              fontSize: 'clamp(0.7rem, 1.3vw, 0.8rem)',
               fontWeight: 700,
             }}
           >
-            <BookOpen size={14} color="#2563eb" />
+            <BookOpen size={13} color="#2563eb" />
             <span>Nạp câu hỏi từ Google Sheet</span>
           </div>
 
@@ -401,17 +411,17 @@ export const StartScreen: React.FC<StartScreenProps> = ({
             style={{
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '5px',
+              gap: '4px',
               background: '#f8fafc',
               border: '1.5px solid #e2e8f0',
-              padding: '4px 12px',
-              borderRadius: '10px',
+              padding: '3px 10px',
+              borderRadius: '8px',
               color: '#334155',
-              fontSize: 'clamp(0.76rem, 1.6vw, 0.84rem)',
+              fontSize: 'clamp(0.7rem, 1.3vw, 0.8rem)',
               fontWeight: 700,
             }}
           >
-            <Star size={14} color="#f59e0b" />
+            <Star size={13} color="#f59e0b" />
             <span>Bấm giờ & Tính điểm chi tiết</span>
           </div>
         </div>
@@ -424,43 +434,43 @@ export const StartScreen: React.FC<StartScreenProps> = ({
             display: 'inline-flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '10px',
+            gap: '8px',
             background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
             color: '#ffffff',
             border: 'none',
-            padding: 'clamp(12px, 2vh, 16px) clamp(28px, 6vw, 48px)',
-            borderRadius: '20px',
-            fontSize: 'clamp(1.05rem, 2.5vw, 1.35rem)',
+            padding: 'clamp(9px, 1.4vh, 13px) clamp(24px, 4vw, 40px)',
+            borderRadius: '16px',
+            fontSize: 'clamp(0.95rem, 1.8vw, 1.15rem)',
             fontWeight: 900,
             cursor: loading ? 'not-allowed' : 'pointer',
-            boxShadow: '0 10px 24px rgba(16, 185, 129, 0.4), 0 3px 0 #047857',
+            boxShadow: '0 8px 20px rgba(16, 185, 129, 0.35), 0 3px 0 #047857',
             transition: 'all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)',
             width: '100%',
-            maxWidth: '360px',
+            maxWidth: '320px',
             letterSpacing: '0.5px',
             opacity: loading ? 0.75 : 1,
           }}
           onMouseEnter={(e) => {
             if (!loading) {
               e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
-              e.currentTarget.style.boxShadow = '0 14px 30px rgba(16, 185, 129, 0.5), 0 4px 0 #047857';
+              e.currentTarget.style.boxShadow = '0 12px 24px rgba(16, 185, 129, 0.45), 0 3px 0 #047857';
             }
           }}
           onMouseLeave={(e) => {
             if (!loading) {
               e.currentTarget.style.transform = 'translateY(0) scale(1)';
-              e.currentTarget.style.boxShadow = '0 10px 24px rgba(16, 185, 129, 0.4), 0 3px 0 #047857';
+              e.currentTarget.style.boxShadow = '0 8px 20px rgba(16, 185, 129, 0.35), 0 3px 0 #047857';
             }
           }}
         >
           {loading ? (
             <>
-              <Loader2 className="animate-spin" size={22} />
+              <Loader2 className="animate-spin" size={18} />
               <span>ĐANG TẢI...</span>
             </>
           ) : (
             <>
-              <Play fill="#ffffff" size={22} />
+              <Play fill="#ffffff" size={18} />
               <span>BẮT ĐẦU CHƠI</span>
             </>
           )}
