@@ -214,7 +214,7 @@ export const ChallengeQuestionModal: React.FC<ChallengeQuestionModalProps> = ({
             transition: 'all 0.2s ease',
           }}
         >
-          Đã đọc xong
+          Hoàn thành
         </button>
       </div>
 
