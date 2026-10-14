@@ -219,7 +219,7 @@ export default function ChimChichBong() {
               WebkitTextFillColor: 'transparent',
               filter: 'drop-shadow(0 2px 10px rgba(74, 222, 128, 0.45))',
             }}>
-              Hành Trình Giải Cứu Chích Bông
+              Giải Cứu Chích Bông
             </h1>
           </div>
 
@@ -227,177 +227,162 @@ export default function ChimChichBong() {
           <div style={{
             display: 'flex',
             flexWrap: 'wrap',
-            gap: '10px',
+            gap: '8px',
             alignItems: 'center',
             justifyContent: 'center',
             background: 'rgba(255, 255, 255, 0.08)',
             backdropFilter: 'blur(16px)',
-            padding: '8px 16px',
+            padding: '8px 12px',
             borderRadius: '18px',
             border: '1px solid rgba(255, 255, 255, 0.16)',
             boxShadow: '0 8px 28px rgba(0,0,0,0.4)',
+            maxWidth: '100%',
+            boxSizing: 'border-box',
           }}>
-        {/* Nút Nghe Thuyết Minh (Description Audio) */}
-        <button
-          onClick={handleToggleAudio}
-          disabled={showQuestion}
-          style={{
-            padding: '9px 18px',
-            borderRadius: '12px',
-            border: isPlayingAudio
-              ? '1.5px solid #facc15'
-              : '1px solid rgba(255, 255, 255, 0.2)',
-            background: isPlayingAudio
-              ? 'linear-gradient(135deg, #eab308 0%, #ca8a04 100%)'
-              : 'rgba(255, 255, 255, 0.1)',
-            color: '#ffffff',
-            fontWeight: 800,
-            fontSize: '0.9rem',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            boxShadow: isPlayingAudio ? '0 4px 16px rgba(234, 179, 8, 0.45)' : 'none',
-            transition: 'all 0.25s ease',
-          }}
-          title={isPlayingAudio ? 'Dừng đọc cốt truyện' : 'Nghe đọc cốt truyện'}
-        >
-          {isPlayingAudio ? (
-            <>
-              <VolumeX size={18} />
-              <span>Dừng đọc</span>
-            </>
-          ) : (
-            <>
-              <Volume2 size={18} />
-              <span>Nghe cốt truyện</span>
-            </>
-          )}
-        </button>
-
-        {/* Đường ngăn cách nhẹ */}
-        <div style={{
-          width: '1px',
-          height: '24px',
-          background: 'rgba(255, 255, 255, 0.2)',
-          margin: '0 4px',
-        }} />
-
-        {/* 3 Nút Thử Thách */}
-        <div style={{ display: 'flex', gap: '10px' }}>
-          {([1, 2, 3] as StepId[]).map((step) => {
-            const isActive = currentStep === step && !isFlying;
-            const isTarget = isFlying && flightState?.to === step;
-
-            return (
-              <button
-                key={step}
-                onClick={() => navigateToStep(step)}
-                disabled={isFlying || currentStep === step || showQuestion}
-                style={{
-                  padding: '9px 20px',
-                  borderRadius: '12px',
-                  border: isActive
-                    ? '2px solid #6ee7b7'
-                    : isTarget
-                      ? '2px solid #38bdf8'
-                      : '1px solid rgba(255, 255, 255, 0.2)',
-                  background: isActive
-                    ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
-                    : isTarget
-                      ? 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)'
-                      : 'rgba(255, 255, 255, 0.1)',
-                  color: '#ffffff',
-                  fontWeight: 800,
-                  fontSize: '0.9rem',
-                  cursor: (isFlying || currentStep === step) ? 'default' : 'pointer',
-                  boxShadow: isActive
-                    ? '0 4px 18px rgba(16, 185, 129, 0.5)'
-                    : isTarget
-                      ? '0 4px 18px rgba(2, 132, 199, 0.45)'
-                      : 'none',
-                  transform: isActive ? 'scale(1.05)' : 'scale(1)',
-                  transition: 'all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  opacity: isFlying && !isTarget ? 0.6 : 1,
-                }}
-              >
-                <span>Thử thách {step}</span>
-                {isActive && (
-                  <span style={{
-                    width: '7px',
-                    height: '7px',
-                    borderRadius: '50%',
-                    backgroundColor: '#fef08a',
-                    boxShadow: '0 0 6px #fef08a',
-                  }} />
-                )}
-              </button>
-            );
-          })}
-        </div>
-
-        {/* NÚT XEM CÂU HỎI THỬ THÁCH (Xuất hiện khi chim đã dừng ở bục) */}
-        {!isFlying && (
-          <>
-            <div style={{
-              width: '1px',
-              height: '24px',
-              background: 'rgba(255, 255, 255, 0.2)',
-              margin: '0 4px',
-            }} />
-
+            {/* Nút Nghe Thuyết Minh (Description Audio) */}
             <button
-              onClick={() => {
-                // Tạm dừng thuyết minh nếu đang phát để bé tập trung đọc
-                if (audioRef.current && isPlayingAudio) {
-                  audioRef.current.pause();
-                  setIsPlayingAudio(false);
-                }
-                setShowQuestion(true);
-              }}
+              onClick={handleToggleAudio}
+              disabled={showQuestion}
               style={{
-                padding: '9px 18px',
-                borderRadius: '12px',
-                border: 'none',
-                background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+                padding: '7px 14px',
+                borderRadius: '10px',
+                border: isPlayingAudio
+                  ? '1.5px solid #facc15'
+                  : '1px solid rgba(255, 255, 255, 0.2)',
+                background: isPlayingAudio
+                  ? 'linear-gradient(135deg, #eab308 0%, #ca8a04 100%)'
+                  : 'rgba(255, 255, 255, 0.1)',
                 color: '#ffffff',
-                fontWeight: 900,
-                fontSize: '0.9rem',
+                fontWeight: 800,
+                fontSize: '0.82rem',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '8px',
-                boxShadow: '0 4px 16px rgba(245, 158, 11, 0.45)',
-                animation: 'pulseBtn 1.8s infinite',
-                transition: 'all 0.2s',
+                gap: '6px',
+                boxShadow: isPlayingAudio ? '0 4px 16px rgba(234, 179, 8, 0.45)' : 'none',
+                transition: 'all 0.25s ease',
               }}
+              title={isPlayingAudio ? 'Dừng đọc cốt truyện' : 'Nghe đọc cốt truyện'}
             >
-              <HelpCircle size={18} />
-              <span>Bài đọc thử thách {currentStep}</span>
+              {isPlayingAudio ? (
+                <>
+                  <VolumeX size={16} />
+                  <span>Dừng đọc</span>
+                </>
+              ) : (
+                <>
+                  <Volume2 size={16} />
+                  <span>Cốt truyện</span>
+                </>
+              )}
             </button>
-          </>
-        )}
+
+            {/* 3 Nút Thử Thách */}
+            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', justifyContent: 'center' }}>
+              {([1, 2, 3] as StepId[]).map((step) => {
+                const isActive = currentStep === step && !isFlying;
+                const isTarget = isFlying && flightState?.to === step;
+
+                return (
+                  <button
+                    key={step}
+                    onClick={() => navigateToStep(step)}
+                    disabled={isFlying || currentStep === step || showQuestion}
+                    style={{
+                      padding: '7px 13px',
+                      borderRadius: '10px',
+                      border: isActive
+                        ? '2px solid #6ee7b7'
+                        : isTarget
+                          ? '2px solid #38bdf8'
+                          : '1px solid rgba(255, 255, 255, 0.2)',
+                      background: isActive
+                        ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
+                        : isTarget
+                          ? 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)'
+                          : 'rgba(255, 255, 255, 0.1)',
+                      color: '#ffffff',
+                      fontWeight: 800,
+                      fontSize: '0.82rem',
+                      cursor: (isFlying || currentStep === step) ? 'default' : 'pointer',
+                      boxShadow: isActive
+                        ? '0 4px 18px rgba(16, 185, 129, 0.5)'
+                        : isTarget
+                          ? '0 4px 18px rgba(2, 132, 199, 0.45)'
+                          : 'none',
+                      transform: isActive ? 'scale(1.04)' : 'scale(1)',
+                      transition: 'all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '5px',
+                      opacity: isFlying && !isTarget ? 0.6 : 1,
+                    }}
+                  >
+                    <span>Thử thách {step}</span>
+                    {isActive && (
+                      <span style={{
+                        width: '6px',
+                        height: '6px',
+                        borderRadius: '50%',
+                        backgroundColor: '#fef08a',
+                        boxShadow: '0 0 6px #fef08a',
+                      }} />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* NÚT XEM CÂU HỎI THỬ THÁCH (Xuất hiện khi chim đã dừng ở bục) */}
+            {!isFlying && (
+              <button
+                onClick={() => {
+                  // Tạm dừng thuyết minh nếu đang phát để bé tập trung đọc
+                  if (audioRef.current && isPlayingAudio) {
+                    audioRef.current.pause();
+                    setIsPlayingAudio(false);
+                  }
+                  setShowQuestion(true);
+                }}
+                style={{
+                  padding: '7px 15px',
+                  borderRadius: '10px',
+                  border: 'none',
+                  background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+                  color: '#ffffff',
+                  fontWeight: 900,
+                  fontSize: '0.82rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  boxShadow: '0 4px 16px rgba(245, 158, 11, 0.45)',
+                  animation: 'pulseBtn 1.8s infinite',
+                  transition: 'all 0.2s',
+                }}
+              >
+                <HelpCircle size={16} />
+                <span>Bài đọc {currentStep}</span>
+              </button>
+            )}
           </div>
         </div>
       )}
 
       {/* 
         SÂN KHẤU TRÒ CHƠI RESPONSIVE 16:9
-        Tự động co theo chiều cao và chiều rộng để vừa trọn 1 màn hình (1366x768, 1920x1080...)
+        Tự động co giãn theo cả chiều rộng (mobile dọc) và chiều cao (màn hình nằm ngang)
       */}
       <div
         style={{
           position: showQuestion ? 'fixed' : 'relative',
-          bottom: showQuestion ? '20px' : undefined,
-          right: showQuestion ? '20px' : undefined,
-          width: showQuestion ? '320px' : '100%',
-          maxWidth: showQuestion ? '320px' : 'min(1280px, calc((100vh - 150px) * (16 / 9)))',
-          maxHeight: showQuestion ? undefined : 'calc(100vh - 150px)',
+          bottom: showQuestion ? '16px' : undefined,
+          right: showQuestion ? '16px' : undefined,
+          width: showQuestion ? 'min(280px, 75vw)' : '100%',
+          maxWidth: showQuestion ? 'min(280px, 75vw)' : 'min(1280px, 100%, calc((100vh - 170px) * (16 / 9)))',
+          maxHeight: showQuestion ? undefined : 'calc(100vh - 170px)',
           aspectRatio: '16 / 9',
-          borderRadius: showQuestion ? '16px' : '20px',
+          borderRadius: showQuestion ? '14px' : '20px',
           overflow: 'hidden',
           boxShadow: showQuestion
             ? '0 16px 40px rgba(0,0,0,0.8), 0 0 0 2px rgba(255, 255, 255, 0.4)'
@@ -405,7 +390,7 @@ export default function ChimChichBong() {
           border: '3px solid rgba(255, 255, 255, 0.3)',
           backgroundColor: '#7dd3fc',
           userSelect: 'none',
-          zIndex: showQuestion ? 50 : 10,
+          zIndex: showQuestion ? 20 : 10, // Ở dưới modal bài đọc khi thu nhỏ
           pointerEvents: showQuestion ? 'none' : 'auto',
           transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
         }}
@@ -476,6 +461,7 @@ export default function ChimChichBong() {
 
       {/* 
         COMPONENT BÀI ĐỌC TRUNG TÂM DÀNH CHO HỌC SINH LỚP 1
+        zIndex: 60 đè nổi hoàn toàn lên trên hình ảnh bản đồ thu nhỏ
       */}
       {showQuestion && (
         <div style={{
@@ -489,7 +475,7 @@ export default function ChimChichBong() {
           justifyContent: 'center',
           padding: '20px',
           boxSizing: 'border-box',
-          zIndex: 45,
+          zIndex: 60, // Cao hơn hình ảnh thu nhỏ (zIndex 20)
           background: 'rgba(9, 13, 22, 0.45)',
         }}>
           <ChallengeQuestionModal

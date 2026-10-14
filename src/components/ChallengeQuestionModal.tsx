@@ -50,7 +50,7 @@ export const ChallengeQuestionModal: React.FC<ChallengeQuestionModalProps> = ({
     }}>
       {/* Header Hộp bài đọc (Đã bỏ icon) */}
       <div style={{
-        padding: '16px 24px',
+        padding: '14px 20px',
         background: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)',
         display: 'flex',
         alignItems: 'center',
@@ -60,14 +60,14 @@ export const ChallengeQuestionModal: React.FC<ChallengeQuestionModalProps> = ({
         <div>
           <h3 style={{
             margin: 0,
-            fontSize: '1.25rem',
+            fontSize: 'clamp(1.05rem, 3.5vw, 1.25rem)',
             fontWeight: 900,
             color: '#fef08a',
             letterSpacing: '0.3px',
           }}>
             Thử Thách {readingData.step}: {readingData.stepTitle}
           </h3>
-          <span style={{ fontSize: '0.85rem', color: '#94a3b8' }}>
+          <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>
             Con hãy đọc to, rõ ràng theo hướng dẫn nhé!
           </span>
         </div>
@@ -76,9 +76,9 @@ export const ChallengeQuestionModal: React.FC<ChallengeQuestionModalProps> = ({
         <button
           onClick={onClose}
           style={{
-            width: '38px',
-            height: '38px',
-            borderRadius: '12px',
+            width: '36px',
+            height: '36px',
+            borderRadius: '10px',
             border: '1px solid rgba(255, 255, 255, 0.2)',
             background: 'rgba(255, 255, 255, 0.1)',
             color: '#ffffff',
@@ -87,38 +87,41 @@ export const ChallengeQuestionModal: React.FC<ChallengeQuestionModalProps> = ({
             justifyContent: 'center',
             cursor: 'pointer',
             transition: 'all 0.2s',
+            flexShrink: 0,
           }}
           title="Đóng bài đọc"
         >
-          <X size={22} />
+          <X size={20} />
         </button>
       </div>
 
       {/* Nội dung Bài đọc dành cho học sinh Lớp 1 */}
       <div style={{
-        padding: '28px 24px',
+        padding: '20px 16px',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        gap: '24px',
+        gap: '18px',
         textAlign: 'center',
+        maxHeight: '75vh',
+        overflowY: 'auto',
       }}>
         {/* KHU VỰC VẦN CHÍNH (Phóng to nổi bật) */}
         <div style={{
           width: '100%',
-          maxWidth: '480px',
+          maxWidth: '440px',
           background: 'linear-gradient(135deg, #fefce8 0%, #fef08a 100%)',
           border: '3px solid #facc15',
-          borderRadius: '24px',
-          padding: '20px 24px',
+          borderRadius: '20px',
+          padding: '16px 20px',
           boxShadow: '0 8px 24px rgba(234, 179, 8, 0.25)',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          gap: '8px',
+          gap: '6px',
         }}>
           <div style={{
-            fontSize: '3.6rem',
+            fontSize: 'clamp(2.6rem, 8vw, 3.4rem)',
             fontWeight: 900,
             color: '#b45309',
             lineHeight: 1.1,
@@ -134,10 +137,10 @@ export const ChallengeQuestionModal: React.FC<ChallengeQuestionModalProps> = ({
           <div style={{ width: '100%' }}>
             <span style={{
               display: 'block',
-              fontSize: '0.92rem',
+              fontSize: '0.85rem',
               fontWeight: 800,
               color: '#64748b',
-              marginBottom: '12px',
+              marginBottom: '10px',
               textTransform: 'uppercase',
               letterSpacing: '0.5px',
             }}>
