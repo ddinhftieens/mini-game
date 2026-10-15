@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Volume2, VolumeX, HelpCircle, CheckCircle2, RotateCcw } from 'lucide-react';
+import { Volume2, VolumeX, HelpCircle, CheckCircle2, RotateCcw, BookOpen, Sparkles, Loader2 } from 'lucide-react';
 import { ChallengeQuestionModal, ChallengeReadingData } from './components/ChallengeQuestionModal';
 
 /**
@@ -228,31 +228,6 @@ export default function ChimChichBong() {
           zIndex: 50,
           flexShrink: 0,
         }}>
-          {/* Tiêu đề chúc mừng thành công */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            background: 'linear-gradient(135deg, rgba(74, 222, 128, 0.22) 0%, rgba(16, 185, 129, 0.1) 100%)',
-            padding: '6px 26px',
-            borderRadius: '999px',
-            border: '1.5px solid rgba(134, 239, 172, 0.55)',
-            boxShadow: '0 4px 24px rgba(16, 185, 129, 0.35)',
-          }}>
-            <h1 style={{
-              margin: 0,
-              fontSize: 'clamp(1.15rem, 2vw, 1.45rem)',
-              fontWeight: 900,
-              letterSpacing: '1.2px',
-              textTransform: 'uppercase',
-              background: 'linear-gradient(135deg, #ffffff 0%, #bef264 40%, #86efac 75%, #4ade80 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              filter: 'drop-shadow(0 2px 10px rgba(74, 222, 128, 0.45))',
-            }}>
-              Giải Cứu Thành Công Chích Bông
-            </h1>
-          </div>
         </div>
 
         {/* Khung Vườn Rau Xanh Mướt (chimchichbong_vuonrau.png) */}
@@ -389,45 +364,60 @@ export default function ChimChichBong() {
           transition: 'all 0.3s ease',
           flexShrink: 0,
         }}>
-          {/* TIÊU ĐỀ TRÒ CHƠI (Tông xanh lá đồng bộ màu lông chim Chích Bông) */}
+          {/* TIÊU ĐỀ TRÒ CHƠI */}
           <div style={{
-            display: 'flex',
+            position: 'relative',
+            display: 'inline-flex',
             alignItems: 'center',
-            gap: '8px',
-            background: 'linear-gradient(135deg, rgba(74, 222, 128, 0.18) 0%, rgba(16, 185, 129, 0.08) 100%)',
-            padding: '5px 22px',
+            justifyContent: 'center',
+            padding: '7px 32px',
             borderRadius: '999px',
-            border: '1.5px solid rgba(134, 239, 172, 0.45)',
-            boxShadow: '0 4px 20px rgba(16, 185, 129, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+            background: 'linear-gradient(180deg, rgba(34, 197, 94, 0.22) 0%, rgba(15, 23, 42, 0.75) 100%)',
+            border: '1.5px solid rgba(74, 222, 128, 0.45)',
+            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.45), 0 0 20px rgba(74, 222, 128, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.3)',
+            backdropFilter: 'blur(12px)',
           }}>
+            <span style={{
+              position: 'absolute',
+              top: '2px',
+              left: '12%',
+              right: '12%',
+              height: '1px',
+              background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.7), transparent)',
+            }} />
             <h1 style={{
               margin: 0,
-              fontSize: 'clamp(1.1rem, 1.8vw, 1.35rem)',
+              fontSize: 'clamp(1.15rem, 1.8vw, 1.45rem)',
               fontWeight: 900,
-              letterSpacing: '1.2px',
+              letterSpacing: '2px',
               textTransform: 'uppercase',
-              background: 'linear-gradient(135deg, #ffffff 0%, #bef264 40%, #86efac 75%, #4ade80 100%)',
+              background: 'linear-gradient(180deg, #ffffff 15%, #bbf7d0 55%, #4ade80 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
-              filter: 'drop-shadow(0 2px 10px rgba(74, 222, 128, 0.45))',
+              filter: 'drop-shadow(0 2px 8px rgba(34, 197, 94, 0.55))',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
             }}>
-              Giải Cứu Chích Bông
+              <span>🌿</span>
+              <span>Giải Cứu Chích Bông</span>
+              <span>🌿</span>
             </h1>
           </div>
 
-          {/* THANH HEADER ĐIỀU KHIỂN CÁC NÚT THỬ THÁCH */}
+          {/* THANH HEADER ĐIỀU KHIỂN CÁC NÚT THỬ THÁCH (Thanh Dock Gaming) */}
           <div style={{
             display: 'flex',
             flexWrap: 'wrap',
-            gap: '8px',
+            gap: '10px',
             alignItems: 'center',
             justifyContent: 'center',
-            background: 'rgba(255, 255, 255, 0.08)',
-            backdropFilter: 'blur(16px)',
-            padding: '8px 12px',
-            borderRadius: '18px',
-            border: '1px solid rgba(255, 255, 255, 0.16)',
-            boxShadow: '0 8px 28px rgba(0,0,0,0.4)',
+            background: 'linear-gradient(180deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.92) 100%)',
+            backdropFilter: 'blur(20px)',
+            padding: '7px 12px',
+            borderRadius: '22px',
+            border: '1px solid rgba(255, 255, 255, 0.12)',
+            boxShadow: '0 12px 32px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.18)',
             maxWidth: '100%',
             boxSizing: 'border-box',
           }}>
@@ -435,42 +425,55 @@ export default function ChimChichBong() {
             <button
               onClick={handleToggleAudio}
               disabled={showQuestion || isFlying}
+              className="game-control-btn"
               style={{
-                padding: '7px 14px',
-                borderRadius: '10px',
+                padding: '8px 16px',
+                borderRadius: '14px',
                 border: isPlayingAudio
                   ? '1.5px solid #facc15'
-                  : '1px solid rgba(255, 255, 255, 0.2)',
+                  : '1px solid rgba(255, 255, 255, 0.12)',
                 background: isPlayingAudio
-                  ? 'linear-gradient(135deg, #eab308 0%, #ca8a04 100%)'
-                  : 'rgba(255, 255, 255, 0.1)',
+                  ? 'linear-gradient(180deg, #f59e0b 0%, #b45309 100%)'
+                  : 'linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%)',
                 color: '#ffffff',
                 fontWeight: 800,
-                fontSize: '0.82rem',
+                fontSize: '0.85rem',
                 cursor: (showQuestion || isFlying) ? 'default' : 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '6px',
-                boxShadow: isPlayingAudio ? '0 4px 16px rgba(234, 179, 8, 0.45)' : 'none',
+                gap: '7px',
+                boxShadow: isPlayingAudio
+                  ? '0 0 16px rgba(245, 158, 11, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.4)'
+                  : 'inset 0 1px 0 rgba(255, 255, 255, 0.1)',
                 transition: 'all 0.25s ease',
               }}
               title={isPlayingAudio ? 'Dừng đọc cốt truyện' : 'Nghe đọc cốt truyện'}
             >
               {isPlayingAudio ? (
                 <>
-                  <VolumeX size={16} />
+                  <VolumeX size={17} color="#fff" />
                   <span>Dừng đọc</span>
                 </>
               ) : (
                 <>
-                  <Volume2 size={16} />
-                  <span>Cốt truyện</span>
+                  <Volume2 size={17} color="#cbd5e1" />
+                  <span style={{ color: '#f1f5f9' }}>Cốt truyện</span>
                 </>
               )}
             </button>
 
-            {/* 3 Nút Thử Thách */}
-            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', justifyContent: 'center' }}>
+            {/* Dải phân cách mờ */}
+            <div style={{ width: '1px', height: '24px', background: 'rgba(255, 255, 255, 0.12)', margin: '0 2px' }} />
+
+            {/* 3 Nút Thử Thách theo dạng Segmented Tabs */}
+            <div style={{
+              display: 'flex',
+              gap: '6px',
+              padding: '3px',
+              borderRadius: '16px',
+              background: 'rgba(0, 0, 0, 0.25)',
+              border: '1px solid rgba(255, 255, 255, 0.06)',
+            }}>
               {([1, 2, 3] as StepId[]).map((step) => {
                 const isActive = currentStep === step && !isFlying;
                 const isTarget = isFlying && flightState?.to === step;
@@ -480,107 +483,58 @@ export default function ChimChichBong() {
                     key={step}
                     onClick={() => navigateToStep(step)}
                     disabled={isFlying || currentStep === step || showQuestion}
+                    className={`game-control-btn ${isTarget ? 'flying-target-tab' : ''}`}
                     style={{
-                      padding: '7px 13px',
-                      borderRadius: '10px',
+                      padding: '7px 15px',
+                      borderRadius: '12px',
                       border: isActive
-                        ? '2px solid #6ee7b7'
+                        ? '1.5px solid #4ade80'
                         : isTarget
-                          ? '2px solid #38bdf8'
-                          : '1px solid rgba(255, 255, 255, 0.2)',
+                          ? '1.5px solid #38bdf8'
+                          : '1px solid transparent',
                       background: isActive
-                        ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
+                        ? 'linear-gradient(180deg, #10b981 0%, #047857 100%)'
                         : isTarget
-                          ? 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)'
-                          : 'rgba(255, 255, 255, 0.1)',
-                      color: '#ffffff',
-                      fontWeight: 800,
-                      fontSize: '0.82rem',
+                          ? 'linear-gradient(180deg, #0284c7 0%, #0369a1 100%)'
+                          : 'transparent',
+                      color: isActive ? '#ffffff' : isTarget ? '#e0f2fe' : '#94a3b8',
+                      fontWeight: isActive || isTarget ? 800 : 700,
+                      fontSize: '0.85rem',
                       cursor: (isFlying || currentStep === step) ? 'default' : 'pointer',
                       boxShadow: isActive
-                        ? '0 4px 18px rgba(16, 185, 129, 0.5)'
-                        : isTarget
-                          ? '0 4px 18px rgba(2, 132, 199, 0.45)'
-                          : 'none',
-                      transform: isActive ? 'scale(1.04)' : 'scale(1)',
+                        ? '0 0 16px rgba(16, 185, 129, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.35)'
+                        : 'none',
+                      transform: isActive ? 'scale(1.02)' : 'scale(1)',
                       transition: 'all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)',
                       display: 'flex',
                       alignItems: 'center',
-                      gap: '5px',
-                      opacity: isFlying && !isTarget ? 0.6 : 1,
+                      gap: '6px',
+                      opacity: isFlying && !isTarget ? 0.45 : 1,
                     }}
                   >
-                    <span>Thử thách {step}</span>
-                    {isActive && (
-                      <span style={{
-                        width: '6px',
-                        height: '6px',
-                        borderRadius: '50%',
-                        backgroundColor: '#fef08a',
-                        boxShadow: '0 0 6px #fef08a',
-                      }} />
+                    {isTarget ? (
+                      <>
+                        <Loader2 size={15} color="#7dd3fc" className="spin-loader-icon" />
+                        <span>Đang bay</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Thử thách {step}</span>
+                        {isActive && (
+                          <span style={{
+                            width: '7px',
+                            height: '7px',
+                            borderRadius: '50%',
+                            backgroundColor: '#fef08a',
+                            boxShadow: '0 0 8px #fef08a',
+                          }} />
+                        )}
+                      </>
                     )}
                   </button>
                 );
               })}
             </div>
-
-            {/* NÚT XEM CÂU HỎI THỬ THÁCH (Xuất hiện khi chim đã dừng ở bục) */}
-            {!isFlying && (
-              <button
-                onClick={() => {
-                  if (audioRef.current && isPlayingAudio) {
-                    audioRef.current.pause();
-                    setIsPlayingAudio(false);
-                  }
-                  setShowQuestion(true);
-                }}
-                style={{
-                  padding: '7px 15px',
-                  borderRadius: '10px',
-                  border: 'none',
-                  background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
-                  color: '#ffffff',
-                  fontWeight: 900,
-                  fontSize: '0.82rem',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  boxShadow: '0 4px 16px rgba(245, 158, 11, 0.45)',
-                  animation: 'pulseBtn 1.8s infinite',
-                  transition: 'all 0.2s',
-                }}
-              >
-                <HelpCircle size={16} />
-                <span>Bài đọc</span>
-              </button>
-            )}
-
-            {/* NÚT HOÀN THÀNH THỬ THÁCH (Xuất hiện khi đang ở bục 3) */}
-            {!isFlying && currentStep === 3 && (
-              <button
-                onClick={handleCompleteChallenge}
-                style={{
-                  padding: '7px 16px',
-                  borderRadius: '10px',
-                  border: 'none',
-                  background: 'linear-gradient(135deg, #ec4899 0%, #db2777 100%)',
-                  color: '#ffffff',
-                  fontWeight: 900,
-                  fontSize: '0.82rem',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  boxShadow: '0 4px 14px rgba(236, 72, 153, 0.4)',
-                  transition: 'all 0.2s',
-                }}
-              >
-                <CheckCircle2 size={16} />
-                <span>Hoàn thành thử thách</span>
-              </button>
-            )}
           </div>
         </div>
       )}
@@ -672,7 +626,124 @@ export default function ChimChichBong() {
               }}
             />
           </div>
+
+          {/* 
+            BONG BÓNG TƯƠNG TÁC TRÊN ĐẦU CHÍCH BÔNG (Game Interactive Speech Bubble)
+            Chỉ xuất hiện khi chim đã dừng ở bục và chưa mở bảng câu hỏi
+          */}
+          {!isFlying && !showQuestion && (
+            <button
+              onClick={() => {
+                if (audioRef.current && isPlayingAudio) {
+                  audioRef.current.pause();
+                  setIsPlayingAudio(false);
+                }
+                setShowQuestion(true);
+              }}
+              className="bird-speech-bubble"
+              style={{
+                position: 'absolute',
+                top: '-55%',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                zIndex: 35,
+                background: 'linear-gradient(135deg, #ffffff 0%, #fffbeb 40%, #fef3c7 100%)',
+                color: '#92400e',
+                border: '2px solid #f59e0b',
+                padding: '4px 11px',
+                borderRadius: '999px',
+                boxShadow: '0 8px 24px rgba(245, 158, 11, 0.45), 0 3px 8px rgba(0,0,0,0.25)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '5px',
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                pointerEvents: 'auto',
+                fontWeight: 900,
+                fontSize: 'clamp(0.72rem, 1.25vw, 0.95rem)',
+                userSelect: 'none',
+              }}
+              title="Nhấn vào đây để xem bài đọc"
+            >
+              <span className="bubble-sparkle" style={{ fontSize: '1rem', lineHeight: 1 }}>📖</span>
+              <span style={{ letterSpacing: '0.3px' }}>Đọc bài</span>
+              <Sparkles size={13} color="#d97706" style={{ flexShrink: 0 }} />
+
+              {/* Mũi nhọn tam giác chỉ xuống đầu chú chim */}
+              <div style={{
+                position: 'absolute',
+                bottom: '-7px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: 0,
+                height: 0,
+                borderLeft: '7px solid transparent',
+                borderRight: '7px solid transparent',
+                borderTop: '7px solid #f59e0b',
+              }} />
+              <div style={{
+                position: 'absolute',
+                bottom: '-5px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: 0,
+                height: 0,
+                borderLeft: '5px solid transparent',
+                borderRight: '5px solid transparent',
+                borderTop: '5px solid #fffbeb',
+              }} />
+            </button>
+          )}
         </div>
+
+        {/* 
+          3. NÚT HOÀN THÀNH THỬ THÁCH (Đặt trên bầu trời phía trên vòm hoa: x = 83.0%, y = 10.0%)
+          Khi học sinh đạt đến Bục 3 và chim đã dừng, nút phát hào quang mời gọi hoàn thành
+        */}
+        {!isFlying && currentStep === 3 && !showQuestion && (
+          <div
+            style={{
+              position: 'absolute',
+              left: '90.0%',
+              top: '6.0%',
+              transform: 'translate(-50%, -50%)',
+              zIndex: 35,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
+            {/* Vòng hào quang phát sáng nhẹ */}
+            <div className="garden-gate-glow" />
+
+            {/* Nút hành động hoàn thành thử thách */}
+            <button
+              onClick={handleCompleteChallenge}
+              className="garden-gate-btn"
+              style={{
+                position: 'relative',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '7px',
+                padding: '7px 16px',
+                borderRadius: '999px',
+                background: 'linear-gradient(135deg, #ec4899 0%, #db2777 50%, #be185d 100%)',
+                color: '#ffffff',
+                border: '2px solid #fbcfe8',
+                fontWeight: 900,
+                fontSize: 'clamp(0.72rem, 1.25vw, 0.95rem)',
+                cursor: 'pointer',
+                boxShadow: '0 8px 24px rgba(219, 39, 119, 0.65), 0 2px 8px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255, 255, 255, 0.5)',
+                whiteSpace: 'nowrap',
+                userSelect: 'none',
+              }}
+              title="Nhấn để cùng Chích Bông hoàn thành thử thách bay vào vườn rau!"
+            >
+              <CheckCircle2 size={16} color="#fdf2f8" />
+              <span>Hoàn thành thử thách</span>
+            </button>
+          </div>
+        )}
       </div>
 
       {/* 
@@ -703,15 +774,108 @@ export default function ChimChichBong() {
 
       {/* Keyframe Styles */}
       <style>{`
-        /* Nút câu hỏi đập nhấp nháy thu hút sự chú ý */
-        @keyframes pulseBtn {
+        .game-control-btn {
+          user-select: none;
+          cursor: pointer;
+        }
+        .game-control-btn:hover:not(:disabled) {
+          filter: brightness(1.12);
+          transform: translateY(-1px);
+        }
+        .game-control-btn:active:not(:disabled) {
+          transform: translateY(1px);
+          filter: brightness(0.95);
+        }
+        .pulse-action-btn {
+          animation: pulseActionGlow 2s infinite ease-in-out;
+        }
+        @keyframes pulseActionGlow {
           0%, 100% {
-            box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);
+            box-shadow: 0 4px 18px rgba(245, 158, 11, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.4);
             transform: scale(1);
           }
           50% {
-            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.7);
-            transform: scale(1.03);
+            box-shadow: 0 6px 24px rgba(245, 158, 11, 0.75), 0 0 12px rgba(251, 191, 36, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            transform: scale(1.04);
+          }
+        }
+
+        /* Nút thử thách đang bay tới (Target Flight State) */
+        .flying-target-tab {
+          background: linear-gradient(180deg, #0284c7 0%, #0369a1 50%, #075985 100%) !important;
+          border: 1.5px solid #7dd3fc !important;
+          box-shadow: 0 0 16px rgba(56, 189, 248, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.5) !important;
+        }
+        .spin-loader-icon {
+          animation: spinAnimation 1s linear infinite;
+        }
+        @keyframes spinAnimation {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+
+        /* Bong bóng hội thoại tương tác trên đầu chim */
+        .bird-speech-bubble {
+          animation: speechBubbleBounce 1.8s infinite ease-in-out;
+          transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.2s;
+        }
+        .bird-speech-bubble:hover {
+          filter: brightness(1.08);
+          transform: translateX(-50%) scale(1.1) !important;
+        }
+        .bird-speech-bubble:active {
+          transform: translateX(-50%) scale(0.96) !important;
+        }
+        @keyframes speechBubbleBounce {
+          0%, 100% {
+            transform: translateX(-50%) translateY(0px) scale(1);
+          }
+          50% {
+            transform: translateX(-50%) translateY(-6px) scale(1.05);
+          }
+        }
+
+        /* Hiệu ứng Cổng Vườn Hoa - Đích đến Thử thách 3 */
+        .garden-gate-glow {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 80px;
+          height: 80px;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(244, 114, 182, 0.5) 0%, rgba(236, 72, 153, 0.2) 50%, transparent 75%);
+          animation: gateAuraPulse 2s infinite ease-in-out;
+          pointer-events: none;
+        }
+        .garden-gate-btn {
+          animation: gateBtnFloat 2s infinite ease-in-out;
+          transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .garden-gate-btn:hover {
+          transform: scale(1.1);
+          filter: brightness(1.12);
+          box-shadow: 0 8px 26px rgba(219, 39, 119, 0.8), 0 0 16px rgba(244, 114, 182, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.6) !important;
+        }
+        .garden-gate-btn:active {
+          transform: scale(0.96);
+        }
+        @keyframes gateAuraPulse {
+          0%, 100% {
+            transform: translate(-50%, -50%) scale(0.9);
+            opacity: 0.6;
+          }
+          50% {
+            transform: translate(-50%, -50%) scale(1.3);
+            opacity: 1;
+          }
+        }
+        @keyframes gateBtnFloat {
+          0%, 100% {
+            transform: translateY(0px) scale(1);
+          }
+          50% {
+            transform: translateY(-5px) scale(1.03);
           }
         }
 
