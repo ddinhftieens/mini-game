@@ -217,11 +217,16 @@ const AICamera: React.FC<AICameraProps> = ({
               isProcessing = false;
             }
           }
+          // Guard unmount before scheduling next frame
+          if (!isMounted) return;
           animFrameIdRef.current = requestAnimationFrame(processFrame);
         };
 
         animFrameIdRef.current = requestAnimationFrame(processFrame);
       } catch (err: any) {
+        // If unmounted while acquiring camera or playing video, silently abort
+        if (!isMounted) return;
+
         console.warn('Camera acquisition error:', err);
         let msg = 'Không thể kết nối với thiết bị camera.';
         if (err.name === 'NotFoundError' || err.message?.includes('Requested device not found')) {
@@ -251,7 +256,11 @@ const AICamera: React.FC<AICameraProps> = ({
         videoRef.current.pause();
         videoRef.current.srcObject = null;
       }
-      faceMeshRef.current?.close();
+      try {
+        faceMeshRef.current?.close();
+      } catch (e) {
+        // Safe ignore if closed while busy
+      }
       faceMeshRef.current = null;
     };
   }, [width, height, handleResults]); // handleResults is now stable ([] deps) so this effect only re-runs when width/height change

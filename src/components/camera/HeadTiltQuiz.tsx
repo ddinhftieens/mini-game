@@ -144,7 +144,7 @@ const HeadTiltQuiz: React.FC<HeadTiltQuizProps> = ({ questions = DEFAULT_QUESTIO
       inCooldownRef.current = true;
       clearTimers();
       setHoldProgress(0);
-      setHeldDir(null);
+      setHeldDir(dir); // Retain active answer card highlight during cooldown
 
       // FIX-2: Read currentIndex from ref to avoid stale closure
       const q = questions[currentIndexRef.current];
@@ -207,8 +207,10 @@ const HeadTiltQuiz: React.FC<HeadTiltQuizProps> = ({ questions = DEFAULT_QUESTIO
       if (!cameraReadyRef.current) setCameraReady(true);
       setTiltDir(dir);
 
+      // Do not accept tilt actions or clear answer state while in cooldown
+      if (inCooldownRef.current) return;
+
       if (dir === 'left' || dir === 'right') {
-        if (inCooldownRef.current) return;
         setHeldDir(dir);
         holdStartRef.current = Date.now();
 
@@ -266,6 +268,7 @@ const HeadTiltQuiz: React.FC<HeadTiltQuizProps> = ({ questions = DEFAULT_QUESTIO
       elapsedTimer.current = null;
     }
     inCooldownRef.current = false;
+    currentIndexRef.current = 0;
     setCurrentIndex(0);
     setScore(0);
     setElapsedTime(0);
@@ -407,9 +410,12 @@ const HeadTiltQuiz: React.FC<HeadTiltQuizProps> = ({ questions = DEFAULT_QUESTIO
       <div className="htq-arena">
         {/* Left Answer */}
         <div
-          onClick={() => handleTilt('left')}
+          onClick={() => {
+            if (!inCooldownRef.current) selectAnswer('left');
+          }}
           role="button"
           tabIndex={0}
+          style={{ pointerEvents: feedback ? 'none' : 'auto' }}
           className={`htq-answer-card htq-answer-card--left
             ${leftActive ? 'htq-answer-card--active' : ''}
             ${feedback && heldDir === 'left' ? `htq-answer-card--${feedback}` : ''}
@@ -480,9 +486,12 @@ const HeadTiltQuiz: React.FC<HeadTiltQuizProps> = ({ questions = DEFAULT_QUESTIO
 
         {/* Right Answer */}
         <div
-          onClick={() => handleTilt('right')}
+          onClick={() => {
+            if (!inCooldownRef.current) selectAnswer('right');
+          }}
           role="button"
           tabIndex={0}
+          style={{ pointerEvents: feedback ? 'none' : 'auto' }}
           className={`htq-answer-card htq-answer-card--right
             ${rightActive ? 'htq-answer-card--active' : ''}
             ${feedback && heldDir === 'right' ? `htq-answer-card--${feedback}` : ''}
