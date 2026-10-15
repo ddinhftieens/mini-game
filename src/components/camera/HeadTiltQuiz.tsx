@@ -109,20 +109,49 @@ const HeadTiltQuiz: React.FC<HeadTiltQuizProps> = ({ questions = DEFAULT_QUESTIO
   const currentIndexRef = useRef(currentIndex);
   currentIndexRef.current = currentIndex;
 
-  // Background Music URL compatible with GitHub Pages base URL
-  const bgMusicUrl = `${import.meta.env.BASE_URL || '/'}camera/nhac_nen.mp3`.replace(/\/+/g, '/');
+  // Chuẩn hóa đường dẫn file nhạc nền tương thích cả Vite dev server lẫn GitHub Pages
+  const bgMusicUrl = `${(import.meta.env.BASE_URL || '/').replace(/\/+$/, '')}/camera/nhac_nen.mp3`;
 
-  const toggleMusic = () => {
-    if (!audioRef.current) return;
-    if (isMusicPlaying) {
-      audioRef.current.pause();
+  // Khởi tạo đối tượng Audio một lần duy nhất qua Ref
+  useEffect(() => {
+    const audio = new Audio(bgMusicUrl);
+    audio.loop = true;
+    audio.volume = 0.5;
+
+    audio.onplay = () => setIsMusicPlaying(true);
+    audio.onpause = () => setIsMusicPlaying(false);
+    audio.onerror = (e) => {
+      console.warn('Audio error:', e);
       setIsMusicPlaying(false);
+    };
+
+    audioRef.current = audio;
+
+    return () => {
+      audio.pause();
+      audio.src = '';
+      audioRef.current = null;
+    };
+  }, [bgMusicUrl]);
+
+  const playMusic = async () => {
+    if (!audioRef.current) return;
+    try {
+      if (!audioRef.current.src || audioRef.current.src === '') {
+        audioRef.current.src = bgMusicUrl;
+      }
+      await audioRef.current.play();
+    } catch (err: any) {
+      console.warn('Không thể phát nhạc nền:', err);
+    }
+  };
+
+  const toggleMusic = async () => {
+    if (!audioRef.current) return;
+    if (!audioRef.current.paused) {
+      audioRef.current.pause();
     } else {
-      audioRef.current.play().then(() => {
-        setIsMusicPlaying(true);
-      }).catch((err) => {
-        console.warn('Cannot autoplay or play audio:', err);
-      });
+      await playMusic();
     }
   };
 
@@ -237,9 +266,6 @@ const HeadTiltQuiz: React.FC<HeadTiltQuizProps> = ({ questions = DEFAULT_QUESTIO
       }
       if (audioRef.current) {
         audioRef.current.pause();
-        audioRef.current.onended = null;
-        audioRef.current.src = '';
-        audioRef.current.load(); // FIX-4: flush audio buffer to fully release memory
       }
     };
   }, [clearTimers]);
@@ -275,14 +301,6 @@ const HeadTiltQuiz: React.FC<HeadTiltQuizProps> = ({ questions = DEFAULT_QUESTIO
 
   return (
     <div className="htq-root">
-      {/* Audio nền duy nhất, tự động phát lặp lại liên tục khi hết bài */}
-      <audio
-        ref={audioRef}
-        src={bgMusicUrl}
-        loop
-        preload="auto"
-      />
-
       {/* Màn hình Bắt đầu */}
       {!gameStarted && (
         <div className="htq-startcard">
@@ -299,6 +317,7 @@ const HeadTiltQuiz: React.FC<HeadTiltQuizProps> = ({ questions = DEFAULT_QUESTIO
             onClick={() => {
               setGameStarted(true);
               setElapsedTime(0);
+              playMusic();
             }}
           >
             BẮT ĐẦU
