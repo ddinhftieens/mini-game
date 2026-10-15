@@ -176,11 +176,19 @@ const AICamera: React.FC<AICameraProps> = ({
         setCameraActive(true);
         onReadyRef.current?.(true);
 
-        // Frame loop to send frames to faceMesh
-        const processFrame = async () => {
+        // Frame loop to send frames to faceMesh (throttled to ~30 FPS to prevent CPU/GPU overload and memory backpressure)
+        let lastFrameTime = 0;
+        const TARGET_FRAME_INTERVAL = 33; // ms (~30 fps)
+
+        const processFrame = async (timestamp: number) => {
           if (!isMounted) return;
-          if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA && !isProcessing) {
+          if (
+            video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA &&
+            !isProcessing &&
+            timestamp - lastFrameTime >= TARGET_FRAME_INTERVAL
+          ) {
             isProcessing = true;
+            lastFrameTime = timestamp;
             try {
               await faceMesh.send({ image: video });
             } catch (e) {
@@ -213,12 +221,18 @@ const AICamera: React.FC<AICameraProps> = ({
       isMounted = false;
       if (animFrameIdRef.current) {
         cancelAnimationFrame(animFrameIdRef.current);
+        animFrameIdRef.current = null;
       }
       if (streamRef.current) {
         streamRef.current.getTracks().forEach((t) => t.stop());
         streamRef.current = null;
       }
+      if (videoRef.current) {
+        videoRef.current.pause();
+        videoRef.current.srcObject = null;
+      }
       faceMeshRef.current?.close();
+      faceMeshRef.current = null;
     };
   }, [width, height, handleResults]);
 

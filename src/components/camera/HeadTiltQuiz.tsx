@@ -157,24 +157,27 @@ const HeadTiltQuiz: React.FC<HeadTiltQuizProps> = ({ questions = DEFAULT_QUESTIO
         inCooldownRef.current = false;
 
         if (isCorrect) {
-          // Trả lời đúng -> Chuyển sang câu hỏi tiếp theo
-          if (currentIndex + 1 >= questions.length) {
-            setGameOver(true);
-          } else {
-            setCurrentIndex((i) => i + 1);
-          }
-        } else {
-          // Trả lời sai -> Giữ nguyên câu hỏi hiện tại cho học sinh tiếp theo
+          // Trả lời đúng -> Chuyển sang câu hỏi tiếp theo an toàn
+          setCurrentIndex((prev) => {
+            if (prev + 1 >= questions.length) {
+              setGameOver(true);
+              return prev;
+            }
+            return prev + 1;
+          });
         }
       }, COOLDOWN_MS);
     },
-    [currentIndex, questions, clearTimers]
+    [questions.length, clearTimers]
   );
 
   // Bộ đếm thời gian liên tục từ khi bắt đầu cho đến khi hoàn thành
   useEffect(() => {
     if (!gameStarted || gameOver) {
-      if (elapsedTimer.current) clearInterval(elapsedTimer.current);
+      if (elapsedTimer.current) {
+        clearInterval(elapsedTimer.current);
+        elapsedTimer.current = null;
+      }
       return;
     }
 
@@ -183,7 +186,10 @@ const HeadTiltQuiz: React.FC<HeadTiltQuizProps> = ({ questions = DEFAULT_QUESTIO
     }, 1000);
 
     return () => {
-      if (elapsedTimer.current) clearInterval(elapsedTimer.current);
+      if (elapsedTimer.current) {
+        clearInterval(elapsedTimer.current);
+        elapsedTimer.current = null;
+      }
     };
   }, [gameStarted, gameOver]);
 
@@ -223,12 +229,31 @@ const HeadTiltQuiz: React.FC<HeadTiltQuizProps> = ({ questions = DEFAULT_QUESTIO
   useEffect(() => {
     return () => {
       clearTimers();
-      if (cooldownTimer.current) clearTimeout(cooldownTimer.current);
+      if (cooldownTimer.current) {
+        clearTimeout(cooldownTimer.current);
+        cooldownTimer.current = null;
+      }
+      if (elapsedTimer.current) {
+        clearInterval(elapsedTimer.current);
+        elapsedTimer.current = null;
+      }
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.src = '';
+      }
     };
   }, [clearTimers]);
 
   const restart = () => {
     clearTimers();
+    if (cooldownTimer.current) {
+      clearTimeout(cooldownTimer.current);
+      cooldownTimer.current = null;
+    }
+    if (elapsedTimer.current) {
+      clearInterval(elapsedTimer.current);
+      elapsedTimer.current = null;
+    }
     inCooldownRef.current = false;
     setCurrentIndex(0);
     setScore(0);
@@ -256,12 +281,6 @@ const HeadTiltQuiz: React.FC<HeadTiltQuizProps> = ({ questions = DEFAULT_QUESTIO
         src={bgMusicUrl}
         loop
         preload="auto"
-        onEnded={() => {
-          if (audioRef.current) {
-            audioRef.current.currentTime = 0;
-            audioRef.current.play().catch(() => {});
-          }
-        }}
       />
 
       {/* Màn hình Bắt đầu */}
