@@ -90,7 +90,6 @@ const HeadTiltQuiz: React.FC<HeadTiltQuizProps> = ({ questions = DEFAULT_QUESTIO
   const [elapsedTime, setElapsedTime] = useState(0); // Bộ đếm thời gian từ khi bắt đầu
   const [tiltDir, setTiltDir] = useState<TiltDirection>(null);
   const [heldDir, setHeldDir] = useState<'left' | 'right' | null>(null);
-  const [holdProgress, setHoldProgress] = useState(0); // 0-100
   const [feedback, setFeedback] = useState<'correct' | 'wrong' | null>(null);
   const [gameOver, setGameOver] = useState(false);
   const [cameraReady, setCameraReady] = useState(false);
@@ -100,10 +99,8 @@ const HeadTiltQuiz: React.FC<HeadTiltQuizProps> = ({ questions = DEFAULT_QUESTIO
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const holdTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const progressTimer = useRef<ReturnType<typeof setInterval> | null>(null);
   const cooldownTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const elapsedTimer = useRef<ReturnType<typeof setInterval> | null>(null);
-  const holdStartRef = useRef<number>(0);
   const inCooldownRef = useRef(false);
   // FIX-3: Keep a ref for cameraReady so handleTilt does not need it as a dep
   const cameraReadyRef = useRef(cameraReady);
@@ -129,13 +126,13 @@ const HeadTiltQuiz: React.FC<HeadTiltQuizProps> = ({ questions = DEFAULT_QUESTIO
     }
   };
 
-  const currentQ = questions[currentIndex];
+  const currentQ = questions[currentIndex] ?? questions[0];
 
   const clearTimers = useCallback(() => {
     if (holdTimer.current) clearTimeout(holdTimer.current);
-    if (progressTimer.current) clearInterval(progressTimer.current);
+    if (cooldownTimer.current) clearTimeout(cooldownTimer.current);
     holdTimer.current = null;
-    progressTimer.current = null;
+    cooldownTimer.current = null;
   }, []);
 
   const selectAnswer = useCallback(
@@ -143,11 +140,11 @@ const HeadTiltQuiz: React.FC<HeadTiltQuizProps> = ({ questions = DEFAULT_QUESTIO
       if (inCooldownRef.current) return;
       inCooldownRef.current = true;
       clearTimers();
-      setHoldProgress(0);
       setHeldDir(dir); // Retain active answer card highlight during cooldown
 
       // FIX-2: Read currentIndex from ref to avoid stale closure
-      const q = questions[currentIndexRef.current];
+      const currentIdx = currentIndexRef.current;
+      const q = questions[currentIdx] ?? questions[0];
       const chosen = dir === 'left' ? q.leftAnswer : q.rightAnswer;
       const isCorrect = chosen.correct;
 
@@ -161,22 +158,21 @@ const HeadTiltQuiz: React.FC<HeadTiltQuizProps> = ({ questions = DEFAULT_QUESTIO
       cooldownTimer.current = setTimeout(() => {
         setFeedback(null);
         setHeldDir(null);
-        setHoldProgress(0);
         inCooldownRef.current = false;
 
         if (isCorrect) {
-          // Trả lời đúng -> Chuyển sang câu hỏi tiếp theo an toàn
-          setCurrentIndex((prev) => {
-            if (prev + 1 >= questions.length) {
-              setGameOver(true);
-              return prev;
-            }
-            return prev + 1;
-          });
+          // [BUG-1 FIX]: Tách setGameOver ra ngoài updater function
+          const nextIndex = currentIdx + 1;
+          if (nextIndex >= questions.length) {
+            setGameOver(true);
+          } else {
+            currentIndexRef.current = nextIndex;
+            setCurrentIndex(nextIndex);
+          }
         }
       }, COOLDOWN_MS);
     },
-    [questions, clearTimers] // FIX-2: removed currentIndex (now read via ref)
+    [questions, clearTimers]
   );
 
   // Bộ đếm thời gian liên tục từ khi bắt đầu cho đến khi hoàn thành
@@ -212,28 +208,19 @@ const HeadTiltQuiz: React.FC<HeadTiltQuizProps> = ({ questions = DEFAULT_QUESTIO
 
       if (dir === 'left' || dir === 'right') {
         setHeldDir(dir);
-        holdStartRef.current = Date.now();
-
         clearTimers();
 
-        progressTimer.current = setInterval(() => {
-          const elapsed = Date.now() - holdStartRef.current;
-          const pct = Math.min((elapsed / HOLD_MS) * 100, 100);
-          setHoldProgress(pct);
-        }, 30);
-
+        // [OPT-1 FIX]: SVG ring dùng CSS animation 1.2s mượt mà, không cần progressTimer set 33 re-render/s
         holdTimer.current = setTimeout(() => {
           clearTimers();
-          setHoldProgress(0);
           selectAnswer(dir);
         }, HOLD_MS);
       } else {
         clearTimers();
         setHeldDir(null);
-        setHoldProgress(0);
       }
     },
-    [clearTimers, selectAnswer] // FIX-3: removed cameraReady (now read via ref)
+    [clearTimers, selectAnswer]
   );
 
   // cleanup on unmount
@@ -277,7 +264,6 @@ const HeadTiltQuiz: React.FC<HeadTiltQuizProps> = ({ questions = DEFAULT_QUESTIO
     setGameStarted(true);
     setAnswers([]);
     setHeldDir(null);
-    setHoldProgress(0);
     setTiltDir(null);
   };
 
@@ -442,7 +428,6 @@ const HeadTiltQuiz: React.FC<HeadTiltQuizProps> = ({ questions = DEFAULT_QUESTIO
                   cx="18" cy="18" r="15.9"
                   fill="none"
                   strokeWidth="3.5"
-                  strokeDasharray={`${holdProgress} 100`}
                   strokeLinecap="round"
                   transform="rotate(-90 18 18)"
                 />
@@ -518,7 +503,6 @@ const HeadTiltQuiz: React.FC<HeadTiltQuizProps> = ({ questions = DEFAULT_QUESTIO
                   cx="18" cy="18" r="15.9"
                   fill="none"
                   strokeWidth="3.5"
-                  strokeDasharray={`${holdProgress} 100`}
                   strokeLinecap="round"
                   transform="rotate(-90 18 18)"
                 />

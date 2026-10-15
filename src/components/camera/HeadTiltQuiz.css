@@ -366,7 +366,16 @@
 .htq-ring-fill {
   stroke: #fde047;
   filter: drop-shadow(0 0 6px #fde047);
-  transition: stroke-dasharray 0.05s linear;
+  animation: htq-ring-spin 1.2s linear forwards;
+}
+
+@keyframes htq-ring-spin {
+  from {
+    stroke-dasharray: 0 100;
+  }
+  to {
+    stroke-dasharray: 100 100;
+  }
 }
 
 /* ── Center Camera Ring ────────────────────────────────────────────────── */
