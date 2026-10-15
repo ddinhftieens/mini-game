@@ -105,6 +105,12 @@ const HeadTiltQuiz: React.FC<HeadTiltQuizProps> = ({ questions = DEFAULT_QUESTIO
   const elapsedTimer = useRef<ReturnType<typeof setInterval> | null>(null);
   const holdStartRef = useRef<number>(0);
   const inCooldownRef = useRef(false);
+  // FIX-3: Keep a ref for cameraReady so handleTilt does not need it as a dep
+  const cameraReadyRef = useRef(cameraReady);
+  cameraReadyRef.current = cameraReady;
+  // FIX-2: Keep a ref for currentIndex so selectAnswer never reads a stale closure
+  const currentIndexRef = useRef(currentIndex);
+  currentIndexRef.current = currentIndex;
 
   // Background Music URL compatible with GitHub Pages base URL
   const bgMusicUrl = `${import.meta.env.BASE_URL || '/'}camera/nhac_nen.mp3`.replace(/\/+/g, '/');
@@ -140,14 +146,16 @@ const HeadTiltQuiz: React.FC<HeadTiltQuizProps> = ({ questions = DEFAULT_QUESTIO
       setHoldProgress(0);
       setHeldDir(null);
 
-      const q = questions[currentIndex];
+      // FIX-2: Read currentIndex from ref to avoid stale closure
+      const q = questions[currentIndexRef.current];
       const chosen = dir === 'left' ? q.leftAnswer : q.rightAnswer;
       const isCorrect = chosen.correct;
 
       setFeedback(isCorrect ? 'correct' : 'wrong');
+      // FIX-1: Always record answer (both correct and wrong) for full history
+      setAnswers((prev) => [...prev, { correct: isCorrect, dir }]);
       if (isCorrect) {
         setScore((s) => s + 1);
-        setAnswers((prev) => [...prev, { correct: true, dir }]);
       }
 
       cooldownTimer.current = setTimeout(() => {
@@ -168,7 +176,7 @@ const HeadTiltQuiz: React.FC<HeadTiltQuizProps> = ({ questions = DEFAULT_QUESTIO
         }
       }, COOLDOWN_MS);
     },
-    [questions.length, clearTimers]
+    [questions, clearTimers] // FIX-2: removed currentIndex (now read via ref)
   );
 
   // Bộ đếm thời gian liên tục từ khi bắt đầu cho đến khi hoàn thành
@@ -195,7 +203,8 @@ const HeadTiltQuiz: React.FC<HeadTiltQuizProps> = ({ questions = DEFAULT_QUESTIO
 
   const handleTilt = useCallback(
     (dir: TiltDirection) => {
-      if (!cameraReady) setCameraReady(true);
+      // FIX-3: Use ref instead of state to avoid recreating handleTilt on cameraReady change
+      if (!cameraReadyRef.current) setCameraReady(true);
       setTiltDir(dir);
 
       if (dir === 'left' || dir === 'right') {
@@ -222,7 +231,7 @@ const HeadTiltQuiz: React.FC<HeadTiltQuizProps> = ({ questions = DEFAULT_QUESTIO
         setHoldProgress(0);
       }
     },
-    [cameraReady, clearTimers, selectAnswer]
+    [clearTimers, selectAnswer] // FIX-3: removed cameraReady (now read via ref)
   );
 
   // cleanup on unmount
@@ -239,7 +248,9 @@ const HeadTiltQuiz: React.FC<HeadTiltQuizProps> = ({ questions = DEFAULT_QUESTIO
       }
       if (audioRef.current) {
         audioRef.current.pause();
+        audioRef.current.onended = null;
         audioRef.current.src = '';
+        audioRef.current.load(); // FIX-4: flush audio buffer to fully release memory
       }
     };
   }, [clearTimers]);

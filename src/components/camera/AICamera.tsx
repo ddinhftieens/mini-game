@@ -47,9 +47,18 @@ const AICamera: React.FC<AICameraProps> = ({
   onReadyRef.current = onReady;
   const onErrorRef = useRef(onError);
   onErrorRef.current = onError;
+  // FIX-1: Use refs for props so handleResults never changes identity,
+  // preventing the useEffect from re-running and restarting FaceMesh.
+  const tiltThresholdRef = useRef(tiltThreshold);
+  tiltThresholdRef.current = tiltThreshold;
+  const mirroredRef = useRef(mirrored);
+  mirroredRef.current = mirrored;
 
   const [cameraActive, setCameraActive] = useState(false);
 
+  // FIX-1 (continued): deps are [] because all values are read via refs at call time.
+  // This guarantees handleResults never changes identity → useEffect never re-runs
+  // → FaceMesh is never accidentally restarted on parent re-render.
   const handleResults = useCallback(
     (results: { multiFaceLandmarks?: { x: number; y: number; z: number }[][] }) => {
       const canvas = canvasRef.current;
@@ -69,18 +78,21 @@ const AICamera: React.FC<AICameraProps> = ({
 
       const landmarks = results.multiFaceLandmarks[0];
       const tiltDeg = computeTiltDegrees(landmarks);
+      // Read threshold and mirror flag from refs (always fresh, no stale closure)
+      const threshold = tiltThresholdRef.current;
+      const isMirrored = mirroredRef.current;
 
       let direction: TiltDirection;
-      if (tiltDeg > tiltThreshold) {
-        direction = 'right'; // screen-right, but head tilts left (mirrored)
-      } else if (tiltDeg < -tiltThreshold) {
+      if (tiltDeg > threshold) {
+        direction = 'right'; // screen-right, head tilts left (mirrored)
+      } else if (tiltDeg < -threshold) {
         direction = 'left';
       } else {
         direction = 'center';
       }
 
       // For mirrored camera: left/right are flipped
-      if (mirrored) {
+      if (isMirrored) {
         if (direction === 'left') direction = 'right';
         else if (direction === 'right') direction = 'left';
       }
@@ -120,7 +132,7 @@ const AICamera: React.FC<AICameraProps> = ({
       ctx.lineWidth = 2;
       ctx.stroke();
     },
-    [tiltThreshold, mirrored]
+    [] // stable forever – reads props via refs
   );
 
   useEffect(() => {
@@ -172,6 +184,14 @@ const AICamera: React.FC<AICameraProps> = ({
         streamRef.current = stream;
         video.srcObject = stream;
         await video.play();
+
+        // FIX-2: Guard unmount race between getUserMedia and video.play()
+        if (!isMounted) {
+          stream.getTracks().forEach((t) => t.stop());
+          video.srcObject = null;
+          streamRef.current = null;
+          return;
+        }
 
         setCameraActive(true);
         onReadyRef.current?.(true);
@@ -234,7 +254,7 @@ const AICamera: React.FC<AICameraProps> = ({
       faceMeshRef.current?.close();
       faceMeshRef.current = null;
     };
-  }, [width, height, handleResults]);
+  }, [width, height, handleResults]); // handleResults is now stable ([] deps) so this effect only re-runs when width/height change
 
   return (
     <div
