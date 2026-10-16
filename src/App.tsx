@@ -22,7 +22,7 @@ interface GameOption {
 const GAMES: GameOption[] = [
   {
     id: 'stage-quiz',
-    title: 'Giải đố vui',
+    title: 'Giải Đố Vui',
     badge: 'Trắc nghiệm thông minh',
     subtitle: 'Khám phá thế giới cùng AI',
     description: 'Bộ câu hỏi trắc nghiệm đồng bộ Google Sheet với hoạt cảnh hoạt hình sinh động, âm thanh hiệu ứng và tính điểm thời gian.',
