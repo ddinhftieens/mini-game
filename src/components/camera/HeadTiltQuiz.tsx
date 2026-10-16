@@ -485,58 +485,60 @@ const HeadTiltQuiz: React.FC<HeadTiltQuizProps> = ({ questions: initialQuestions
 
   return (
     <div className="htq-root">
-      {/* Nút Cài đặt Sheet ở góc trên bên phải */}
-      <div style={{ position: 'absolute', top: '16px', right: '16px', zIndex: 50, display: 'flex', gap: '8px' }}>
-        <button
-          onClick={() => loadQuestionsFromSheet()}
-          disabled={loadingQuestions}
-          title="Tải lại câu hỏi từ Google Sheet"
-          style={{
-            background: 'rgba(255, 255, 255, 0.12)',
-            border: '1.5px solid rgba(255, 255, 255, 0.25)',
-            borderRadius: '99px',
-            padding: '8px 14px',
-            color: '#fff',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            cursor: loadingQuestions ? 'not-allowed' : 'pointer',
-            fontSize: '0.85rem',
-            fontWeight: 700,
-            backdropFilter: 'blur(10px)',
-            transition: 'all 0.2s ease',
-          }}
-        >
-          <RefreshCw size={16} className={loadingQuestions ? 'animate-spin' : ''} style={{ animation: loadingQuestions ? 'spin 1s linear infinite' : 'none' }} />
-          <span>{loadingQuestions ? 'Đang nạp...' : 'Nạp lại'}</span>
-        </button>
+      {/* Nút Cài đặt Sheet ở góc trên bên phải (chỉ hiển thị ở màn hình bắt đầu / menu để không che thanh điểm khi chơi) */}
+      {!gameStarted && (
+        <div style={{ position: 'absolute', top: '16px', right: '16px', zIndex: 50, display: 'flex', gap: '8px' }}>
+          <button
+            onClick={() => loadQuestionsFromSheet()}
+            disabled={loadingQuestions}
+            title="Tải lại câu hỏi từ Google Sheet"
+            style={{
+              background: 'rgba(255, 255, 255, 0.12)',
+              border: '1.5px solid rgba(255, 255, 255, 0.25)',
+              borderRadius: '99px',
+              padding: '8px 14px',
+              color: '#fff',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              cursor: loadingQuestions ? 'not-allowed' : 'pointer',
+              fontSize: '0.85rem',
+              fontWeight: 700,
+              backdropFilter: 'blur(10px)',
+              transition: 'all 0.2s ease',
+            }}
+          >
+            <RefreshCw size={16} className={loadingQuestions ? 'animate-spin' : ''} style={{ animation: loadingQuestions ? 'spin 1s linear infinite' : 'none' }} />
+            <span>{loadingQuestions ? 'Đang nạp...' : 'Nạp lại'}</span>
+          </button>
 
-        <button
-          onClick={() => {
-            setInputUrl(sheetUrl);
-            setShowSettingsModal(true);
-          }}
-          title="Cài đặt liên kết Google Sheet"
-          style={{
-            background: 'rgba(255, 255, 255, 0.12)',
-            border: '1.5px solid rgba(255, 255, 255, 0.25)',
-            borderRadius: '99px',
-            padding: '8px 14px',
-            color: '#fff',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            cursor: 'pointer',
-            fontSize: '0.85rem',
-            fontWeight: 700,
-            backdropFilter: 'blur(10px)',
-            transition: 'all 0.2s ease',
-          }}
-        >
-          <Settings size={16} />
-          <span>Cấu hình Sheet</span>
-        </button>
-      </div>
+          <button
+            onClick={() => {
+              setInputUrl(sheetUrl);
+              setShowSettingsModal(true);
+            }}
+            title="Cài đặt liên kết Google Sheet"
+            style={{
+              background: 'rgba(255, 255, 255, 0.12)',
+              border: '1.5px solid rgba(255, 255, 255, 0.25)',
+              borderRadius: '99px',
+              padding: '8px 14px',
+              color: '#fff',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              cursor: 'pointer',
+              fontSize: '0.85rem',
+              fontWeight: 700,
+              backdropFilter: 'blur(10px)',
+              transition: 'all 0.2s ease',
+            }}
+          >
+            <Settings size={16} />
+            <span>Cấu hình Sheet</span>
+          </button>
+        </div>
+      )}
 
       {/* Màn hình Bắt đầu */}
       {!gameStarted && (
