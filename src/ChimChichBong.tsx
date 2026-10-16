@@ -221,13 +221,35 @@ export default function ChimChichBong() {
         {/* Header màn hình hoàn thành */}
         <div style={{
           display: 'flex',
-          flexDirection: 'column',
           alignItems: 'center',
-          gap: '8px',
+          gap: '12px',
           marginBottom: '10px',
           zIndex: 50,
           flexShrink: 0,
         }}>
+          <button
+            onClick={() => {
+              setIsCompletedSuccess(false);
+              setCurrentStep(1);
+            }}
+            style={{
+              padding: '8px 18px',
+              borderRadius: '999px',
+              border: '1.5px solid #86efac',
+              background: 'linear-gradient(180deg, #15803d 0%, #166534 100%)',
+              color: '#ffffff',
+              fontWeight: 800,
+              fontSize: '0.88rem',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              boxShadow: '0 4px 14px rgba(22, 101, 52, 0.4)',
+            }}
+          >
+            <RotateCcw size={16} />
+            <span>Chơi lại</span>
+          </button>
         </div>
 
         {/* Khung Vườn Rau Xanh Mướt (chimchichbong_vuonrau.png) */}

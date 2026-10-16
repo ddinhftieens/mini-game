@@ -8,3 +8,4 @@ import HeadTiltQuiz from './components/camera/HeadTiltQuiz';
 export default function HeadTiltQuizPage() {
   return <HeadTiltQuiz />;
 }
+
