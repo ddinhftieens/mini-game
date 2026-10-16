@@ -4,6 +4,7 @@ import { GameTheme } from '../types';
  * CẤU HÌNH GOOGLE APPS SCRIPT / SHEET API MẶC ĐỊNH
  */
 export const DEFAULT_GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbzMVJhX3QrMcP0O3TW9VTPbBTlUBFyQaPLUYIPuIG6acBP5xACFGruUkZJ-hhqbJ5Yzlg/exec';
+export const HEAD_TILT_GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycby_RHmd8nPqgbNrXJLQoPeHTwtTV3MYyKSydSx4dSqK9JscbBUpn8F4mcHg_wOn950Q/exec';
 export const GOOGLE_SHEET_APPS_SCRIPT_URL = '';
 export const DEFAULT_TARGET_STEPS = 5;
 

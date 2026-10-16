@@ -65,6 +65,11 @@
   100% { transform: translate(40px, 30px) scale(1.1); }
 }
 
+@keyframes htq-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
 /* ── Header ────────────────────────────────────────────────────────────── */
 .htq-header {
   display: flex;
@@ -345,36 +350,20 @@
   50% { transform: scale(1.08); }
 }
 
-/* ── Hold Progress Ring ────────────────────────────────────────────────── */
-.htq-hold-ring {
-  position: absolute;
-  bottom: 12px;
-  right: 12px;
-  width: 42px;
-  height: 42px;
+/* ── Biometric Scan Progress Ring around Center Camera ──────────────────── */
+.htq-camera-progress-fill {
+  /* Chu vi hình tròn r=124: 2 * π * 124 ≈ 779.1 */
+  stroke-dasharray: 780;
+  stroke-dashoffset: 780;
+  animation: htq-camera-scan-run 1.2s cubic-bezier(0.2, 0.8, 0.25, 1) forwards;
 }
 
-.htq-ring-svg {
-  width: 100%;
-  height: 100%;
-}
-
-.htq-ring-bg {
-  stroke: rgba(255, 255, 255, 0.25);
-}
-
-.htq-ring-fill {
-  stroke: #fde047;
-  filter: drop-shadow(0 0 6px #fde047);
-  animation: htq-ring-spin 1.2s linear forwards;
-}
-
-@keyframes htq-ring-spin {
+@keyframes htq-camera-scan-run {
   from {
-    stroke-dasharray: 0 100;
+    stroke-dashoffset: 780;
   }
   to {
-    stroke-dasharray: 100 100;
+    stroke-dashoffset: 0;
   }
 }
 
