@@ -142,7 +142,9 @@ const AICamera: React.FC<AICameraProps> = ({
     let isMounted = true;
     let isProcessing = false;
 
-    const faceMesh = new FaceMesh({
+    // Lấy FaceMesh từ window (do load từ CDN trong index.html) hoặc từ module import
+    const FaceMeshConstructor = (window as any).FaceMesh || FaceMesh;
+    const faceMesh = new FaceMeshConstructor({
       locateFile: (file: string) =>
         `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`,
     });
@@ -154,7 +156,7 @@ const AICamera: React.FC<AICameraProps> = ({
       minTrackingConfidence: 0.5,
     });
 
-    faceMesh.onResults((results) => {
+    faceMesh.onResults((results: any) => {
       if (!isMounted) return;
       handleResults(results);
     });
