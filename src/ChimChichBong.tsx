@@ -218,39 +218,6 @@ export default function ChimChichBong() {
         overflow: 'hidden',
         position: 'relative',
       }}>
-        {/* Header màn hình hoàn thành */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '12px',
-          marginBottom: '10px',
-          zIndex: 50,
-          flexShrink: 0,
-        }}>
-          <button
-            onClick={() => {
-              setIsCompletedSuccess(false);
-              setCurrentStep(1);
-            }}
-            style={{
-              padding: '8px 18px',
-              borderRadius: '999px',
-              border: '1.5px solid #86efac',
-              background: 'linear-gradient(180deg, #15803d 0%, #166534 100%)',
-              color: '#ffffff',
-              fontWeight: 800,
-              fontSize: '0.88rem',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              boxShadow: '0 4px 14px rgba(22, 101, 52, 0.4)',
-            }}
-          >
-            <RotateCcw size={16} />
-            <span>Chơi lại</span>
-          </button>
-        </div>
 
         {/* Khung Vườn Rau Xanh Mướt (chimchichbong_vuonrau.png) */}
         <div style={{
@@ -762,7 +729,7 @@ export default function ChimChichBong() {
               title="Nhấn để cùng Chích Bông hoàn thành thử thách bay vào vườn rau!"
             >
               <CheckCircle2 size={16} color="#fdf2f8" />
-              <span>Hoàn thành thử thách</span>
+              <span>Về khu vườn</span>
             </button>
           </div>
         )}
