@@ -875,10 +875,6 @@ const HeadTiltQuiz: React.FC<HeadTiltQuizProps> = ({ questions: initialQuestions
             ${feedback && heldDir === 'left' ? `htq-answer-card--${feedback}` : ''}
           `}
             >
-              <div className="htq-answer-side-indicator">
-                <span className="htq-key-tag">Trái</span>
-                <span className="htq-arrow-icon">◀</span>
-              </div>
               <div className="htq-answer-content">
                 <div className="htq-answer-text">{currentQ.leftAnswer.text}</div>
               </div>
@@ -986,10 +982,6 @@ const HeadTiltQuiz: React.FC<HeadTiltQuizProps> = ({ questions: initialQuestions
             ${feedback && heldDir === 'right' ? `htq-answer-card--${feedback}` : ''}
           `}
             >
-              <div className="htq-answer-side-indicator">
-                <span className="htq-key-tag">Phải</span>
-                <span className="htq-arrow-icon">▶</span>
-              </div>
               <div className="htq-answer-content">
                 <div className="htq-answer-text">{currentQ.rightAnswer.text}</div>
               </div>
