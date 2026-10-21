@@ -63,14 +63,20 @@ export default function ChimChichBong() {
   // Trạng thái màn hoàn thành thử thách vườn rau
   const [isCompletedSuccess, setIsCompletedSuccess] = useState<boolean>(false);
   const [isFlyingToGarden, setIsFlyingToGarden] = useState<boolean>(false);
+  const [isPlayingGardenAudio, setIsPlayingGardenAudio] = useState<boolean>(true);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const gardenAudioRef = useRef<HTMLAudioElement | null>(null);
   const flightTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Khởi tạo và cleanup audio cũng như timer khi unmount
   useEffect(() => {
     const audio = new Audio(formatPath('cus/description.mp3'));
     audioRef.current = audio;
+
+    const gardenAudio = new Audio(formatPath('cus/tiengchimhot.mp3'));
+    gardenAudio.loop = true;
+    gardenAudioRef.current = gardenAudio;
 
     audio.onended = () => {
       setIsPlayingAudio(false);
@@ -92,12 +98,33 @@ export default function ChimChichBong() {
       audio.src = '';
       audioRef.current = null;
 
+      gardenAudio.pause();
+      gardenAudio.src = '';
+      gardenAudioRef.current = null;
+
       if (flightTimerRef.current) {
         clearTimeout(flightTimerRef.current);
         flightTimerRef.current = null;
       }
     };
   }, []);
+
+  // Tự động phát tiếng chim hót khi về tới khu vườn (isCompletedSuccess)
+  useEffect(() => {
+    if (isCompletedSuccess && gardenAudioRef.current) {
+      gardenAudioRef.current.currentTime = 0;
+      gardenAudioRef.current.play()
+        .then(() => setIsPlayingGardenAudio(true))
+        .catch((err) => {
+          console.warn('Lỗi tự động phát âm thanh tiếng chim hót:', err);
+          setIsPlayingGardenAudio(false);
+        });
+    } else if (!isCompletedSuccess && gardenAudioRef.current) {
+      gardenAudioRef.current.pause();
+      gardenAudioRef.current.currentTime = 0;
+      setIsPlayingGardenAudio(false);
+    }
+  }, [isCompletedSuccess]);
 
   // Bật/tắt đọc Description
   const handleToggleAudio = () => {
@@ -271,6 +298,82 @@ export default function ChimChichBong() {
                 display: 'block',
               }}
             />
+          </div>
+
+          {/* Thanh nút điều khiển: Bật/Tắt tiếng chim hót & Chơi lại */}
+          <div
+            style={{
+              position: 'absolute',
+              top: '14px',
+              right: '14px',
+              zIndex: 40,
+              display: 'flex',
+              gap: '8px',
+            }}
+          >
+            {/* Nút bật/tắt tiếng chim hót */}
+            <button
+              onClick={() => {
+                if (!gardenAudioRef.current) return;
+                if (gardenAudioRef.current.paused) {
+                  gardenAudioRef.current.play()
+                    .then(() => setIsPlayingGardenAudio(true))
+                    .catch(() => {});
+                } else {
+                  gardenAudioRef.current.pause();
+                  setIsPlayingGardenAudio(false);
+                }
+              }}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '6px 14px',
+                borderRadius: '999px',
+                background: isPlayingGardenAudio ? 'rgba(15, 23, 42, 0.75)' : 'rgba(15, 23, 42, 0.55)',
+                border: isPlayingGardenAudio ? '1.5px solid rgba(74, 222, 128, 0.6)' : '1.5px solid rgba(148, 163, 184, 0.4)',
+                backdropFilter: 'blur(10px)',
+                color: isPlayingGardenAudio ? '#86efac' : '#94a3b8',
+                fontSize: '0.85rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                boxShadow: isPlayingGardenAudio ? '0 4px 16px rgba(74, 222, 128, 0.25)' : 'none',
+              }}
+              title={isPlayingGardenAudio ? 'Tắt tiếng chim hót' : 'Bật tiếng chim hót'}
+            >
+              {isPlayingGardenAudio ? <Volume2 size={16} /> : <VolumeX size={16} />}
+              <span>{isPlayingGardenAudio ? 'Tiếng chim hót' : 'Tắt âm thanh'}</span>
+            </button>
+
+            {/* Nút chơi lại từ đầu */}
+            <button
+              onClick={() => {
+                if (gardenAudioRef.current) {
+                  gardenAudioRef.current.pause();
+                  gardenAudioRef.current.currentTime = 0;
+                }
+                setIsCompletedSuccess(false);
+                setCurrentStep(1);
+              }}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '6px 14px',
+                borderRadius: '999px',
+                background: 'linear-gradient(135deg, #10b981 0%, #047857 100%)',
+                border: '1.5px solid #86efac',
+                color: '#ffffff',
+                fontSize: '0.85rem',
+                fontWeight: 800,
+                cursor: 'pointer',
+                boxShadow: '0 4px 16px rgba(16, 185, 129, 0.5)',
+              }}
+              title="Khám phá lại hành trình"
+            >
+              <RotateCcw size={15} />
+              <span>Chơi lại</span>
+            </button>
           </div>
         </div>
 
@@ -501,24 +604,18 @@ export default function ChimChichBong() {
                       opacity: isFlying && !isTarget ? 0.45 : 1,
                     }}
                   >
-                    {isTarget ? (
-                      <>
-                        <Loader2 size={15} color="#7dd3fc" className="spin-loader-icon" />
-                        <span>Đang bay</span>
-                      </>
-                    ) : (
-                      <>
-                        <span>Thử thách {step}</span>
-                        {isActive && (
-                          <span style={{
-                            width: '7px',
-                            height: '7px',
-                            borderRadius: '50%',
-                            backgroundColor: '#fef08a',
-                            boxShadow: '0 0 8px #fef08a',
-                          }} />
-                        )}
-                      </>
+                    <span>Thử thách {step}</span>
+                    {isTarget && (
+                      <Loader2 size={13} color="#bae6fd" className="spin-loader-icon" />
+                    )}
+                    {isActive && (
+                      <span style={{
+                        width: '7px',
+                        height: '7px',
+                        borderRadius: '50%',
+                        backgroundColor: '#fef08a',
+                        boxShadow: '0 0 8px #fef08a',
+                      }} />
                     )}
                   </button>
                 );
@@ -729,7 +826,7 @@ export default function ChimChichBong() {
               title="Nhấn để cùng Chích Bông hoàn thành thử thách bay vào vườn rau!"
             >
               <CheckCircle2 size={16} color="#fdf2f8" />
-              <span>Về khu vườn</span>
+              <span>Khu vườn</span>
             </button>
           </div>
         )}
@@ -791,12 +888,22 @@ export default function ChimChichBong() {
 
         /* Nút thử thách đang bay tới (Target Flight State) */
         .flying-target-tab {
-          background: linear-gradient(180deg, #0284c7 0%, #0369a1 50%, #075985 100%) !important;
-          border: 1.5px solid #7dd3fc !important;
-          box-shadow: 0 0 16px rgba(56, 189, 248, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.5) !important;
+          background: linear-gradient(135deg, #0284c7 0%, #0369a1 50%, #0c4a6e 100%) !important;
+          border: 1.5px solid #38bdf8 !important;
+          animation: flyingTabGlow 1.2s infinite ease-in-out;
         }
         .spin-loader-icon {
-          animation: spinAnimation 1s linear infinite;
+          animation: spinAnimation 0.9s linear infinite;
+        }
+        @keyframes flyingTabGlow {
+          0%, 100% {
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            transform: scale(1.01);
+          }
+          50% {
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.75), 0 0 8px rgba(125, 211, 252, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+            transform: scale(1.03);
+          }
         }
         @keyframes spinAnimation {
           from { transform: rotate(0deg); }
