@@ -262,7 +262,7 @@ export default function ChimChichBong() {
         }}>
           {/* Background Vườn rau */}
           <img
-            src={formatPath('cus/chimchichbong_vuonrau.png')}
+            src={formatPath('cus/chimchichbong_vuonrau_2.png')}
             alt="Vườn rau nhà mình - Chích Bông giải cứu thành công"
             style={{
               position: 'absolute',
@@ -318,7 +318,7 @@ export default function ChimChichBong() {
                 if (gardenAudioRef.current.paused) {
                   gardenAudioRef.current.play()
                     .then(() => setIsPlayingGardenAudio(true))
-                    .catch(() => {});
+                    .catch(() => { });
                 } else {
                   gardenAudioRef.current.pause();
                   setIsPlayingGardenAudio(false);
