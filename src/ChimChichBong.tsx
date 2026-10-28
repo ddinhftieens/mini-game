@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Volume2, VolumeX, HelpCircle, CheckCircle2, RotateCcw, BookOpen, Sparkles, Loader2 } from 'lucide-react';
+import { CheckCircle2, BookOpen, Sparkles, Loader2 } from 'lucide-react';
 import { ChallengeQuestionModal, ChallengeReadingData } from './components/ChallengeQuestionModal';
 
 /**
@@ -26,124 +26,168 @@ interface FlightState {
 const baseUrl = import.meta.env.BASE_URL || '/';
 const formatPath = (path: string) => `${baseUrl.replace(/\/$/, '')}/${path.replace(/^\//, '')}`;
 
-// Dữ liệu bài đọc vần dành cho học sinh Lớp 1 tương ứng với 3 thử thách
+// Dữ liệu bài đọc dành cho học sinh Lớp 1 tương ứng với 3 thử thách
 const CHALLENGE_READING: Record<StepId, ChallengeReadingData> = {
   1: {
     id: 1,
     step: 1,
     stepTitle: 'Vượt Núi Cao',
-    rhyme: 'ot',
-    vocabulary: ['ngót', 'vót'],
-    sentence: 'quả nhót',
+    content: {
+      type: 'rhymes',
+      rhymes: [
+        { rhyme: 'at',  words: ['bãi cát'] },
+        { rhyme: 'ăt',  words: ['mặt trời'] },
+        { rhyme: 'ât',  words: ['bật lửa'] },
+      ],
+    },
   },
   2: {
     id: 2,
     step: 2,
     stepTitle: 'Vượt Dòng Sông',
-    rhyme: 'ôt',
-    vocabulary: ['cột', 'tốt'],
-    sentence: 'lá lốt',
+    content: {
+      type: 'riddle',
+      lines: [
+        'Miệng tròn, lòng trắng phau phau',
+        'Đựng cơm, đựng thịt, đựng rau hằng ngày.',
+        'Là cái gì?',
+      ],
+      answer: 'Cái bát',
+    },
   },
   3: {
     id: 3,
     step: 3,
     stepTitle: 'Vượt qua cánh cổng',
-    rhyme: 'ơt',
-    vocabulary: ['thớt', 'vợt'],
-    sentence: 'quả ớt',
+    content: {
+      type: 'passage',
+      text: 'Hè đến, nhà Nam đi nghỉ mát ở Cát Bà. Mẹ và Nam bỏ áo bơi, bàn chải, khăn mặt vào ba lô. Nam rất vui khi đi chơi xa với cả nhà.',
+    },
   },
 };
 
+// ============================================================
+// COMPONENT VIDEO MODAL OVERLAY
+// ============================================================
+interface VideoModalProps {
+  src: string;
+  onClose: () => void;
+}
+
+function VideoModal({ src, onClose }: VideoModalProps) {
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  useEffect(() => {
+    // Tự động phát video khi mở modal
+    if (videoRef.current) {
+      videoRef.current.play().catch(() => {});
+    }
+  }, []);
+
+  // Đóng modal khi video kết thúc
+  const handleVideoEnded = () => {
+    onClose();
+  };
+
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 100,
+        backgroundColor: 'rgba(0, 0, 0, 0.85)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '20px',
+        boxSizing: 'border-box',
+      }}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          position: 'relative',
+          width: '100%',
+          maxWidth: 'min(900px, 100%, calc((100vh - 80px) * (16/9)))',
+          aspectRatio: '16 / 9',
+          borderRadius: '16px',
+          overflow: 'hidden',
+          boxShadow: '0 30px 80px rgba(0,0,0,0.8)',
+          border: '2px solid rgba(255,255,255,0.2)',
+        }}
+      >
+        <video
+          ref={videoRef}
+          src={src}
+          onEnded={handleVideoEnded}
+          controls
+          autoPlay
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            display: 'block',
+            backgroundColor: '#000',
+          }}
+        />
+
+        {/* Nút đóng */}
+        <button
+          onClick={onClose}
+          style={{
+            position: 'absolute',
+            top: '12px',
+            right: '12px',
+            width: '36px',
+            height: '36px',
+            borderRadius: '50%',
+            background: 'rgba(0,0,0,0.6)',
+            border: '1.5px solid rgba(255,255,255,0.35)',
+            color: '#fff',
+            fontSize: '1.1rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            backdropFilter: 'blur(6px)',
+            zIndex: 10,
+            lineHeight: 1,
+          }}
+          title="Đóng video"
+        >
+          ✕
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ============================================================
+// COMPONENT CHÍNH
+// ============================================================
 export default function ChimChichBong() {
   const [currentStep, setCurrentStep] = useState<StepId>(1);
   const [flightState, setFlightState] = useState<FlightState | null>(null);
-  const [isPlayingAudio, setIsPlayingAudio] = useState<boolean>(false);
   const [showQuestion, setShowQuestion] = useState<boolean>(false);
 
   // Trạng thái màn hoàn thành thử thách vườn rau
-  const [isCompletedSuccess, setIsCompletedSuccess] = useState<boolean>(false);
   const [isFlyingToGarden, setIsFlyingToGarden] = useState<boolean>(false);
-  const [isPlayingGardenAudio, setIsPlayingGardenAudio] = useState<boolean>(true);
 
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const gardenAudioRef = useRef<HTMLAudioElement | null>(null);
+  // Trạng thái hiển thị video modal
+  const [videoSrc, setVideoSrc] = useState<string | null>(null);
+
   const flightTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Khởi tạo và cleanup audio cũng như timer khi unmount
+  // Cleanup timer khi unmount
   useEffect(() => {
-    const audio = new Audio(formatPath('cus/description.mp3'));
-    audioRef.current = audio;
-
-    const gardenAudio = new Audio(formatPath('cus/tiengchimhot.mp3'));
-    gardenAudio.loop = true;
-    gardenAudioRef.current = gardenAudio;
-
-    audio.onended = () => {
-      setIsPlayingAudio(false);
-    };
-
-    audio.onpause = () => {
-      setIsPlayingAudio(false);
-    };
-
-    audio.onerror = () => {
-      setIsPlayingAudio(false);
-    };
-
     return () => {
-      audio.pause();
-      audio.onended = null;
-      audio.onpause = null;
-      audio.onerror = null;
-      audio.src = '';
-      audioRef.current = null;
-
-      gardenAudio.pause();
-      gardenAudio.src = '';
-      gardenAudioRef.current = null;
-
       if (flightTimerRef.current) {
         clearTimeout(flightTimerRef.current);
         flightTimerRef.current = null;
       }
     };
   }, []);
-
-  // Tự động phát tiếng chim hót khi về tới khu vườn (isCompletedSuccess)
-  useEffect(() => {
-    if (isCompletedSuccess && gardenAudioRef.current) {
-      gardenAudioRef.current.currentTime = 0;
-      gardenAudioRef.current.play()
-        .then(() => setIsPlayingGardenAudio(true))
-        .catch((err) => {
-          console.warn('Lỗi tự động phát âm thanh tiếng chim hót:', err);
-          setIsPlayingGardenAudio(false);
-        });
-    } else if (!isCompletedSuccess && gardenAudioRef.current) {
-      gardenAudioRef.current.pause();
-      gardenAudioRef.current.currentTime = 0;
-      setIsPlayingGardenAudio(false);
-    }
-  }, [isCompletedSuccess]);
-
-  // Bật/tắt đọc Description
-  const handleToggleAudio = () => {
-    if (!audioRef.current) return;
-
-    if (isPlayingAudio) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-      setIsPlayingAudio(false);
-    } else {
-      audioRef.current.currentTime = 0;
-      audioRef.current.play()
-        .then(() => setIsPlayingAudio(true))
-        .catch((err) => {
-          console.error('Audio playback error:', err);
-          setIsPlayingAudio(false);
-        });
-    }
-  };
 
   // Vị trí tĩnh của các bục
   const stepPositions: Record<StepId, { left: string; top: string }> = {
@@ -153,6 +197,25 @@ export default function ChimChichBong() {
   };
 
   const isFlying = flightState !== null || isFlyingToGarden;
+
+  // Xử lý khi nhấn "Khu vườn":
+  // Chim bay từ bục 3 lên vị trí cổng vòm hoa (2.5s), sau đó mới mở video
+  const handleGardenClick = () => {
+    if (isFlying || showQuestion) return;
+
+    if (flightTimerRef.current) {
+      clearTimeout(flightTimerRef.current);
+      flightTimerRef.current = null;
+    }
+
+    setIsFlyingToGarden(true);
+
+    flightTimerRef.current = setTimeout(() => {
+      flightTimerRef.current = null;
+      setIsFlyingToGarden(false);
+      setVideoSrc(formatPath('cus/chimchichbong_end.mp4'));
+    }, 2500);
+  };
 
   const navigateToStep = (targetStep: StepId) => {
     if (isFlying || targetStep === currentStep || showQuestion) return;
@@ -173,33 +236,6 @@ export default function ChimChichBong() {
       setFlightState(null);
     }, durationMs);
   };
-
-  // Xử lý khi nhấn "Hoàn thành thử thách":
-  // Chim bay từ bục 3 lên vị trí cổng vòm hoa, sau đó mở background vườn rau
-  const handleCompleteChallenge = () => {
-    if (isFlying || showQuestion) return;
-
-    if (flightTimerRef.current) {
-      clearTimeout(flightTimerRef.current);
-      flightTimerRef.current = null;
-    }
-
-    // Tạm dừng audio nếu đang phát
-    if (audioRef.current && isPlayingAudio) {
-      audioRef.current.pause();
-      setIsPlayingAudio(false);
-    }
-
-    setIsFlyingToGarden(true);
-
-    // Chuyến bay lên vòm cổng hoa kéo dài 2.5s rồi chuyển màn hình
-    flightTimerRef.current = setTimeout(() => {
-      flightTimerRef.current = null;
-      setIsFlyingToGarden(false);
-      setIsCompletedSuccess(true);
-    }, 2500);
-  };
-
 
   // Xác định animation name và duration dựa vào cặp (from -> to)
   const getFlightAnimation = () => {
@@ -225,203 +261,6 @@ export default function ChimChichBong() {
   };
 
   // =========================================================================
-  // MÀN HÌNH HOÀN THÀNH: GIẢI CỨU THÀNH CÔNG CHÍCH BÔNG (VƯỜN RAU)
-  // =========================================================================
-  if (isCompletedSuccess) {
-    return (
-      <div style={{
-        width: '100vw',
-        height: '100vh',
-        maxHeight: '100vh',
-        backgroundColor: '#090d16',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '10px 16px',
-        boxSizing: 'border-box',
-        fontFamily: 'system-ui, -apple-system, sans-serif',
-        color: '#ffffff',
-        overflow: 'hidden',
-        position: 'relative',
-      }}>
-
-        {/* Khung Vườn Rau Xanh Mướt (chimchichbong_vuonrau.png) */}
-        <div style={{
-          position: 'relative',
-          width: '100%',
-          maxWidth: 'min(1280px, 100%, calc((100vh - 170px) * (16 / 9)))',
-          maxHeight: 'calc(100vh - 170px)',
-          aspectRatio: '16 / 9',
-          borderRadius: '20px',
-          overflow: 'hidden',
-          boxShadow: '0 25px 60px rgba(0,0,0,0.7), 0 0 0 2px rgba(134, 239, 172, 0.4)',
-          border: '3px solid rgba(255, 255, 255, 0.35)',
-          backgroundColor: '#86efac',
-          userSelect: 'none',
-        }}>
-          {/* Background Vườn rau */}
-          <img
-            src={formatPath('cus/chimchichbong_vuonrau_2.png')}
-            alt="Vườn rau nhà mình - Chích Bông giải cứu thành công"
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              display: 'block',
-              pointerEvents: 'none',
-            }}
-          />
-
-          {/* Chú chim Chích Bông bay lượn qua lại tự do giữa vườn rau */}
-          <div
-            style={{
-              position: 'absolute',
-              width: '9.5%',
-              aspectRatio: '1 / 1',
-              zIndex: 30,
-              pointerEvents: 'none',
-              animation: 'flyBackAndForth 8s infinite ease-in-out',
-            }}
-          >
-            <img
-              src={formatPath('cus/chimchichbong_bay.png')}
-              alt="Chích Bông bay lượn vui vẻ trong vườn rau"
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'contain',
-                filter: 'drop-shadow(0 6px 14px rgba(0,0,0,0.35))',
-                display: 'block',
-              }}
-            />
-          </div>
-
-          {/* Thanh nút điều khiển: Bật/Tắt tiếng chim hót & Chơi lại */}
-          <div
-            style={{
-              position: 'absolute',
-              top: '14px',
-              right: '14px',
-              zIndex: 40,
-              display: 'flex',
-              gap: '8px',
-            }}
-          >
-            {/* Nút bật/tắt tiếng chim hót */}
-            <button
-              onClick={() => {
-                if (!gardenAudioRef.current) return;
-                if (gardenAudioRef.current.paused) {
-                  gardenAudioRef.current.play()
-                    .then(() => setIsPlayingGardenAudio(true))
-                    .catch(() => { });
-                } else {
-                  gardenAudioRef.current.pause();
-                  setIsPlayingGardenAudio(false);
-                }
-              }}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '6px 14px',
-                borderRadius: '999px',
-                background: isPlayingGardenAudio ? 'rgba(15, 23, 42, 0.75)' : 'rgba(15, 23, 42, 0.55)',
-                border: isPlayingGardenAudio ? '1.5px solid rgba(74, 222, 128, 0.6)' : '1.5px solid rgba(148, 163, 184, 0.4)',
-                backdropFilter: 'blur(10px)',
-                color: isPlayingGardenAudio ? '#86efac' : '#94a3b8',
-                fontSize: '0.85rem',
-                fontWeight: 700,
-                cursor: 'pointer',
-                boxShadow: isPlayingGardenAudio ? '0 4px 16px rgba(74, 222, 128, 0.25)' : 'none',
-              }}
-              title={isPlayingGardenAudio ? 'Tắt tiếng chim hót' : 'Bật tiếng chim hót'}
-            >
-              {isPlayingGardenAudio ? <Volume2 size={16} /> : <VolumeX size={16} />}
-              <span>{isPlayingGardenAudio ? 'Tiếng chim hót' : 'Tắt âm thanh'}</span>
-            </button>
-
-            {/* Nút chơi lại từ đầu */}
-            <button
-              onClick={() => {
-                if (gardenAudioRef.current) {
-                  gardenAudioRef.current.pause();
-                  gardenAudioRef.current.currentTime = 0;
-                }
-                setIsCompletedSuccess(false);
-                setCurrentStep(1);
-              }}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '6px 14px',
-                borderRadius: '999px',
-                background: 'linear-gradient(135deg, #10b981 0%, #047857 100%)',
-                border: '1.5px solid #86efac',
-                color: '#ffffff',
-                fontSize: '0.85rem',
-                fontWeight: 800,
-                cursor: 'pointer',
-                boxShadow: '0 4px 16px rgba(16, 185, 129, 0.5)',
-              }}
-              title="Khám phá lại hành trình"
-            >
-              <RotateCcw size={15} />
-              <span>Chơi lại</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Keyframe bay lượn qua lại trong vườn rau */}
-        <style>{`
-          @keyframes flyBackAndForth {
-            0% {
-              left: 15%;
-              top: 32%;
-              transform: translate(-50%, -50%) scaleX(1) rotate(2deg);
-            }
-            25% {
-              left: 45%;
-              top: 22%;
-              transform: translate(-50%, -50%) scaleX(1) scale(1.1) rotate(-3deg);
-            }
-            49% {
-              left: 80%;
-              top: 35%;
-              transform: translate(-50%, -50%) scaleX(1) rotate(4deg);
-            }
-            50% {
-              left: 80%;
-              top: 35%;
-              transform: translate(-50%, -50%) scaleX(-1) rotate(4deg);
-            }
-            75% {
-              left: 48%;
-              top: 42%;
-              transform: translate(-50%, -50%) scaleX(-1) scale(1.05) rotate(-2deg);
-            }
-            99% {
-              left: 15%;
-              top: 32%;
-              transform: translate(-50%, -50%) scaleX(-1) rotate(2deg);
-            }
-            100% {
-              left: 15%;
-              top: 32%;
-              transform: translate(-50%, -50%) scaleX(1) rotate(2deg);
-            }
-          }
-        `}</style>
-      </div>
-    );
-  }
-
-  // =========================================================================
   // MÀN HÌNH BẢN ĐỒ CHÍNH (HÀNH TRÌNH GIẢI CỨU CHÍCH BÔNG)
   // =========================================================================
   return (
@@ -441,7 +280,13 @@ export default function ChimChichBong() {
       overflow: 'hidden',
       position: 'relative',
     }}>
-      {/* 
+
+      {/* VIDEO MODAL OVERLAY */}
+      {videoSrc && (
+        <VideoModal src={videoSrc} onClose={() => setVideoSrc(null)} />
+      )}
+
+      {/*
         TIÊU ĐỀ TRÒ CHƠI & HEADER THANH ĐIỀU KHIỂN:
         Ẩn hoàn toàn khi đang mở bài đọc
       */}
@@ -513,20 +358,16 @@ export default function ChimChichBong() {
             maxWidth: '100%',
             boxSizing: 'border-box',
           }}>
-            {/* Nút Nghe Thuyết Minh (Description Audio) */}
+            {/* Nút Cốt Truyện — click để xem video chimchichbong_start.mp4 */}
             <button
-              onClick={handleToggleAudio}
+              onClick={() => setVideoSrc(formatPath('cus/chimchichbong_start.mp4'))}
               disabled={showQuestion || isFlying}
               className="game-control-btn"
               style={{
                 padding: '8px 16px',
                 borderRadius: '14px',
-                border: isPlayingAudio
-                  ? '1.5px solid #facc15'
-                  : '1px solid rgba(255, 255, 255, 0.12)',
-                background: isPlayingAudio
-                  ? 'linear-gradient(180deg, #f59e0b 0%, #b45309 100%)'
-                  : 'linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%)',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%)',
                 color: '#ffffff',
                 fontWeight: 800,
                 fontSize: '0.85rem',
@@ -534,24 +375,12 @@ export default function ChimChichBong() {
                 display: 'flex',
                 alignItems: 'center',
                 gap: '7px',
-                boxShadow: isPlayingAudio
-                  ? '0 0 16px rgba(245, 158, 11, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.4)'
-                  : 'inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+                boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.1)',
                 transition: 'all 0.25s ease',
               }}
-              title={isPlayingAudio ? 'Dừng đọc cốt truyện' : 'Nghe đọc cốt truyện'}
+              title="Xem cốt truyện"
             >
-              {isPlayingAudio ? (
-                <>
-                  <VolumeX size={17} color="#fff" />
-                  <span>Dừng đọc</span>
-                </>
-              ) : (
-                <>
-                  <Volume2 size={17} color="#cbd5e1" />
-                  <span style={{ color: '#f1f5f9' }}>Cốt truyện</span>
-                </>
-              )}
+              <BookOpen size={17} color="#cbd5e1" />
             </button>
 
             {/* Dải phân cách mờ */}
@@ -625,7 +454,7 @@ export default function ChimChichBong() {
         </div>
       )}
 
-      {/* 
+      {/*
         SÂN KHẤU TRÒ CHƠI RESPONSIVE 16:9
         Tự động co giãn theo cả chiều rộng (mobile dọc) và chiều cao (màn hình nằm ngang)
       */}
@@ -713,17 +542,13 @@ export default function ChimChichBong() {
             />
           </div>
 
-          {/* 
+          {/*
             BONG BÓNG TƯƠNG TÁC TRÊN ĐẦU CHÍCH BÔNG (Game Interactive Speech Bubble)
             Chỉ xuất hiện khi chim đã dừng ở bục và chưa mở bảng câu hỏi
           */}
           {!isFlying && !showQuestion && (
             <button
               onClick={() => {
-                if (audioRef.current && isPlayingAudio) {
-                  audioRef.current.pause();
-                  setIsPlayingAudio(false);
-                }
                 setShowQuestion(true);
               }}
               className="bird-speech-bubble"
@@ -782,9 +607,10 @@ export default function ChimChichBong() {
           )}
         </div>
 
-        {/* 
-          3. NÚT HOÀN THÀNH THỬ THÁCH (Đặt trên bầu trời phía trên vòm hoa: x = 83.0%, y = 10.0%)
-          Khi học sinh đạt đến Bục 3 và chim đã dừng, nút phát hào quang mời gọi hoàn thành
+        {/*
+          3. NÚT KHU VƯỜN (Đặt trên bầu trời phía trên vòm hoa: x = 83.0%, y = 10.0%)
+          Khi học sinh đạt đến Bục 3 và chim đã dừng, nút phát hào quang mời gọi hoàn thành.
+          Click sẽ hiển thị video chimchichbong_end.mp4
         */}
         {!isFlying && currentStep === 3 && !showQuestion && (
           <div
@@ -802,9 +628,9 @@ export default function ChimChichBong() {
             {/* Vòng hào quang phát sáng nhẹ */}
             <div className="garden-gate-glow" />
 
-            {/* Nút hành động hoàn thành thử thách */}
+            {/* Nút hành động Khu Vườn */}
             <button
-              onClick={handleCompleteChallenge}
+              onClick={handleGardenClick}
               className="garden-gate-btn"
               style={{
                 position: 'relative',
@@ -823,7 +649,7 @@ export default function ChimChichBong() {
                 whiteSpace: 'nowrap',
                 userSelect: 'none',
               }}
-              title="Nhấn để cùng Chích Bông hoàn thành thử thách bay vào vườn rau!"
+              title="Nhấn để xem Chích Bông bay vào khu vườn!"
             >
               <CheckCircle2 size={16} color="#fdf2f8" />
               <span>Khu vườn</span>
@@ -832,7 +658,7 @@ export default function ChimChichBong() {
         )}
       </div>
 
-      {/* 
+      {/*
         COMPONENT BÀI ĐỌC TRUNG TÂM DÀNH CHO HỌC SINH LỚP 1
         zIndex: 60 đè nổi hoàn toàn lên trên hình ảnh bản đồ thu nhỏ
       */}
@@ -871,19 +697,6 @@ export default function ChimChichBong() {
         .game-control-btn:active:not(:disabled) {
           transform: translateY(1px);
           filter: brightness(0.95);
-        }
-        .pulse-action-btn {
-          animation: pulseActionGlow 2s infinite ease-in-out;
-        }
-        @keyframes pulseActionGlow {
-          0%, 100% {
-            box-shadow: 0 4px 18px rgba(245, 158, 11, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.4);
-            transform: scale(1);
-          }
-          50% {
-            box-shadow: 0 6px 24px rgba(245, 158, 11, 0.75), 0 0 12px rgba(251, 191, 36, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.6);
-            transform: scale(1.04);
-          }
         }
 
         /* Nút thử thách đang bay tới (Target Flight State) */
@@ -975,7 +788,6 @@ export default function ChimChichBong() {
           }
         }
 
-
         /* --- Bay từ Bục 3 vào Cổng Vòm Hoa (Hoàn thành) --- */
         @keyframes fly_to_garden_gate {
           0% {
@@ -990,7 +802,7 @@ export default function ChimChichBong() {
           }
           100% {
             left: 83.0%;
-            top: 39.0%; /* Vị trí đánh dấu màu đỏ ngay giữa vòm hoa */
+            top: 39.0%;
             transform: translate(-50%, -88%) scale(0.85);
             opacity: 0.9;
           }
