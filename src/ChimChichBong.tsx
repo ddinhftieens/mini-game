@@ -220,7 +220,6 @@ export default function ChimChichBong() {
   // Xử lý khi nhấn nút "Hoàn thành" trong Modal bài đọc
   const handleCompleteChallenge = () => {
     setShowQuestion(false);
-    // Khi hoàn thành Thử thách 3: chim tự động bay vào cổng vòm hoa và chiếu video chimchichbong_end.mp4
     if (currentStep === 3) {
       setTimeout(() => {
         triggerGardenFlight();
@@ -279,7 +278,7 @@ export default function ChimChichBong() {
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: '10px 16px',
+      padding: '8px 16px',
       boxSizing: 'border-box',
       fontFamily: 'system-ui, -apple-system, sans-serif',
       color: '#ffffff',
@@ -292,102 +291,104 @@ export default function ChimChichBong() {
         <VideoModal src={videoSrc} onClose={() => setVideoSrc(null)} />
       )}
 
-      {/* Thanh Header điều khiển */}
+      {/*
+        ======================================================================
+        HEADER TRÒ CHƠI TINH TẾ, ĐỒNG BỘ MÀU SẮC & GỌN GÀNG
+        - Cùng ngôn ngữ màu Dark Slate Blue / Emerald sạch sẽ
+        - Bỏ hai icon hoa/lá, bỏ các hiệu ứng rung lắc/đung đưa/nhấp nháy
+        ======================================================================
+      */}
       {!showQuestion && (
-        <div style={{
+        <header className="game-header-container" style={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           gap: '8px',
           marginBottom: '10px',
           zIndex: 50,
-          transition: 'all 0.3s ease',
           flexShrink: 0,
+          maxWidth: '100%',
         }}>
-          {/* Tiêu đề trò chơi */}
+          {/* 1. KHUNG TIÊU ĐỀ TRÒ CHƠI (Đồng bộ bảng màu Dark Slate) */}
           <div style={{
-            position: 'relative',
             display: 'inline-flex',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '7px 32px',
+            padding: '7px 28px',
             borderRadius: '999px',
-            background: 'linear-gradient(180deg, rgba(34, 197, 94, 0.22) 0%, rgba(15, 23, 42, 0.75) 100%)',
-            border: '1.5px solid rgba(74, 222, 128, 0.45)',
-            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.45), 0 0 20px rgba(74, 222, 128, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.3)',
-            backdropFilter: 'blur(12px)',
+            background: 'rgba(30, 41, 59, 0.88)',
+            border: '1.5px solid rgba(255, 255, 255, 0.12)',
+            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.4)',
+            backdropFilter: 'blur(20px)',
           }}>
             <h1 style={{
               margin: 0,
-              fontSize: 'clamp(1.15rem, 1.8vw, 1.45rem)',
-              fontWeight: 900,
-              letterSpacing: '2px',
+              fontSize: 'clamp(1.1rem, 1.8vw, 1.35rem)',
+              fontWeight: 800,
+              letterSpacing: '2.5px',
               textTransform: 'uppercase',
-              background: 'linear-gradient(180deg, #ffffff 15%, #bbf7d0 55%, #4ade80 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              filter: 'drop-shadow(0 2px 8px rgba(34, 197, 94, 0.55))',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
+              color: '#f8fafc',
+              fontFamily: 'system-ui, -apple-system, sans-serif',
+              lineHeight: 1.2,
             }}>
-              <span>🌿</span>
-              <span>Giải Cứu Chích Bông</span>
-              <span>🌿</span>
+              GIẢI CỨU CHÍCH BÔNG
             </h1>
           </div>
 
-          {/* Thanh dock chọn thử thách */}
+          {/* 2. THANH DOCK ĐIỀU KHIỂN & CHỌN THỬ THÁCH (Đồng bộ tuyệt đối) */}
           <div style={{
             display: 'flex',
-            flexWrap: 'wrap',
-            gap: '10px',
             alignItems: 'center',
             justifyContent: 'center',
-            background: 'linear-gradient(180deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.92) 100%)',
+            gap: '6px',
+            background: 'rgba(30, 41, 59, 0.88)',
             backdropFilter: 'blur(20px)',
-            padding: '7px 12px',
-            borderRadius: '22px',
-            border: '1px solid rgba(255, 255, 255, 0.12)',
-            boxShadow: '0 12px 32px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.18)',
+            padding: '5px 8px',
+            borderRadius: '20px',
+            border: '1.5px solid rgba(255, 255, 255, 0.12)',
+            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.4)',
             maxWidth: '100%',
             boxSizing: 'border-box',
           }}>
-            {/* Xem cốt truyện */}
+            {/* Nút Xem Video Cốt Truyện */}
             <button
               onClick={() => setVideoSrc(formatPath('cus/chimchichbong_start.mp4'))}
               disabled={showQuestion || isFlying}
               className="game-control-btn"
               style={{
-                padding: '8px 16px',
-                borderRadius: '14px',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
-                background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%)',
-                color: '#ffffff',
-                fontWeight: 800,
-                fontSize: '0.85rem',
+                width: '36px',
+                height: '36px',
+                borderRadius: '12px',
+                border: '1px solid rgba(255, 255, 255, 0.14)',
+                background: 'rgba(255, 255, 255, 0.06)',
+                color: '#e2e8f0',
                 cursor: (showQuestion || isFlying) ? 'default' : 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '7px',
-                boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.1)',
-                transition: 'all 0.25s ease',
+                justifyContent: 'center',
+                flexShrink: 0,
+                transition: 'background 0.2s, border-color 0.2s',
               }}
               title="Xem video cốt truyện"
             >
-              <BookOpen size={17} color="#cbd5e1" />
+              <BookOpen size={17} strokeWidth={2.2} color="#cbd5e1" />
             </button>
 
-            <div style={{ width: '1px', height: '24px', background: 'rgba(255, 255, 255, 0.12)', margin: '0 2px' }} />
+            {/* Dải phân cách dọc */}
+            <div style={{
+              width: '1px',
+              height: '22px',
+              background: 'rgba(255, 255, 255, 0.15)',
+              margin: '0 2px',
+            }} />
 
-            {/* 3 Nút Thử Thách */}
+            {/* Segmented Control 3 Thử Thách */}
             <div style={{
               display: 'flex',
-              gap: '6px',
-              padding: '3px',
-              borderRadius: '16px',
-              background: 'rgba(0, 0, 0, 0.25)',
-              border: '1px solid rgba(255, 255, 255, 0.06)',
+              gap: '4px',
+              padding: '2px',
+              borderRadius: '14px',
+              background: 'rgba(0, 0, 0, 0.3)',
             }}>
               {([1, 2, 3] as StepId[]).map((step) => {
                 const isActive = currentStep === step && !isFlying;
@@ -398,54 +399,68 @@ export default function ChimChichBong() {
                     key={step}
                     onClick={() => navigateToStep(step)}
                     disabled={isFlying || currentStep === step || showQuestion}
-                    className={`game-control-btn ${isTarget ? 'flying-target-tab' : ''}`}
+                    className="game-control-btn"
                     style={{
                       padding: '7px 15px',
                       borderRadius: '12px',
                       border: isActive
-                        ? '1.5px solid #4ade80'
+                        ? '1px solid #10b981'
                         : isTarget
-                          ? '1.5px solid #38bdf8'
+                          ? '1px solid #0284c7'
                           : '1px solid transparent',
                       background: isActive
-                        ? 'linear-gradient(180deg, #10b981 0%, #047857 100%)'
+                        ? '#059669'
                         : isTarget
-                          ? 'linear-gradient(180deg, #0284c7 0%, #0369a1 100%)'
+                          ? '#0284c7'
                           : 'transparent',
-                      color: isActive ? '#ffffff' : isTarget ? '#e0f2fe' : '#94a3b8',
+                      color: isActive || isTarget ? '#ffffff' : '#94a3b8',
                       fontWeight: isActive || isTarget ? 800 : 700,
                       fontSize: '0.85rem',
                       cursor: (isFlying || currentStep === step) ? 'default' : 'pointer',
-                      boxShadow: isActive
-                        ? '0 0 16px rgba(16, 185, 129, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.35)'
-                        : 'none',
-                      transform: isActive ? 'scale(1.02)' : 'scale(1)',
-                      transition: 'all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)',
                       display: 'flex',
                       alignItems: 'center',
-                      gap: '6px',
+                      gap: '7px',
                       opacity: isFlying && !isTarget ? 0.45 : 1,
+                      transition: 'background 0.2s, color 0.2s',
                     }}
                   >
+                    {/* Badge số thứ tự 1, 2, 3 */}
+                    <div style={{
+                      width: '20px',
+                      height: '20px',
+                      borderRadius: '50%',
+                      background: isActive
+                        ? '#ffffff'
+                        : isTarget
+                          ? '#ffffff'
+                          : 'rgba(255, 255, 255, 0.12)',
+                      color: isActive
+                        ? '#059669'
+                        : isTarget
+                          ? '#0284c7'
+                          : '#cbd5e1',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '0.75rem',
+                      fontWeight: 900,
+                      lineHeight: 1,
+                    }}>
+                      {step}
+                    </div>
+
                     <span>Thử thách {step}</span>
+
+                    {/* Loader khi đang bay */}
                     {isTarget && (
                       <Loader2 size={13} color="#bae6fd" className="spin-loader-icon" />
-                    )}
-                    {isActive && (
-                      <span style={{
-                        width: '7px',
-                        height: '7px',
-                        borderRadius: '50%',
-                        backgroundColor: '#fef08a',
-                        boxShadow: '0 0 8px #fef08a',
-                      }} />
                     )}
                   </button>
                 );
               })}
             </div>
           </div>
-        </div>
+        </header>
       )}
 
       {/* SÂN KHẤU BẢN ĐỒ 16:9 */}
@@ -628,31 +643,11 @@ export default function ChimChichBong() {
           cursor: pointer;
         }
         .game-control-btn:hover:not(:disabled) {
-          filter: brightness(1.12);
-          transform: translateY(-1px);
-        }
-        .game-control-btn:active:not(:disabled) {
-          transform: translateY(1px);
-          filter: brightness(0.95);
+          filter: brightness(1.1);
         }
 
-        .flying-target-tab {
-          background: linear-gradient(135deg, #0284c7 0%, #0369a1 50%, #0c4a6e 100%) !important;
-          border: 1.5px solid #38bdf8 !important;
-          animation: flyingTabGlow 1.2s infinite ease-in-out;
-        }
         .spin-loader-icon {
           animation: spinAnimation 0.9s linear infinite;
-        }
-        @keyframes flyingTabGlow {
-          0%, 100% {
-            box-shadow: 0 0 10px rgba(56, 189, 248, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.4);
-            transform: scale(1.01);
-          }
-          50% {
-            box-shadow: 0 0 20px rgba(56, 189, 248, 0.75), 0 0 8px rgba(125, 211, 252, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.7);
-            transform: scale(1.03);
-          }
         }
         @keyframes spinAnimation {
           from { transform: rotate(0deg); }
