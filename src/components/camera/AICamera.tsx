@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { FaceMesh } from '@mediapipe/face_mesh';
-import { Camera } from '@mediapipe/camera_utils';
+// FaceMesh được nạp qua CDN trong index.html (window.FaceMesh); gói UMD không tương thích ESM của Vite 8.
+type FaceMesh = any;
+
 
 export type TiltDirection = 'left' | 'right' | 'center' | null;
 
@@ -143,7 +144,11 @@ const AICamera: React.FC<AICameraProps> = ({
     let isProcessing = false;
 
     // Lấy FaceMesh từ window (do load từ CDN trong index.html) hoặc từ module import
-    const FaceMeshConstructor = (window as any).FaceMesh || FaceMesh;
+    const FaceMeshConstructor = (window as any).FaceMesh;
+    if (!FaceMeshConstructor) {
+      onError?.('Không tải được thư viện FaceMesh (kiểm tra kết nối mạng).');
+      return;
+    }
     const faceMesh = new FaceMeshConstructor({
       locateFile: (file: string) =>
         `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`,

@@ -314,7 +314,7 @@ export default function ChimChichBong() {
             display: 'inline-flex',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '7px 28px',
+            padding: '9px 38px', backgroundImage: 'linear-gradient(135deg, rgba(30, 41, 59, 0.92) 0%, rgba(15, 23, 42, 0.95) 100%)', borderColor: 'rgba(251, 191, 36, 0.75)', borderWidth: '2px', filter: 'drop-shadow(0 0 10px rgba(251, 191, 36, 0.3))',
             borderRadius: '999px',
             background: 'rgba(30, 41, 59, 0.88)',
             border: '1.5px solid rgba(255, 255, 255, 0.12)',
@@ -323,12 +323,12 @@ export default function ChimChichBong() {
           }}>
             <h1 style={{
               margin: 0,
-              fontSize: 'clamp(1.1rem, 1.8vw, 1.35rem)',
-              fontWeight: 800,
-              letterSpacing: '2.5px',
+              fontSize: 'clamp(1.5rem, 2.6vw, 2rem)',
+              fontWeight: 900,
+              letterSpacing: '3px',
               textTransform: 'uppercase',
-              color: '#f8fafc',
-              fontFamily: 'system-ui, -apple-system, sans-serif',
+              background: 'linear-gradient(180deg, #fef9c3 0%, #fde047 50%, #f59e0b 100%)', WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent', filter: 'drop-shadow(0 2px 3px rgba(0, 0, 0, 0.6))',
+              fontFamily: '"Nunito", "Quicksand", system-ui, sans-serif',
               lineHeight: 1.2,
             }}>
               GIẢI CỨU CHÍCH BÔNG

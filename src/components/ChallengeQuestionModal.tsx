@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   X,
   Sparkles,
@@ -9,7 +9,9 @@ import {
   Speech,
   CheckCircle2,
   BookOpen,
-  RotateCcw
+  RotateCcw,
+  Volume2,
+  Square
 } from 'lucide-react';
 
 // ============================================================
@@ -67,8 +69,8 @@ function RhymesContent({ data }: { data: ChallengeTypeRhymes }) {
       rhymeShadow: '0 8px 20px rgba(234, 88, 12, 0.28)',
       wordCardBg: 'linear-gradient(145deg, #ffffff 0%, #fffbeb 60%, #fef3c7 100%)',
       wordBorder: '#f59e0b',
-      wordColor: '#9a3412',
-      wordShadow: '0 6px 18px rgba(245, 158, 11, 0.15)',
+      wordColor: '#c2410c',
+      wordShadow: '0 8px 22px rgba(245, 158, 11, 0.2)',
       renderIcon: () => (
         <div style={{
           width: '38px',
@@ -90,8 +92,8 @@ function RhymesContent({ data }: { data: ChallengeTypeRhymes }) {
       rhymeShadow: '0 8px 20px rgba(220, 38, 38, 0.28)',
       wordCardBg: 'linear-gradient(145deg, #ffffff 0%, #fef2f2 60%, #fee2e2 100%)',
       wordBorder: '#f87171',
-      wordColor: '#991b1b',
-      wordShadow: '0 6px 18px rgba(239, 68, 68, 0.15)',
+      wordColor: '#b91c1c',
+      wordShadow: '0 8px 22px rgba(239, 68, 68, 0.2)',
       renderIcon: () => (
         <div style={{
           width: '38px',
@@ -113,8 +115,8 @@ function RhymesContent({ data }: { data: ChallengeTypeRhymes }) {
       rhymeShadow: '0 8px 20px rgba(37, 99, 235, 0.28)',
       wordCardBg: 'linear-gradient(145deg, #ffffff 0%, #eff6ff 60%, #dbeafe 100%)',
       wordBorder: '#60a5fa',
-      wordColor: '#1e40af',
-      wordShadow: '0 6px 18px rgba(59, 130, 246, 0.15)',
+      wordColor: '#1d4ed8',
+      wordShadow: '0 8px 22px rgba(59, 130, 246, 0.2)',
       renderIcon: () => (
         <div style={{
           width: '38px',
@@ -154,35 +156,12 @@ function RhymesContent({ data }: { data: ChallengeTypeRhymes }) {
         boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.03)',
         boxSizing: 'border-box',
       }}>
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
-          color: '#334155',
-          fontSize: '0.9rem',
-          fontWeight: 800,
-          letterSpacing: '0.5px',
-        }}>
-          <div style={{
-            width: '26px',
-            height: '26px',
-            borderRadius: '8px',
-            background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: '#fff',
-            boxShadow: '0 2px 5px rgba(37, 99, 235, 0.3)',
-          }}>
-            <BookA size={16} strokeWidth={2.5} />
-          </div>
-          <span>1. Các vần cần đọc:</span>
-        </div>
+
 
         <div style={{
           display: 'grid',
           gridTemplateColumns: `repeat(${data.rhymes.length}, minmax(0, 1fr))`,
-          gap: '14px',
+          gap: '16px',
           width: '100%',
         }}>
           {data.rhymes.map((item, idx) => {
@@ -197,7 +176,7 @@ function RhymesContent({ data }: { data: ChallengeTypeRhymes }) {
                   flexDirection: 'column',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  padding: '16px 10px',
+                  padding: '22px 10px',
                   borderRadius: '20px',
                   background: theme.rhymeBg,
                   border: '2.5px solid rgba(255, 255, 255, 0.85)',
@@ -219,7 +198,7 @@ function RhymesContent({ data }: { data: ChallengeTypeRhymes }) {
                 }} />
 
                 <span style={{
-                  fontSize: 'clamp(2.4rem, 6.5vw, 3.2rem)',
+                  fontSize: 'clamp(3.4rem, 9vw, 4.6rem)',
                   fontWeight: 900,
                   color: '#ffffff',
                   lineHeight: 1,
@@ -248,35 +227,12 @@ function RhymesContent({ data }: { data: ChallengeTypeRhymes }) {
         boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.03)',
         boxSizing: 'border-box',
       }}>
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
-          color: '#334155',
-          fontSize: '0.9rem',
-          fontWeight: 800,
-          letterSpacing: '0.5px',
-        }}>
-          <div style={{
-            width: '26px',
-            height: '26px',
-            borderRadius: '8px',
-            background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: '#fff',
-            boxShadow: '0 2px 5px rgba(16, 185, 129, 0.3)',
-          }}>
-            <Speech size={16} strokeWidth={2.5} />
-          </div>
-          <span>2. Các từ ngữ ứng dụng:</span>
-        </div>
+
 
         <div style={{
           display: 'grid',
           gridTemplateColumns: `repeat(${data.rhymes.length}, minmax(0, 1fr))`,
-          gap: '14px',
+          gap: '16px',
           width: '100%',
         }}>
           {data.rhymes.map((item, idx) => {
@@ -302,7 +258,6 @@ function RhymesContent({ data }: { data: ChallengeTypeRhymes }) {
                   boxSizing: 'border-box',
                 }}
               >
-                {theme.renderIcon()}
 
                 <div style={{
                   display: 'flex',
@@ -315,16 +270,16 @@ function RhymesContent({ data }: { data: ChallengeTypeRhymes }) {
                     <div
                       key={wIdx}
                       style={{
-                        padding: '6px 14px',
-                        borderRadius: '14px',
-                        background: '#ffffff',
-                        border: `1.5px solid ${theme.wordBorder}`,
-                        fontSize: 'clamp(1.15rem, 3.2vw, 1.45rem)',
+                        padding: '18px 8px', textAlign: 'center',
+                        borderRadius: '18px',
+                        background: 'transparent',
+                        border: 'none',
+                        fontSize: 'clamp(2rem, 5vw, 2.7rem)',
                         fontWeight: 900,
                         color: theme.wordColor,
                         letterSpacing: '0.5px',
                         fontFamily: '"Nunito", "Quicksand", system-ui, sans-serif',
-                        boxShadow: '0 2px 6px rgba(0,0,0,0.06)',
+                        boxShadow: 'none',
                         whiteSpace: 'nowrap',
                       }}
                     >
@@ -349,6 +304,32 @@ function RhymesContent({ data }: { data: ChallengeTypeRhymes }) {
  */
 function RiddleContent({ data }: { data: ChallengeTypeRiddle }) {
   const [revealed, setRevealed] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  // Dừng âm thanh khi đóng modal
+  useEffect(() => () => {
+    audioRef.current?.pause();
+  }, []);
+
+  const toggleQuestionAudio = () => {
+    if (!audioRef.current) {
+      const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
+      const audio = new Audio(`${base}/cus/question.mp3`);
+      audio.onended = () => setIsPlaying(false);
+      audio.onpause = () => setIsPlaying(false);
+      audio.onplay = () => setIsPlaying(true);
+      audioRef.current = audio;
+    }
+    const audio = audioRef.current;
+    if (!audio.paused) {
+      audio.pause();
+      audio.currentTime = 0;
+    } else {
+      audio.currentTime = 0;
+      audio.play().catch(() => setIsPlaying(false));
+    }
+  };
 
   // Đường dẫn ảnh cái bát (mặc định hoặc từ data)
   const bowlImg = data.image || 'cus/cai_bat.png';
@@ -376,12 +357,38 @@ function RiddleContent({ data }: { data: ChallengeTypeRiddle }) {
             textAlign: 'center',
             boxSizing: 'border-box',
           }}>
+            <button
+              onClick={toggleQuestionAudio}
+              className="challenge-tile-hover"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '10px',
+                padding: '10px 26px',
+                marginBottom: '18px',
+                borderRadius: '999px',
+                border: '2px solid #ffffff',
+                background: isPlaying
+                  ? 'linear-gradient(135deg, #f87171 0%, #dc2626 100%)'
+                  : 'linear-gradient(135deg, #60a5fa 0%, #2563eb 100%)',
+                color: '#ffffff',
+                fontWeight: 900,
+                fontSize: '1.15rem',
+                fontFamily: '"Nunito", "Quicksand", system-ui, sans-serif',
+                cursor: 'pointer',
+                boxShadow: '0 6px 18px rgba(37, 99, 235, 0.35)',
+                transition: 'all 0.25s ease',
+              }}
+            >
+              {isPlaying ? <Square size={20} fill="#fff" /> : <Volume2 size={24} strokeWidth={2.4} />}
+              <span>{isPlaying ? 'Dừng đọc' : 'Nghe đọc câu đố'}</span>
+            </button>
             {data.lines.map((line, idx) => {
               const isLast = idx === data.lines.length - 1;
               return (
                 <p key={idx} style={{
                   margin: idx === 0 ? 0 : isLast ? '14px 0 0' : '8px 0 0',
-                  fontSize: isLast ? 'clamp(1.3rem, 3.8vw, 1.65rem)' : 'clamp(1.2rem, 3.5vw, 1.55rem)',
+                  fontSize: isLast ? 'clamp(1.55rem, 4.2vw, 1.95rem)' : 'clamp(1.4rem, 3.8vw, 1.8rem)',
                   fontWeight: isLast ? 900 : 800,
                   color: isLast ? '#1d4ed8' : '#1e3a8a',
                   lineHeight: 1.7,
@@ -574,7 +581,7 @@ export const ChallengeQuestionModal: React.FC<ChallengeQuestionModalProps> = ({
   return (
     <div style={{
       width: '100%',
-      maxWidth: '780px',
+      maxWidth: '900px',
       background: 'rgba(255, 255, 255, 0.98)',
       backdropFilter: 'blur(20px)',
       borderRadius: '28px',
@@ -585,7 +592,7 @@ export const ChallengeQuestionModal: React.FC<ChallengeQuestionModalProps> = ({
       border: '3px solid #ffffff',
       animation: 'challengePopIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)',
       userSelect: 'none',
-      fontFamily: 'system-ui, -apple-system, sans-serif',
+      fontFamily: '"Nunito", "Quicksand", system-ui, sans-serif',
     }}>
       {/* Header */}
       <div style={{
@@ -599,7 +606,7 @@ export const ChallengeQuestionModal: React.FC<ChallengeQuestionModalProps> = ({
         <div>
           <h3 style={{
             margin: 0,
-            fontSize: 'clamp(1.1rem, 3.5vw, 1.3rem)',
+            fontSize: 'clamp(1.4rem, 4vw, 1.75rem)',
             fontWeight: 900,
             color: '#fef08a',
             letterSpacing: '0.3px',
@@ -610,7 +617,7 @@ export const ChallengeQuestionModal: React.FC<ChallengeQuestionModalProps> = ({
             <Sparkles size={18} color="#fef08a" />
             <span>Thử Thách {readingData.step}: {readingData.stepTitle}</span>
           </h3>
-          <span style={{ fontSize: '0.82rem', color: '#94a3b8', marginTop: '3px', display: 'block' }}>
+          <span style={{ fontSize: '1.05rem', fontWeight: 600, color: '#cbd5e1', marginTop: '4px', display: 'block' }}>
             {content.type === 'rhymes' && 'Con hãy đọc to các vần và từ ngữ ở 2 hàng bên dưới nhé!'}
             {content.type === 'riddle' && 'Con hãy đọc câu đố và đoán xem là gì nhé!'}
             {content.type === 'passage' && 'Con hãy đọc to, rõ ràng đoạn văn nhé!'}
@@ -660,13 +667,13 @@ export const ChallengeQuestionModal: React.FC<ChallengeQuestionModalProps> = ({
           className="challenge-finish-btn"
           style={{
             marginTop: '4px',
-            padding: '12px 42px',
+            padding: '16px 54px',
             borderRadius: '18px',
             border: 'none',
             background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
             color: '#ffffff',
             fontWeight: 900,
-            fontSize: '1.1rem',
+            fontSize: '1.4rem',
             cursor: 'pointer',
             boxShadow: '0 6px 20px rgba(16, 185, 129, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3)',
             transition: 'all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)',
