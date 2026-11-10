@@ -30,7 +30,7 @@ const GAMES: GameOption[] = [
     borderGlow: 'rgba(16, 185, 129, 0.45)',
     tagColor: '#34d399',
     icon: <Award size={32} color="#6ee7b7" />,
-    features: ['Google Sheet live sync', '3 Chủ đề thú vị', 'Bộ đếm thời gian & Điểm'],
+    features: ['Đồng bộ Google Sheet', 'Các chủ đề thú vị', 'Bộ đếm thời gian & Điểm'],
   },
   {
     id: 'chim-chich-bong',
@@ -42,7 +42,7 @@ const GAMES: GameOption[] = [
     borderGlow: 'rgba(14, 165, 233, 0.45)',
     tagColor: '#38bdf8',
     icon: <MapPin size={32} color="#7dd3fc" />,
-    features: ['Cốt truyện audio lồng tiếng', 'Thử thách bài đọc vần', 'Hoạt ảnh chim bay mượt mà'],
+    features: ['Cốt truyện video hấp dẫn', 'Thử thách bài đọc vần, câu đố', 'Hoạt ảnh chim bay mượt mà'],
   },
   {
     id: 'head-tilt-quiz',
