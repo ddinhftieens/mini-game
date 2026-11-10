@@ -315,7 +315,7 @@ function RiddleContent({ data }: { data: ChallengeTypeRiddle }) {
   const toggleQuestionAudio = () => {
     if (!audioRef.current) {
       const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
-      const audio = new Audio(`${base}/cus/question.mp3`);
+      const audio = new Audio(`${base}/cus/question_2.mp3`);
       audio.onended = () => setIsPlaying(false);
       audio.onpause = () => setIsPlaying(false);
       audio.onplay = () => setIsPlaying(true);
