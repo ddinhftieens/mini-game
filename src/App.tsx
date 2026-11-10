@@ -35,7 +35,7 @@ const GAMES: GameOption[] = [
   {
     id: 'chim-chich-bong',
     title: 'Giải Cứu Chích Bông',
-    badge: 'Tập đọc Lớp 1',
+    badge: 'Tiếng Việt Lớp 1',
     subtitle: 'Bay qua núi đồi • Vượt dòng sông • Về vườn rau',
     description: 'Hành trình tương tác giúp chú chim Chích Bông vượt qua các chặng đường, luyện đọc vần - từ ngữ và bay về khu vườn rau xanh mát.',
     gradient: 'linear-gradient(135deg, #0ea5e9 0%, #0284c7 50%, #0369a1 100%)',
